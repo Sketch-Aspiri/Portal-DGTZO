@@ -45,6 +45,8 @@ Route::middleware('auth')->group(function () {
                 ->middleware('throttle:approvals')->name('approve');
             Route::post('/{user}/rechazar', [UserApprovalController::class, 'reject'])
                 ->middleware('throttle:approvals')->name('reject');
+            Route::post('/{user}/accesos', [UserApprovalController::class, 'grant'])
+                ->middleware('throttle:approvals')->name('grant');
             Route::post('/{user}/aprovisionar/{subsistema}', [UserApprovalController::class, 'retry'])
                 ->where('subsistema', '[a-z_]{2,40}')->middleware('throttle:approvals')->name('retry');
         });

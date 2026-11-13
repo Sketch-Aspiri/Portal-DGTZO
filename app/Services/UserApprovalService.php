@@ -59,6 +59,54 @@ class UserApprovalService
         }
     }
 
+    /**
+     * Da acceso a otros subsistemas a una cuenta YA activa (la cuenta en cada uno se crea en cola, como al aprobar).
+     * Solo agrega: cambiar el rol o quitar un acceso no se sincroniza con el subsistema, así que no se ofrece.
+     * Nadie se da acceso a sí mismo: un administrador no amplía su propio alcance.
+     *
+     * @param  array<string, array{rol: string, contexto: array<string, mixed>}>  $accesos
+     */
+    public function grant(User $target, User $actor, array $accesos): void
+    {
+        $created = DB::transaction(function () use ($target, $actor, $accesos): array {
+            $fresh = User::query()->lockForUpdate()->findOrFail($target->id);
+
+            if (! $actor->canApprove()) {
+                throw new BusinessRuleException(__('portal.cannot_approve'));
+            }
+
+            if ($fresh->is($actor)) {
+                throw new BusinessRuleException(__('portal.cannot_self_grant'));
+            }
+
+            if ($fresh->status !== UserStatus::Active) {
+                throw new BusinessRuleException(__('portal.not_active'));
+            }
+
+            $ids = [];
+
+            foreach ($accesos as $subsistema => $datos) {
+                if ($fresh->accesos()->where('subsistema', $subsistema)->exists()) {
+                    throw new BusinessRuleException(__('portal.already_has_access'));
+                }
+
+                $access = $fresh->accesos()->create(['subsistema' => $subsistema, 'rol' => $datos['rol'], 'contexto' => $datos['contexto']]);
+                $access->forceFill(['aprovisionamiento' => UsuarioSubsistema::PENDIENTE, 'intentos' => 0])->save();
+                $ids[] = $access->id;
+            }
+
+            activity('auth')->performedOn($fresh)->causedBy($actor)->event('access_granted')
+                ->withProperties(['accesos' => array_map(fn (array $d): array => ['rol' => $d['rol'], 'contexto' => $d['contexto']], $accesos)])
+                ->log('access_granted');
+
+            return $ids;
+        });
+
+        foreach ($created as $id) {
+            ProvisionAccess::dispatch($id);
+        }
+    }
+
     /** Reintento manual de un acceso que quedó en error. */
     public function retry(User $user, User $actor, string $subsistema): void
     {

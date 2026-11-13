@@ -7,6 +7,7 @@ namespace App\Http\Controllers;
 use App\Enums\PortalRole;
 use App\Enums\UserStatus;
 use App\Http\Requests\ApproveUserRequest;
+use App\Http\Requests\GrantAccessRequest;
 use App\Http\Requests\RejectUserRequest;
 use App\Models\User;
 use App\Services\Ecosystem\SubsystemGateway;
@@ -38,17 +39,33 @@ class UserApprovalController extends Controller
 
     public function show(Request $request, User $user): View
     {
+        $user->load('accesos');
         $pending = $user->status === UserStatus::Pending;
 
+        // Dar acceso a una cuenta activa: solo a otra persona y solo a los sistemas que aún no tiene.
+        $canGrant = $user->status === UserStatus::Active && ! $request->user()->is($user);
+        $missing = array_values(array_diff(Subsistemas::claves(), $user->accesos->pluck('subsistema')->all()));
+
+        // El formulario ofrece lo que cada subsistema tiene hoy (equipos, estaciones); null = no responde.
+        $offered = $pending ? Subsistemas::claves() : ($canGrant ? $missing : []);
+
         return view('users.show', [
-            'user' => $user->load('accesos'),
+            'user' => $user,
             'catalogo' => Subsistemas::todos(),
-            // El formulario ofrece lo que cada subsistema tiene hoy (equipos, estaciones); null = no responde.
-            'catalogos' => $pending ? collect(Subsistemas::claves())->mapWithKeys(
+            'catalogos' => collect($offered)->mapWithKeys(
                 fn (string $key): array => [$key => $this->gateway->catalog($key)],
-            )->all() : [],
+            )->all(),
             'esAdministrador' => $request->user()->portal_role === PortalRole::Administrador,
+            'puedeDarAcceso' => $canGrant,
+            'faltantes' => $missing,
         ]);
+    }
+
+    public function grant(GrantAccessRequest $request, User $user): RedirectResponse
+    {
+        $this->approvals->grant($user, $request->user(), $request->accesos());
+
+        return redirect()->route('users.show', $user)->with('status', __('portal.access_granted'));
     }
 
     public function approve(ApproveUserRequest $request, User $user): RedirectResponse
