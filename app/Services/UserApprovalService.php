@@ -1,0 +1,116 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\Services;
+
+use App\Enums\UserStatus;
+use App\Exceptions\BusinessRuleException;
+use App\Jobs\ProvisionAccess;
+use App\Models\User;
+use App\Models\UsuarioSubsistema;
+use Illuminate\Support\Facades\DB;
+
+class UserApprovalService
+{
+    /**
+     * Aprueba una cuenta pendiente y le da acceso a los subsistemas elegidos; la cuenta en cada subsistema se crea
+     * después, en cola (ProvisionAccess), con reintentos.
+     *
+     * @param  array<string, array{rol: string, contexto: array<string, mixed>}>  $accesos  [subsistema => datos]
+     */
+    public function approve(User $user, User $actor, array $accesos): void
+    {
+        $created = DB::transaction(function () use ($user, $actor, $accesos): array {
+            $fresh = User::query()->lockForUpdate()->findOrFail($user->id);
+
+            $this->assertDecidable($fresh, $actor);
+
+            $ids = [];
+
+            foreach ($accesos as $subsistema => $datos) {
+                $access = $fresh->accesos()->updateOrCreate(
+                    ['subsistema' => $subsistema],
+                    ['rol' => $datos['rol'], 'contexto' => $datos['contexto']],
+                );
+                $access->forceFill([
+                    'aprovisionamiento' => UsuarioSubsistema::PENDIENTE,
+                    'ultimo_error' => null,
+                    'intentos' => 0,
+                ])->save();
+                $ids[] = $access->id;
+            }
+
+            $fresh->forceFill([
+                'status' => UserStatus::Active,
+                'decided_by' => $actor->id,
+                'decided_at' => now(),
+            ])->save();
+
+            activity('auth')->performedOn($fresh)->causedBy($actor)->event('approved')
+                ->withProperties(['accesos' => array_map(fn (array $d): array => ['rol' => $d['rol'], 'contexto' => $d['contexto']], $accesos)])
+                ->log('approved');
+
+            return $ids;
+        });
+
+        foreach ($created as $id) {
+            ProvisionAccess::dispatch($id);
+        }
+    }
+
+    /** Reintento manual de un acceso que quedó en error. */
+    public function retry(User $user, User $actor, string $subsistema): void
+    {
+        if (! $actor->canApprove()) {
+            throw new BusinessRuleException(__('portal.cannot_approve'));
+        }
+
+        $access = $user->accesos()->where('subsistema', $subsistema)->first();
+
+        if ($access === null || $access->aprovisionamiento !== UsuarioSubsistema::ERROR) {
+            throw new BusinessRuleException(__('portal.not_retryable'));
+        }
+
+        $access->forceFill(['aprovisionamiento' => UsuarioSubsistema::PENDIENTE, 'intentos' => 0])->save();
+
+        activity('auth')->performedOn($user)->causedBy($actor)->event('provision_retry')
+            ->withProperties(['subsistema' => $subsistema])->log('provision_retry');
+
+        ProvisionAccess::dispatch($access->id);
+    }
+
+    public function reject(User $user, User $actor, string $reason): void
+    {
+        DB::transaction(function () use ($user, $actor, $reason): void {
+            $fresh = User::query()->lockForUpdate()->findOrFail($user->id);
+
+            $this->assertDecidable($fresh, $actor);
+
+            $fresh->forceFill([
+                'status' => UserStatus::Inactive,
+                'decided_by' => $actor->id,
+                'decided_at' => now(),
+            ])->save();
+
+            activity('auth')->performedOn($fresh)->causedBy($actor)->event('rejected')
+                ->withProperties(['reason' => $reason])->log('rejected');
+        });
+    }
+
+    /** Solo se decide sobre cuentas pendientes y nunca sobre la propia. */
+    private function assertDecidable(User $target, User $actor): void
+    {
+        if (! $actor->canApprove()) {
+            throw new BusinessRuleException(__('portal.cannot_approve'));
+        }
+
+        if ($target->is($actor)) {
+            throw new BusinessRuleException(__('portal.cannot_self'));
+        }
+
+        if ($target->status !== UserStatus::Pending) {
+            throw new BusinessRuleException(__('portal.not_pending'));
+        }
+    }
+}

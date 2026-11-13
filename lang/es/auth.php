@@ -1,0 +1,54 @@
+<?php
+
+return [
+    'failed' => 'Estas credenciales no coinciden con nuestros registros.',
+    'password' => 'La contraseña es incorrecta.',
+    'throttle' => 'Demasiados intentos de acceso. Inténtalo de nuevo en :seconds segundos.',
+    'registered' => 'Tu registro fue recibido. El jefe de la coordinación que elegiste revisará tu cuenta y, cuando la apruebe, podrás usar el sistema.',
+
+    'ecosystem' => [
+        'no_account' => 'Entraste al Dashboard con :email, pero esa cuenta no existe (o no está activa) en Tickets. Inicia sesión con tu cuenta de Tickets o regístrate.',
+        'link_first' => 'Para unir tu cuenta de Tickets con el Dashboard, inicia sesión aquí una sola vez. Después ya no te lo pediremos en ningún dispositivo.',
+        'leaving' => 'Cerrando la sesión también en el Dashboard…',
+        'continue' => 'Continuar',
+    ],
+    'login' => [
+        'title' => 'Iniciar sesión',
+        'email' => 'Correo electrónico',
+        'password' => 'Contraseña',
+        'remember' => 'Mantener la sesión iniciada',
+        'forgot' => '¿Olvidaste tu contraseña?',
+        'submit' => 'Entrar',
+        'no_account' => '¿Aún no tienes cuenta?',
+        'register_link' => 'Solicita tu acceso',
+    ],
+
+    'register' => [
+        'title' => 'Solicitar acceso',
+        'intro' => 'Tu cuenta quedará pendiente hasta que el jefe de la coordinación que elijas la apruebe y te asigne rol y equipo.',
+        'coordination' => 'Coordinación',
+        'choose_coordination' => 'Elige tu coordinación',
+        'coordination_hint' => 'La solicitud llegará al jefe de esa coordinación.',
+        'name' => 'Nombre completo',
+        'email' => 'Correo electrónico',
+        'password' => 'Contraseña',
+        'password_confirmation' => 'Confirmar contraseña',
+        'password_hint' => 'Mínimo 10 caracteres, con mayúsculas, minúsculas y números.',
+        'submit' => 'Enviar solicitud',
+        'have_account' => '¿Ya tienes cuenta?',
+    ],
+
+    'forgot' => [
+        'title' => 'Recuperar contraseña',
+        'intro' => 'Escribe tu correo y, si existe una cuenta, te enviaremos un enlace para crear una contraseña nueva.',
+        'submit' => 'Enviar enlace',
+        'back' => 'Volver a iniciar sesión',
+    ],
+
+    'reset' => [
+        'title' => 'Nueva contraseña',
+        'submit' => 'Restablecer contraseña',
+    ],
+
+    'logout' => 'Cerrar sesión',
+];
