@@ -52,6 +52,7 @@ trait FakesSubsystems
             'equipos' => [
                 ['id' => 1, 'nombre' => 'Soporte TI', 'coordinacion_id' => 10, 'coordinacion' => 'Sistemas', 'estacion' => 'Oficina Zonal'],
                 ['id' => 2, 'nombre' => 'Redes', 'coordinacion_id' => 10, 'coordinacion' => 'Sistemas', 'estacion' => 'Oficina Zonal'],
+                ['id' => 3, 'nombre' => 'RH Tulum', 'equipo_central_id' => 1, 'area' => 'rh', 'codigo_estacion' => '23', 'coordinacion_id' => 10, 'coordinacion' => 'Sistemas', 'estacion' => 'Oficina Zonal'],
             ],
             'coordinaciones' => [['id' => 10, 'nombre' => 'Sistemas', 'estacion' => 'Oficina Zonal']],
         ];
@@ -66,8 +67,9 @@ trait FakesSubsystems
                 ['clave' => 'jefe_zona', 'nombre' => 'Jefe de Zona', 'requiere_estacion' => false],
                 ['clave' => 'administrador', 'nombre' => 'Administrador', 'requiere_estacion' => false],
                 ['clave' => 'edificio', 'nombre' => 'Edificio', 'requiere_estacion' => false],
-                ['clave' => 'estacion', 'nombre' => 'Estación', 'requiere_estacion' => true],
+                ['clave' => 'estacion', 'nombre' => 'Estación', 'requiere_estacion' => true, 'requiere_area' => true],
             ],
+            'areas' => [['clave' => 'rh', 'nombre' => 'Recursos Humanos'], ['clave' => 'rm', 'nombre' => 'Recursos Materiales']],
             'estaciones' => [['id' => 5, 'nombre' => 'Tulum', 'codigo' => '23']],
         ];
     }

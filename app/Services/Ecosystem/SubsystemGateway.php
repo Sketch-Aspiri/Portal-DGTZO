@@ -48,8 +48,10 @@ final class SubsystemGateway
         ];
 
         $body += match ($access->subsistema) {
-            'tickets' => ['team_ids' => $context['team_ids'] ?? [], 'coordination_ids' => $context['coordination_ids'] ?? []],
-            'dashboard' => ['estacion_id' => $context['estacion_id'] ?? null],
+            'tickets' => ['team_ids' => $context['team_ids'] ?? [], 'coordination_ids' => $context['coordination_ids'] ?? []]
+                + (isset($context['estacion'], $context['area']) ? ['estacion' => $context['estacion'], 'area' => $context['area']] : []),
+            'dashboard' => ['estacion_id' => $context['estacion_id'] ?? null]
+                + (isset($context['area']) ? ['area' => $context['area']] : []),
             default => [],
         };
 

@@ -51,7 +51,7 @@ class ProvisioningTest extends TestCase
 
         $this->approve($jefe, $target, [
             'tickets' => ['activo' => 1, 'rol' => 'coordinador', 'team_ids' => [1, 2]],
-            'dashboard' => ['activo' => 1, 'rol' => 'estacion', 'estacion_id' => 5],
+            'dashboard' => ['activo' => 1, 'rol' => 'estacion', 'estacion_id' => 5, 'area' => 'rh'],
         ])->assertRedirect(route('users.show', $target));
 
         $tickets = UsuarioSubsistema::where('user_id', $target->id)->where('subsistema', 'tickets')->firstOrFail();
@@ -85,6 +85,35 @@ class ProvisioningTest extends TestCase
             $this->assertSignedBy($request, self::DASHBOARD_SECRET);
             $this->assertSame(5, $request->data()['estacion_id']);
             $this->assertSame('estacion', $request->data()['role']);
+            $this->assertSame('rh', $request->data()['area']);
+
+            return true;
+        });
+    }
+
+    public function test_a_station_account_without_an_area_is_rejected_and_tickets_follows_the_same_station_and_area(): void
+    {
+        $jefe = User::factory()->jefeZona()->create();
+        $target = User::factory()->create();
+
+        $this->approve($jefe, $target, ['dashboard' => ['activo' => 1, 'rol' => 'estacion', 'estacion_id' => 5]])
+            ->assertSessionHasErrors('accesos.dashboard.area');
+        $this->approve($jefe, $target, ['dashboard' => ['activo' => 1, 'rol' => 'estacion', 'estacion_id' => 5, 'area' => 'dios']])
+            ->assertSessionHasErrors('accesos.dashboard.area');
+
+        $this->approve($jefe, $target, [
+            'dashboard' => ['activo' => 1, 'rol' => 'estacion', 'estacion_id' => 5, 'area' => 'rh'],
+            'tickets' => ['activo' => 1, 'rol' => 'empleado'],
+        ])->assertRedirect(route('users.show', $target));
+
+        Http::assertSent(function (Request $request): bool {
+            if ($request->method() !== 'POST' || ! str_contains($request->url(), 'tickets.test')) {
+                return false;
+            }
+
+            $this->assertSame('23', $request->data()['estacion']);
+            $this->assertSame('rh', $request->data()['area']);
+            $this->assertSame([], $request->data()['team_ids']);
 
             return true;
         });
@@ -99,7 +128,7 @@ class ProvisioningTest extends TestCase
             ->assertSessionHasErrors('accesos.tickets.team_ids');
         $this->approve($jefe, $target, ['tickets' => ['activo' => 1, 'rol' => 'empleado']])
             ->assertSessionHasErrors('accesos.tickets.team_ids');
-        $this->approve($jefe, $target, ['dashboard' => ['activo' => 1, 'rol' => 'estacion', 'estacion_id' => 77]])
+        $this->approve($jefe, $target, ['dashboard' => ['activo' => 1, 'rol' => 'estacion', 'estacion_id' => 77, 'area' => 'rh']])
             ->assertSessionHasErrors('accesos.dashboard.estacion_id');
         // El rol de ese sistema que el catálogo no conoce.
         $this->approve($jefe, $target, ['tickets' => ['activo' => 1, 'rol' => 'dios', 'team_ids' => [1]]])

@@ -71,6 +71,19 @@
                     <p class="mt-1 text-xs text-gray-500">{{ __('portal.approvals.station_help') }}</p>
                     <x-input-error :messages="$errors->get('accesos.dashboard.estacion_id')" class="mt-1" />
                 </div>
+                @if (! empty($cat['areas']))
+                    <div>
+                        <x-input-label for="area-dashboard" :value="__('portal.approvals.area')" />
+                        <select id="area-dashboard" name="accesos[dashboard][area]" class="mt-1 block w-full rounded-md border-gray-300 text-sm">
+                            <option value="">—</option>
+                            @foreach ($cat['areas'] as $area)
+                                <option value="{{ $area['clave'] }}" @selected(old('accesos.dashboard.area') === $area['clave'])>{{ $area['nombre'] }}</option>
+                            @endforeach
+                        </select>
+                        <p class="mt-1 text-xs text-gray-500">{{ __('portal.approvals.area_help') }}</p>
+                        <x-input-error :messages="$errors->get('accesos.dashboard.area')" class="mt-1" />
+                    </div>
+                @endif
             @endif
         @endif
     </fieldset>

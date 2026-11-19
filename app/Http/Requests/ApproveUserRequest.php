@@ -39,6 +39,7 @@ class ApproveUserRequest extends FormRequest
             'accesos.*.coordination_ids' => ['nullable', 'array', 'max:20'],
             'accesos.*.coordination_ids.*' => ['integer'],
             'accesos.*.estacion_id' => ['nullable', 'integer'],
+            'accesos.*.area' => ['nullable', 'string', 'max:32'],
         ];
     }
 
@@ -48,7 +49,11 @@ class ApproveUserRequest extends FormRequest
         return [function (Validator $validator): void {
             $chosen = 0;
 
-            foreach ((array) $this->input('accesos', []) as $key => $data) {
+            $accesos = (array) $this->input('accesos', []);
+            // El Dashboard se resuelve primero: su estación y área ubican también a la persona en Tickets.
+            uksort($accesos, fn ($a, $b): int => ($b === 'dashboard') <=> ($a === 'dashboard'));
+
+            foreach ($accesos as $key => $data) {
                 if (! is_string($key) || Subsistemas::get($key) === null) {
                     $validator->errors()->add('accesos', __('portal.invalid_subsystem'));
 
@@ -108,6 +113,13 @@ class ApproveUserRequest extends FormRequest
             return;
         }
 
+        // Tickets sin equipos elegidos: se ubica en el subequipo de la estación y área del acceso al Dashboard.
+        $dashboardContext = $this->resolved['dashboard']['contexto'] ?? [];
+        if ($key === 'tickets' && $this->ids($data['team_ids'] ?? []) === [] && isset($dashboardContext['area'])) {
+            $data['estacion'] = $dashboardContext['estacion'];
+            $data['area'] = $dashboardContext['area'];
+        }
+
         $context = $this->contextFor($validator, $key, $role, $data, $catalog);
 
         if ($context !== null) {
@@ -149,7 +161,19 @@ class ApproveUserRequest extends FormRequest
         $coordinations = $this->ids($data['coordination_ids'] ?? []);
         $valid = true;
 
-        if (($roleInfo['requiere_equipo'] ?? false) === true) {
+        // Sin equipos elegidos a mano se ubica por estación y área (el subequipo se deriva del acceso al Dashboard).
+        $bySubteam = $teams === [] && ! empty($data['estacion']) && ! empty($data['area']);
+
+        if ($bySubteam) {
+            $exists = collect((array) ($catalog['equipos'] ?? []))->contains(
+                fn (array $e): bool => (string) ($e['codigo_estacion'] ?? '') === (string) $data['estacion'] && ($e['area'] ?? null) === $data['area'],
+            );
+
+            if (! $exists) {
+                $validator->errors()->add('accesos.tickets.team_ids', __('portal.no_subteam'));
+                $valid = false;
+            }
+        } elseif (($roleInfo['requiere_equipo'] ?? false) === true) {
             $known = array_column((array) ($catalog['equipos'] ?? []), 'id');
 
             if ($teams === [] || array_diff($teams, $known) !== []) {
@@ -171,7 +195,12 @@ class ApproveUserRequest extends FormRequest
             $coordinations = [];
         }
 
-        return $valid ? ['team_ids' => $teams, 'coordination_ids' => $coordinations] : null;
+        if (! $valid) {
+            return null;
+        }
+
+        return ['team_ids' => $teams, 'coordination_ids' => $coordinations]
+            + ($bySubteam ? ['estacion' => (string) $data['estacion'], 'area' => (string) $data['area']] : []);
     }
 
     /**
@@ -187,14 +216,30 @@ class ApproveUserRequest extends FormRequest
         }
 
         $station = (int) ($data['estacion_id'] ?? 0);
+        $stationInfo = collect((array) ($catalog['estaciones'] ?? []))->firstWhere('id', $station);
 
-        if (! in_array($station, array_column((array) ($catalog['estaciones'] ?? []), 'id'), true)) {
+        if ($stationInfo === null) {
             $validator->errors()->add('accesos.dashboard.estacion_id', __('portal.choose_station'));
 
             return null;
         }
 
-        return ['estacion_id' => $station];
+        $context = ['estacion_id' => $station, 'estacion' => (string) ($stationInfo['codigo'] ?? '')];
+
+        // El área solo se pide si el Dashboard la ofrece (rol con `requiere_area`): un Dashboard viejo sigue sirviendo.
+        if (($roleInfo['requiere_area'] ?? false) === true) {
+            $area = (string) ($data['area'] ?? '');
+
+            if (! in_array($area, array_column((array) ($catalog['areas'] ?? []), 'clave'), true)) {
+                $validator->errors()->add('accesos.dashboard.area', __('portal.choose_area'));
+
+                return null;
+            }
+
+            $context['area'] = $area;
+        }
+
+        return $context;
     }
 
     /**
