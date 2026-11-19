@@ -113,9 +113,9 @@ class ApproveUserRequest extends FormRequest
             return;
         }
 
-        // Tickets sin equipos elegidos: se ubica en el subequipo de la estación y área del acceso al Dashboard.
+        // Tickets sin equipos elegidos: se ubica en el subequipo de la estación y área del acceso al Dashboard (el jefe de estación no tiene subequipo propio: sus equipos se eligen a mano).
         $dashboardContext = $this->resolved['dashboard']['contexto'] ?? [];
-        if ($key === 'tickets' && $this->ids($data['team_ids'] ?? []) === [] && isset($dashboardContext['area'])) {
+        if ($key === 'tickets' && $this->ids($data['team_ids'] ?? []) === [] && isset($dashboardContext['area']) && $dashboardContext['area'] !== 'jefe') {
             $data['estacion'] = $dashboardContext['estacion'];
             $data['area'] = $dashboardContext['area'];
         }
