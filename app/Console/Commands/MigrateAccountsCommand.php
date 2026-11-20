@@ -26,7 +26,8 @@ class MigrateAccountsCommand extends Command
     protected $signature = 'portal:migrar-cuentas
         {--ejecutar : Crea las cuentas (sin esto solo reporta)}
         {--avisar : Con --ejecutar, envía a cada persona el correo con las instrucciones}
-        {--solo= : Limita a un correo (para probar con una sola cuenta)}';
+        {--solo= : Limita a un correo (para probar con una sola cuenta)}
+        {--excluir= : Correos que no se migran, separados por coma (cuentas automáticas, por ejemplo)}';
 
     protected $description = 'Crea en el portal las cuentas que solo existen en Dashboard o Tickets';
 
@@ -34,6 +35,7 @@ class MigrateAccountsCommand extends Command
     {
         $existing = User::query()->pluck('email')->map(fn ($e): string => mb_strtolower((string) $e))->flip();
         $only = $this->option('solo') ? mb_strtolower((string) $this->option('solo')) : null;
+        $excluded = array_filter(array_map(fn (string $e): string => mb_strtolower(trim($e)), explode(',', (string) $this->option('excluir'))));
 
         /** @var array<string, array{nombre: string, accesos: array<string, string>}> $plan */
         $plan = [];
@@ -51,7 +53,7 @@ class MigrateAccountsCommand extends Command
             foreach ($accounts as $account) {
                 $email = mb_strtolower((string) ($account['email'] ?? ''));
 
-                if ($email === '' || $existing->has($email) || ($only !== null && $email !== $only)) {
+                if ($email === '' || $existing->has($email) || in_array($email, $excluded, true) || ($only !== null && $email !== $only)) {
                     continue;
                 }
 

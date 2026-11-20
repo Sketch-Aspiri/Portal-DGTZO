@@ -82,6 +82,13 @@ class MigrateAccountsTest extends TestCase
         Notification::assertSentTo(User::firstOrFail(), AccountMigrated::class);
     }
 
+    public function test_excluir_skips_the_listed_emails(): void
+    {
+        $this->artisan('portal:migrar-cuentas', ['--ejecutar' => true, '--excluir' => 'Luis@ejemplo.test, ana@ejemplo.test'])->assertSuccessful();
+
+        $this->assertSame(['ya@ejemplo.test'], User::pluck('email')->all());
+    }
+
     public function test_it_fails_without_changes_when_a_subsystem_does_not_respond(): void
     {
         Http::swap(new \Illuminate\Http\Client\Factory);
