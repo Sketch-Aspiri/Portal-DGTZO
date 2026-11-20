@@ -8,11 +8,11 @@
         {{-- Hero: foto del tren difuminada con capa verde --}}
         <section class="relative isolate overflow-hidden text-white">
             <img src="{{ asset('images/tren-maya.jpeg') }}" alt="" aria-hidden="true"
-                 class="absolute inset-0 -z-20 h-full w-full scale-110 object-cover blur-[3px]">
-            <div class="absolute inset-0 -z-[15] bg-gradient-to-br from-brand-green-dark/95 via-brand-green/75 to-brand-teal/45"></div>
+                 class="absolute inset-0 -z-20 h-full w-full scale-[1.3] origin-[10%_70%] object-cover blur-[2px]">
+            <div class="absolute inset-0 -z-[15] bg-gradient-to-r from-brand-green-dark/95 via-brand-green/60 to-brand-green/10"></div>
             <canvas data-shader-bg data-colors="#043D39,#06534D,#1F7460,#70C2AD" aria-hidden="true"
-                    class="absolute inset-0 -z-10 h-full w-full opacity-55"></canvas>
-            <div class="absolute inset-0 -z-10 bg-gradient-to-b from-brand-green-dark/40 via-transparent to-brand-green-dark/50"></div>
+                    class="absolute inset-0 -z-10 h-full w-full opacity-50 [mask-image:linear-gradient(to_right,black_0%,black_30%,transparent_80%)]"></canvas>
+            <div class="absolute inset-0 -z-10 bg-gradient-to-b from-brand-green-dark/30 via-transparent to-brand-green-dark/40"></div>
 
             <header class="mx-auto flex max-w-6xl items-center justify-between px-4 py-5 sm:px-6 lg:px-8">
                 <a href="/" aria-label="Tren Maya">
