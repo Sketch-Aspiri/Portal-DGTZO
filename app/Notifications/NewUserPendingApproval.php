@@ -14,7 +14,7 @@ class NewUserPendingApproval extends Notification implements ShouldQueue
 {
     use Queueable;
 
-    public function __construct(private readonly User $applicant)
+    public function __construct(private readonly User $applicant, private readonly bool $withRequest = false)
     {
         $this->afterCommit();
     }
@@ -30,12 +30,13 @@ class NewUserPendingApproval extends Notification implements ShouldQueue
         return (new MailMessage)
             ->subject(__('portal.pending_mail.subject'))
             ->line(__('portal.pending_mail.line', ['name' => $this->applicant->name]))
+            ->when($this->withRequest, fn (MailMessage $m) => $m->line(__('portal.pending_mail.with_request')))
             ->action(__('portal.pending_mail.action'), route('users.show', $this->applicant));
     }
 
     /** @return array<string, mixed> */
     public function toArray(object $notifiable): array
     {
-        return ['user_id' => $this->applicant->id, 'name' => $this->applicant->name];
+        return ['user_id' => $this->applicant->id, 'name' => $this->applicant->name, 'con_solicitud' => $this->withRequest];
     }
 }

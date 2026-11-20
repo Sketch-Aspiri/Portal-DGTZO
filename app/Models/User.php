@@ -11,6 +11,7 @@ use Database\Factories\UserFactory;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Str;
@@ -47,6 +48,11 @@ class User extends Authenticatable
             'two_factor_confirmed_at' => 'datetime',
             'decided_at' => 'datetime',
         ];
+    }
+
+    public function solicitudAcceso(): HasOne
+    {
+        return $this->hasOne(SolicitudAcceso::class);
     }
 
     public function accesos(): HasMany

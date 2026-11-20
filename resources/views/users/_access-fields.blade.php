@@ -7,9 +7,10 @@
     @continue(in_array($clave, $omitir ?? [], true))
     @php($cat = $catalogos[$clave] ?? null)
     @php($privilegiados = $sistema['roles_privilegiados'] ?? [])
+    @php($pref = isset($solicitud) && $solicitud ? (array) ($solicitud->accesos[$clave] ?? []) : [])
     <fieldset class="rounded-lg border p-4 space-y-3" @disabled($cat === null)>
         <label class="flex items-center gap-2 font-medium">
-            <input type="checkbox" name="accesos[{{ $clave }}][activo]" value="1" @checked(old("accesos.$clave.activo")) @disabled($cat === null)>
+            <input type="checkbox" name="accesos[{{ $clave }}][activo]" value="1" @checked(old("accesos.$clave.activo", ! empty($pref))) @disabled($cat === null)>
             {{ $sistema['nombre'] }}
         </label>
 
@@ -21,7 +22,7 @@
                 <select id="rol-{{ $clave }}" name="accesos[{{ $clave }}][rol]" class="mt-1 block w-full rounded-md border-gray-300 text-sm">
                     @foreach ($sistema['roles'] as $rolClave => $rolNombre)
                         @if ($esAdministrador || ! in_array($rolClave, $privilegiados, true))
-                            <option value="{{ $rolClave }}" @selected(old("accesos.$clave.rol") === $rolClave)>{{ $rolNombre }}</option>
+                            <option value="{{ $rolClave }}" @selected(old("accesos.$clave.rol", $pref['rol'] ?? null) === $rolClave)>{{ $rolNombre }}</option>
                         @endif
                     @endforeach
                 </select>
@@ -40,7 +41,7 @@
                             <p class="text-xs font-semibold text-gray-600">{{ $grupo }}</p>
                             @foreach ($equipos as $equipo)
                                 <label class="flex items-center gap-2 text-sm">
-                                    <input type="checkbox" name="accesos[tickets][team_ids][]" value="{{ $equipo['id'] }}" @checked(in_array($equipo['id'], (array) old('accesos.tickets.team_ids', [])))>
+                                    <input type="checkbox" name="accesos[tickets][team_ids][]" value="{{ $equipo['id'] }}" @checked(in_array($equipo['id'], (array) old('accesos.tickets.team_ids', $pref['team_ids'] ?? [])))>
                                     {{ $equipo['nombre'] }}
                                 </label>
                             @endforeach
@@ -53,7 +54,7 @@
                     <p class="text-xs text-gray-500">{{ __('portal.approvals.coordinations_help') }}</p>
                     @foreach ($cat['coordinaciones'] ?? [] as $coordinacion)
                         <label class="flex items-center gap-2 text-sm">
-                            <input type="checkbox" name="accesos[tickets][coordination_ids][]" value="{{ $coordinacion['id'] }}" @checked(in_array($coordinacion['id'], (array) old('accesos.tickets.coordination_ids', [])))>
+                            <input type="checkbox" name="accesos[tickets][coordination_ids][]" value="{{ $coordinacion['id'] }}" @checked(in_array($coordinacion['id'], (array) old('accesos.tickets.coordination_ids', $pref['coordination_ids'] ?? [])))>
                             {{ $coordinacion['estacion'] ?? '—' }} › {{ $coordinacion['nombre'] }}
                         </label>
                     @endforeach
@@ -65,7 +66,7 @@
                     <select id="estacion-dashboard" name="accesos[dashboard][estacion_id]" class="mt-1 block w-full rounded-md border-gray-300 text-sm">
                         <option value="">—</option>
                         @foreach ($cat['estaciones'] ?? [] as $estacion)
-                            <option value="{{ $estacion['id'] }}" @selected((int) old('accesos.dashboard.estacion_id') === $estacion['id'])>{{ $estacion['nombre'] }}</option>
+                            <option value="{{ $estacion['id'] }}" @selected((int) old('accesos.dashboard.estacion_id', $pref['estacion_id'] ?? 0) === $estacion['id'])>{{ $estacion['nombre'] }}</option>
                         @endforeach
                     </select>
                     <p class="mt-1 text-xs text-gray-500">{{ __('portal.approvals.station_help') }}</p>
@@ -77,7 +78,7 @@
                         <select id="area-dashboard" name="accesos[dashboard][area]" class="mt-1 block w-full rounded-md border-gray-300 text-sm">
                             <option value="">—</option>
                             @foreach ($cat['areas'] as $area)
-                                <option value="{{ $area['clave'] }}" @selected(old('accesos.dashboard.area') === $area['clave'])>{{ $area['nombre'] }}</option>
+                                <option value="{{ $area['clave'] }}" @selected(old('accesos.dashboard.area', $pref['area'] ?? null) === $area['clave'])>{{ $area['nombre'] }}</option>
                             @endforeach
                         </select>
                         <p class="mt-1 text-xs text-gray-500">{{ __('portal.approvals.area_help') }}</p>

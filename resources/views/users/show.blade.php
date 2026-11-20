@@ -17,6 +17,41 @@
                 <p class="mt-1 text-sm">{{ $user->status->label() }}</p>
             </div>
 
+            @if ($solicitud)
+                <div class="bg-white border border-brand-teal/30 shadow-sm shadow-brand-green/5 rounded-xl p-6">
+                    <div class="flex items-center justify-between gap-2">
+                        <h3 class="font-heading font-semibold text-brand-green">{{ __('portal.access_request.applicant_card') }}</h3>
+                        <span class="rounded-full bg-brand-mist px-2.5 py-0.5 text-xs font-semibold text-brand-green">{{ __('portal.access_request.states.'.$solicitud->estado) }}</span>
+                    </div>
+                    <dl class="mt-3 grid gap-x-6 gap-y-2 text-sm sm:grid-cols-2">
+                        <div><dt class="text-gray-500">{{ __('portal.access_request.puesto') }}</dt><dd class="font-medium">{{ $solicitud->puesto }}</dd></div>
+                        <div><dt class="text-gray-500">{{ __('portal.access_request.ubicacion') }}</dt><dd class="font-medium">{{ $solicitud->ubicacion }}</dd></div>
+                        @if ($solicitud->telefono)
+                            <div><dt class="text-gray-500">{{ __('portal.access_request.telefono') }}</dt><dd class="font-medium">{{ $solicitud->telefono }}</dd></div>
+                        @endif
+                        <div class="sm:col-span-2"><dt class="text-gray-500">{{ __('portal.access_request.functions') }}</dt><dd class="whitespace-pre-line">{{ $solicitud->funciones }}</dd></div>
+                        @if ($solicitud->justificacion)
+                            <div class="sm:col-span-2"><dt class="text-gray-500">{{ __('portal.access_request.justification') }}</dt><dd class="whitespace-pre-line">{{ $solicitud->justificacion }}</dd></div>
+                        @endif
+                        <div class="sm:col-span-2">
+                            <dt class="text-gray-500">{{ __('portal.access_request.requested_systems') }}</dt>
+                            @foreach ($solicitud->accesos as $clave => $acceso)
+                                <dd>
+                                    <strong>{{ $catalogo[$clave]['nombre'] ?? $clave }}</strong>
+                                    — {{ $catalogo[$clave]['roles'][$acceso['rol'] ?? ''] ?? ($acceso['rol'] ?? '') }}
+                                    @if (! empty($acceso['detalle']))
+                                        <span class="text-gray-600">({{ __('portal.access_request.detail_label') }}: {{ $acceso['detalle'] }})</span>
+                                    @endif
+                                </dd>
+                            @endforeach
+                        </div>
+                    </dl>
+                    @if ($user->status === \App\Enums\UserStatus::Pending)
+                        <p class="mt-3 text-xs text-gray-500">{{ __('portal.access_request.applicant_hint') }}</p>
+                    @endif
+                </div>
+            @endif
+
             @if ($user->accesos->isNotEmpty())
                 <div class="bg-white border border-brand-green/10 shadow-sm shadow-brand-green/5 rounded-xl p-6">
                     <h3 class="font-semibold">{{ __('portal.approvals.accesses') }}</h3>
@@ -60,7 +95,7 @@
                     <p class="text-sm text-gray-600">{{ __('portal.approvals.grant_help') }}</p>
                     <x-input-error :messages="$errors->get('accesos')" />
 
-                    @include('users._access-fields', ['omitir' => []])
+                    @include('users._access-fields', ['omitir' => [], 'solicitud' => $solicitud])
 
                     <x-primary-button>{{ __('portal.approvals.approve') }}</x-primary-button>
                 </form>

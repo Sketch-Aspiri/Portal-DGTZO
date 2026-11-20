@@ -24,6 +24,11 @@
                             <p class="font-medium truncate">{{ $row->name }}</p>
                             <p class="text-sm text-gray-500 truncate">{{ $row->email }}</p>
                             <p class="text-xs text-gray-400">{{ __('portal.approvals.requested') }} {{ $row->created_at->diffForHumans() }}</p>
+                            @if ($row->status === \App\Enums\UserStatus::Pending)
+                                <span class="mt-1 inline-block rounded-full px-2 py-0.5 text-xs font-semibold {{ $row->solicitudAcceso ? 'bg-brand-mist text-brand-green' : 'bg-amber-100 text-amber-800' }}">
+                                    {{ __('portal.access_request.states.'.($row->solicitudAcceso ? 'enviada' : 'none')) }}
+                                </span>
+                            @endif
                         </div>
                         <a href="{{ route('users.show', $row) }}" class="text-sm font-semibold text-brand-teal underline hover:text-brand-green-dark">{{ __('portal.approvals.review') }}</a>
                     </div>

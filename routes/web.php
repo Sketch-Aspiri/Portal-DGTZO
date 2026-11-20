@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AccessRequestController;
 use App\Http\Controllers\AccountStatusController;
 use App\Http\Controllers\Auth\EcosystemSessionController;
 use App\Http\Controllers\Auth\TwoFactorChallengeController;
@@ -20,6 +21,7 @@ Route::prefix('ecosistema')->middleware('throttle:ecosystem-sso')->group(functio
 Route::middleware('auth')->group(function () {
     // Cuenta pendiente, rechazada o inactiva: solo ve su estado y puede salir.
     Route::get('/cuenta', AccountStatusController::class)->name('account.status');
+    Route::put('/cuenta/solicitud', [AccessRequestController::class, 'store'])->middleware('throttle:access-request')->name('account.request');
 
     Route::middleware('account.active')->group(function () {
         // 2FA: configurar (obligatorio para quienes aprueban) y superar el desafío en cada sesión.

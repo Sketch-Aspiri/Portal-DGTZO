@@ -29,6 +29,7 @@ class UserApprovalController extends Controller
         $status = UserStatus::tryFrom((string) $request->query('estado')) ?? UserStatus::Pending;
 
         $users = User::query()
+            ->with('solicitudAcceso:id,user_id,estado')
             ->where('status', $status->value)
             ->orderBy('created_at')
             ->paginate(20)
@@ -39,7 +40,7 @@ class UserApprovalController extends Controller
 
     public function show(Request $request, User $user): View
     {
-        $user->load('accesos');
+        $user->load('accesos', 'solicitudAcceso');
         $pending = $user->status === UserStatus::Pending;
 
         // Dar acceso a una cuenta activa: solo a otra persona y solo a los sistemas que aún no tiene.
@@ -51,6 +52,7 @@ class UserApprovalController extends Controller
 
         return view('users.show', [
             'user' => $user,
+            'solicitud' => $user->solicitudAcceso,
             'catalogo' => Subsistemas::todos(),
             'catalogos' => collect($offered)->mapWithKeys(
                 fn (string $key): array => [$key => $this->gateway->catalog($key)],

@@ -99,7 +99,7 @@ class PortalAccountsTest extends TestCase
 
         $this->post('/login', ['email' => 'p@example.com', 'password' => self::PASSWORD])->assertRedirect();
         $this->actingAs($user)->get('/inicio')->assertRedirect(route('account.status'));
-        $this->actingAs($user)->get('/cuenta')->assertOk()->assertSee(__('portal.account.pending_title'));
+        $this->actingAs($user)->get('/cuenta')->assertOk()->assertSee(__('portal.access_request.title'));
         $this->actingAs($user)->get('/usuarios')->assertRedirect(route('account.status'));
     }
 

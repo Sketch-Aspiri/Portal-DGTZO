@@ -7,6 +7,7 @@ namespace App\Services;
 use App\Enums\UserStatus;
 use App\Exceptions\BusinessRuleException;
 use App\Jobs\ProvisionAccess;
+use App\Models\SolicitudAcceso;
 use App\Models\User;
 use App\Models\UsuarioSubsistema;
 use Illuminate\Support\Facades\DB;
@@ -40,6 +41,8 @@ class UserApprovalService
                 ])->save();
                 $ids[] = $access->id;
             }
+
+            $fresh->solicitudAcceso?->forceFill(['estado' => SolicitudAcceso::APROBADA])->save();
 
             $fresh->forceFill([
                 'status' => UserStatus::Active,
@@ -134,6 +137,8 @@ class UserApprovalService
             $fresh = User::query()->lockForUpdate()->findOrFail($user->id);
 
             $this->assertDecidable($fresh, $actor);
+
+            $fresh->solicitudAcceso?->forceFill(['estado' => SolicitudAcceso::RECHAZADA])->save();
 
             $fresh->forceFill([
                 'status' => UserStatus::Inactive,
