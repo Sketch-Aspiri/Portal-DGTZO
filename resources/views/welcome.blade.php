@@ -5,25 +5,58 @@
         <title>{{ __('portal.system_name') }}</title>
     </head>
     <body class="font-sans antialiased bg-brand-mist text-gray-900">
-        <main class="min-h-screen flex items-center justify-center px-4 py-10">
-            <div class="w-full max-w-2xl overflow-hidden rounded-2xl border border-brand-green/10 bg-white shadow-lg shadow-brand-green/5 text-center">
-                <div class="h-1.5 bg-brand-green"></div>
-                <div class="p-8 sm:p-12">
-                    <x-application-logo class="h-24 sm:h-28" />
-                    <h1 class="mt-6 font-heading text-2xl sm:text-3xl font-bold leading-tight text-brand-green">{{ __('portal.welcome.title') }}</h1>
-                    <p class="mt-4 text-gray-600">{{ __('portal.welcome.lead') }}</p>
-                    <p class="mt-2 text-sm text-gray-500">{{ __('portal.welcome.how') }}</p>
+        {{-- Hero: foto del tren difuminada con capa verde --}}
+        <section class="relative isolate overflow-hidden text-white">
+            <img src="{{ asset('images/tren-maya.jpeg') }}" alt="" aria-hidden="true"
+                 class="absolute inset-0 -z-20 h-full w-full scale-110 object-cover blur-[3px]">
+            <div class="absolute inset-0 -z-10 bg-gradient-to-br from-brand-green-dark/95 via-brand-green/75 to-brand-teal/45"></div>
 
-                    <div class="mt-8 flex flex-col sm:flex-row gap-3 justify-center">
-                        @auth
-                            <a href="{{ route('dashboard') }}" class="inline-flex justify-center items-center min-h-[44px] rounded-lg bg-brand-green px-5 py-3 text-sm font-semibold text-white hover:bg-brand-green-dark focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal focus-visible:ring-offset-2">{{ __('portal.welcome.open') }}</a>
-                        @else
-                            <a href="{{ route('login') }}" class="inline-flex justify-center items-center min-h-[44px] rounded-lg bg-brand-green px-5 py-3 text-sm font-semibold text-white hover:bg-brand-green-dark focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal focus-visible:ring-offset-2">{{ __('portal.welcome.login') }}</a>
-                            <a href="{{ route('register') }}" class="inline-flex justify-center items-center min-h-[44px] rounded-lg border border-brand-teal/60 px-5 py-3 text-sm font-semibold text-brand-teal hover:bg-brand-mist focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal focus-visible:ring-offset-2">{{ __('portal.welcome.register') }}</a>
-                        @endauth
-                    </div>
+            <header class="mx-auto flex max-w-6xl items-center justify-between px-4 py-5 sm:px-6 lg:px-8">
+                <a href="/" aria-label="Tren Maya">
+                    <x-application-logo class="h-12 sm:h-14 [&_img]:brightness-0 [&_img]:invert" />
+                </a>
+                <nav class="flex items-center gap-2 sm:gap-3">
+                    @auth
+                        <a href="{{ route('dashboard') }}" class="inline-flex min-h-[44px] items-center rounded-lg bg-white px-4 text-sm font-semibold text-brand-green hover:bg-brand-mist focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-brand-green">{{ __('portal.welcome.open') }}</a>
+                    @else
+                        <a href="{{ route('login') }}" class="inline-flex min-h-[44px] items-center rounded-lg px-3 text-sm font-semibold text-white hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white">{{ __('portal.welcome.login') }}</a>
+                        <a href="{{ route('register') }}" class="inline-flex min-h-[44px] items-center rounded-lg bg-white px-4 text-sm font-semibold text-brand-green hover:bg-brand-mist focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-brand-green">{{ __('portal.welcome.register') }}</a>
+                    @endauth
+                </nav>
+            </header>
+
+            <div class="mx-auto max-w-6xl px-4 pb-44 pt-16 sm:px-6 sm:pt-24 lg:px-8">
+                <p class="text-xs font-semibold uppercase tracking-[0.2em] text-brand-mint sm:text-sm">{{ __('portal.welcome.eyebrow') }}</p>
+                <h1 class="mt-4 max-w-3xl font-heading text-3xl font-bold leading-tight sm:text-5xl">{{ __('portal.welcome.title') }}</h1>
+                <p class="mt-5 max-w-2xl text-lg text-white/90">{{ __('portal.welcome.lead') }}</p>
+
+                <div class="mt-8 flex flex-col gap-3 sm:flex-row">
+                    @auth
+                        <a href="{{ route('dashboard') }}" class="inline-flex min-h-[48px] items-center justify-center rounded-lg bg-white px-6 text-sm font-semibold text-brand-green hover:bg-brand-mist focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-brand-green">{{ __('portal.welcome.open') }}</a>
+                    @else
+                        <a href="{{ route('login') }}" class="inline-flex min-h-[48px] items-center justify-center rounded-lg bg-white px-6 text-sm font-semibold text-brand-green hover:bg-brand-mist focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-brand-green">{{ __('portal.welcome.login') }}</a>
+                        <a href="{{ route('register') }}" class="inline-flex min-h-[48px] items-center justify-center rounded-lg border border-white/70 px-6 text-sm font-semibold text-white hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-brand-green">{{ __('portal.welcome.register') }}</a>
+                    @endauth
                 </div>
             </div>
+        </section>
+
+        {{-- Pasos, montados sobre el borde del hero --}}
+        <main class="relative z-10 mx-auto -mt-28 max-w-6xl px-4 pb-16 sm:px-6 lg:px-8">
+            <h2 class="sr-only">{{ __('portal.welcome.steps_title') }}</h2>
+            <ol class="grid gap-4 md:grid-cols-3">
+                @foreach ([1, 2, 3] as $n)
+                    <li class="rounded-xl border border-brand-green/10 bg-white p-6 shadow-lg shadow-brand-green/10">
+                        <span class="flex h-10 w-10 items-center justify-center rounded-lg bg-brand-mist font-heading text-lg font-bold text-brand-teal" aria-hidden="true">{{ $n }}</span>
+                        <h3 class="mt-4 font-heading text-lg font-semibold text-brand-green">{{ __('portal.welcome.step'.$n.'_title') }}</h3>
+                        <p class="mt-2 text-sm leading-relaxed text-gray-600">{{ __('portal.welcome.step'.$n.'_text') }}</p>
+                    </li>
+                @endforeach
+            </ol>
         </main>
+
+        <footer class="border-t border-brand-green/10 bg-white py-6 text-center text-xs text-gray-500">
+            {{ __('portal.welcome.footer') }}
+        </footer>
     </body>
 </html>
