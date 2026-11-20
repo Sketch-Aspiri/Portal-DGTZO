@@ -22,6 +22,14 @@ return [
         'action' => 'Revisar solicitud',
         'with_request' => 'Ya llenó su solicitud de acceso: sistemas, equipos y funciones.',
     ],
+    'migrated_mail' => [
+        'subject' => 'Ya puedes entrar a tus sistemas con una sola contraseña',
+        'greeting' => 'Hola, :name',
+        'line1' => 'La Zona Oriente estrenó un acceso único: con tu cuenta del portal entras al Dashboard y a Tickets sin escribir una contraseña en cada uno.',
+        'line2' => 'Ya creamos tu cuenta del portal con tu correo. Para estrenarla, crea tu contraseña con el botón de abajo.',
+        'action' => 'Crear mi contraseña',
+        'line3' => 'La primera vez que abras cada sistema te pedirá una sola vez tu contraseña de ese sistema para vincular las cuentas; después ya no.',
+    ],
     'access_request' => [
         'sent' => 'Solicitud enviada. La Zona la revisará y te avisaremos.',
         'title' => 'Cuéntanos qué necesitas',
