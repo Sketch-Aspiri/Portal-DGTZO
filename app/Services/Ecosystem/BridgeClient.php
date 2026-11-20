@@ -5,6 +5,8 @@ declare(strict_types=1);
 namespace App\Services\Ecosystem;
 
 use Illuminate\Http\Client\Response;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Str;
 use Throwable;
@@ -24,6 +26,41 @@ final class BridgeClient
     {
         return strlen((string) config('ecosistema.puente.secretos.'.$subsystem)) >= 32
             && is_string(config('ecosistema.urls.'.$subsystem));
+    }
+
+    /**
+     * Verifica una llamada ENTRANTE de un subsistema (mismo formato, con su `sistema` en la firma): fecha dentro de la
+     * ventana, nonce de un solo uso y firma con el secreto de ese subsistema.
+     */
+    public function verifyIncoming(Request $request, string $subsystem): bool
+    {
+        $date = (string) $request->header('X-Puente-Fecha', '');
+        $nonce = (string) $request->header('X-Puente-Nonce', '');
+        $signature = (string) $request->header('X-Puente-Firma', '');
+
+        if (! $this->configured($subsystem)
+            || preg_match('/^\d{1,12}$/D', $date) !== 1
+            || preg_match('/^[A-Za-z0-9]{20,64}$/D', $nonce) !== 1
+            || abs(now()->getTimestamp() - (int) $date) > 300) {
+            return false;
+        }
+
+        $query = $request->query->all();
+        ksort($query);
+
+        $expected = hash_hmac('sha256', implode('
+', [
+            strtoupper($request->getMethod()),
+            '/'.ltrim($request->path(), '/'),
+            http_build_query($query, '', '&', PHP_QUERY_RFC3986),
+            $subsystem,
+            $date,
+            $nonce,
+            hash('sha256', (string) $request->getContent()),
+        ]), (string) config('ecosistema.puente.secretos.'.$subsystem));
+
+        return hash_equals($expected, $signature)
+            && Cache::add('ecosistema:puente:entrada:'.hash('sha256', $subsystem.'|'.$nonce), true, 660);
     }
 
     /**

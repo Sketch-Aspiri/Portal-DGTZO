@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\EcosystemSessionController;
 use App\Http\Controllers\Auth\TwoFactorChallengeController;
 use App\Http\Controllers\Auth\TwoFactorSetupController;
 use App\Http\Controllers\LauncherController;
+use App\Http\Controllers\ProfileAvatarController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserApprovalController;
 use Illuminate\Support\Facades\Route;
@@ -39,6 +40,9 @@ Route::middleware('auth')->group(function () {
 
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
+        Route::post('/profile/avatar', [ProfileAvatarController::class, 'update'])->middleware('throttle:avatar-upload')->name('profile.avatar.update');
+        Route::delete('/profile/avatar', [ProfileAvatarController::class, 'destroy'])->middleware('throttle:avatar-upload')->name('profile.avatar.destroy');
+        Route::get('/avatars/{user}', [ProfileAvatarController::class, 'show'])->middleware('throttle:avatar-view')->name('avatars.show');
 
         Route::middleware('can:approve-accounts')->prefix('usuarios')->name('users.')->group(function () {
             Route::get('/', [UserApprovalController::class, 'index'])->name('index');

@@ -60,6 +60,15 @@ class User extends Authenticatable
         return $this->hasMany(UsuarioSubsistema::class);
     }
 
+    public function avatarUrl(): ?string
+    {
+        if ($this->avatar_path === null) {
+            return null;
+        }
+
+        return route('avatars.show', ['user' => $this->getKey(), 'v' => substr(sha1((string) $this->avatar_path), 0, 10)]);
+    }
+
     public function isActive(): bool
     {
         return $this->status === UserStatus::Active;

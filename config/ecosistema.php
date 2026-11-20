@@ -39,4 +39,14 @@ return [
         // Segundos que se guarda el catálogo (equipos, estaciones) que muestra el formulario de aprobación.
         'cache_catalogo' => 60,
     ],
+    // Foto de perfil única: el portal guarda la foto y la reparte a los subsistemas que ya la reciben (`subsistemas`);
+    // un cambio hecho en un subsistema llega por /interno/subsistemas/avatar con el secreto de ese subsistema.
+    'avatares' => [
+        'subsistemas' => array_values(array_filter(array_map('trim', explode(',', (string) env('PORTAL_AVATAR_SUBSISTEMAS', 'tickets'))))),
+        'directorio' => 'avatars',
+        'tamano' => 256,
+        'max_kb' => (int) env('AVATAR_MAX_KB', 4096),
+        'max_dimension' => 6000,
+        'max_bytes_puente' => 1024 * 1024,
+    ],
 ];

@@ -32,6 +32,8 @@ class AppServiceProvider extends ServiceProvider
         RateLimiter::for('two-factor', fn (Request $request) => Limit::perMinute(10)->by((string) $request->user()?->id));
         RateLimiter::for('ecosystem-sso', fn (Request $request) => Limit::perMinute(60)->by($request->ip()));
         RateLimiter::for('access-request', fn (Request $request) => Limit::perHour(10)->by((string) $request->user()?->id));
+        RateLimiter::for('avatar-upload', fn (Request $request) => Limit::perHour(20)->by((string) $request->user()?->id));
+        RateLimiter::for('avatar-view', fn (Request $request) => Limit::perMinute(600)->by((string) $request->user()?->id));
         RateLimiter::for('approvals', fn (Request $request) => Limit::perMinute(30)->by((string) $request->user()?->id));
     }
 }
