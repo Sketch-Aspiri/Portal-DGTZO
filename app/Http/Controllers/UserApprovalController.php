@@ -28,14 +28,24 @@ class UserApprovalController extends Controller
     {
         $status = UserStatus::tryFrom((string) $request->query('estado')) ?? UserStatus::Pending;
 
+        $term = trim((string) $request->query('q', ''));
+        $term = mb_substr($term, 0, 100);
+
         $users = User::query()
-            ->with('solicitudAcceso:id,user_id,estado')
+            ->with(['solicitudAcceso:id,user_id,estado', 'accesos:id,user_id,subsistema'])
             ->where('status', $status->value)
+            ->when($term !== '', function ($query) use ($term): void {
+                $like = '%'.addcslashes($term, '\\%_').'%';
+                $query->where(fn ($q) => $q->where('name', 'like', $like)->orWhere('email', 'like', $like));
+            })
             ->orderBy('created_at')
             ->paginate(20)
             ->withQueryString();
 
-        return view('users.index', ['users' => $users, 'status' => $status]);
+        // Totales por estado para las pestañas (una sola consulta).
+        $counts = User::query()->selectRaw('status, count(*) as total')->groupBy('status')->pluck('total', 'status');
+
+        return view('users.index', ['users' => $users, 'status' => $status, 'counts' => $counts, 'term' => $term]);
     }
 
     public function show(Request $request, User $user): View

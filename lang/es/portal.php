@@ -249,6 +249,17 @@ return [
     ],
     'approvals' => [
         'title' => 'Solicitudes de cuenta',
+        'subtitle' => 'Revisa quién pidió entrar, ubica a cada persona y dale acceso a sus sistemas.',
+        'search' => 'Buscar por nombre o correo',
+        'search_button' => 'Buscar',
+        'clear' => 'Limpiar',
+        'results_for' => 'Resultados para «:q»',
+        'no_systems' => 'Sin sistemas',
+        'state_help' => [
+            'pending' => 'Esperan tu decisión',
+            'active' => 'Con acceso al portal',
+            'inactive' => 'Rechazadas o desactivadas',
+        ],
         'empty' => 'No hay cuentas en este estado.',
         'review' => 'Revisar',
         'requested' => 'Solicitada',
