@@ -4,6 +4,7 @@ import '@fontsource/figtree/600.css';
 import '@fontsource/poppins/600.css';
 import '@fontsource/poppins/700.css';
 
+import './shader-background';
 import Alpine from 'alpinejs';
 
 window.Alpine = Alpine;
