@@ -5,7 +5,7 @@
     <div class="mt-4 flex justify-center" role="img" aria-label="{{ __('portal.two_factor.qr_label') }}">{!! $qr_svg !!}</div>
 
     <p class="mt-4 text-sm text-gray-600">{{ __('portal.two_factor.manual_key') }}</p>
-    <p class="mt-1 break-all rounded bg-gray-100 p-2 font-mono text-sm">{{ $secret }}</p>
+    <p class="mt-1 break-all rounded bg-brand-mist p-2 font-mono text-sm">{{ $secret }}</p>
 
     <form method="POST" action="{{ route('two-factor.setup') }}" class="mt-6">
         @csrf
