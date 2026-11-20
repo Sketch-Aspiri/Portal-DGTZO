@@ -47,7 +47,7 @@ class PortalAccountsTest extends TestCase
     public function test_welcome_page_shows_the_system_name_and_links(): void
     {
         $this->get('/')->assertOk()
-            ->assertSee('Sistema de Gestión Territorial Zona Oriente Tren Maya')
+            ->assertSee('Sistema de Gestión Territorial Zona Oriente')
             ->assertSee(route('register'), false)
             ->assertSee(route('login'), false);
     }

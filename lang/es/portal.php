@@ -1,7 +1,7 @@
 <?php
 
 return [
-    'system_name' => 'Sistema de Gestión Territorial Zona Oriente Tren Maya',
+    'system_name' => 'Sistema de Gestión Territorial Zona Oriente',
     'status' => [
         'pending' => 'Pendiente',
         'active' => 'Activa',
