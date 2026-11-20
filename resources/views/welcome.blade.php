@@ -174,7 +174,7 @@
         </main>
 
         <footer class="mt-12 bg-brand-green-dark py-8 text-center text-xs text-white/85">
-            <x-application-logo class="mx-auto mb-3 h-10 opacity-90 [&_img]:brightness-0 [&_img]:invert" />
+            <div class="mb-3 flex justify-center"><x-application-logo class="h-10 opacity-90 [&_img]:brightness-0 [&_img]:invert" /></div>
             {{ __('portal.welcome.footer') }}
         </footer>
     </body>
