@@ -31,7 +31,15 @@
             <p class="mb-4 rounded-lg bg-green-100 px-3 py-2 text-sm text-green-800">{{ session('status') }}</p>
         @endif
 
-        @if (count($subsistemas))
+        @if (! count($subsistemas))
+            <div class="rise mb-5 rounded-2xl border border-dashed border-brand-green/25 bg-white p-10 text-center shadow-lg shadow-brand-green/10">
+                <span class="mx-auto flex h-14 w-14 items-center justify-center rounded-xl bg-brand-mist text-brand-teal">
+                    <svg class="h-7 w-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 118 0v3"/></svg>
+                </span>
+                <p class="mt-4 text-gray-600">{{ __('portal.launcher.empty') }}</p>
+            </div>
+        @endif
+
             <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
                 @foreach ($subsistemas as $clave => $sistema)
                     <a href="{{ $sistema['url'] }}"
@@ -61,15 +69,24 @@
                         </div>
                     </a>
                 @endforeach
+
+                {{-- Temayin AI: aún sin dirección; se muestra a todas las cuentas activas como próxima herramienta. --}}
+                <div class="rise relative flex flex-col overflow-hidden rounded-2xl border border-brand-green/10 bg-gradient-to-br from-brand-green-dark via-brand-green to-brand-teal p-6 text-white shadow-lg shadow-brand-green/20"
+                     style="animation-delay: {{ 0.15 + count($subsistemas) * 0.08 }}s" role="group" aria-label="{{ __('portal.launcher.temayin_name') }}">
+                    <span class="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-brand-mint/20 blur-2xl" aria-hidden="true"></span>
+                    <div class="relative flex items-start justify-between">
+                        <span class="flex h-14 w-14 items-center justify-center rounded-xl bg-white/15 ring-1 ring-white/30 backdrop-blur" aria-hidden="true">
+                            <svg class="h-7 w-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l1.8 4.6L18.5 9l-4.7 1.4L12 15l-1.8-4.6L5.5 9l4.7-1.4L12 3z"/><path d="M18 15l.9 2.1L21 18l-2.1.9L18 21l-.9-2.1L15 18l2.1-.9L18 15z"/></svg>
+                        </span>
+                        <span class="inline-flex items-center gap-1.5 rounded-full bg-white/15 px-2.5 py-1 text-xs font-semibold ring-1 ring-white/25">
+                            <span class="h-1.5 w-1.5 rounded-full bg-amber-300"></span>{{ __('portal.launcher.coming_soon') }}
+                        </span>
+                    </div>
+                    <h2 class="relative mt-5 font-heading text-xl font-semibold">{{ __('portal.launcher.temayin_name') }}</h2>
+                    <p class="relative mt-2 flex-1 text-sm leading-relaxed text-white/85">{{ __('portal.launcher.temayin_text') }}</p>
+                    <div class="relative mt-5 border-t border-white/20 pt-4 text-xs text-white/75">{{ __('portal.launcher.temayin_note') }}</div>
+                </div>
             </div>
-        @else
-            <div class="rise rounded-2xl border border-dashed border-brand-green/25 bg-white p-10 text-center shadow-lg shadow-brand-green/10">
-                <span class="mx-auto flex h-14 w-14 items-center justify-center rounded-xl bg-brand-mist text-brand-teal">
-                    <svg class="h-7 w-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 118 0v3"/></svg>
-                </span>
-                <p class="mt-4 text-gray-600">{{ __('portal.launcher.empty') }}</p>
-            </div>
-        @endif
 
         {{-- Accesos rápidos --}}
         <section class="mt-12" aria-labelledby="accesos-rapidos">
