@@ -71,7 +71,7 @@ return [
     'saved' => 'Guardado.',
     'users' => 'Solicitudes',
     'welcome' => [
-        'title' => 'Bienvenido al Sistema de Gestión Territorial Zona Oriente Tren Maya',
+        'title' => 'Bienvenido al Sistema de Gestión Territorial Zona Oriente',
         'lead' => 'Un solo acceso y un solo perfil para todos los sistemas de la Zona Oriente.',
         'login' => 'Iniciar sesión',
         'register' => 'Crear cuenta',

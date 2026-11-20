@@ -19,7 +19,7 @@
                 {{ $slot }}
             </main>
 
-            <footer class="py-6 text-center text-xs text-gray-500">
+            <footer class="bg-brand-green py-6 text-center text-xs text-white/90">
                 {{ __('portal.system_name') }}
             </footer>
         </div>

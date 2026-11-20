@@ -4,7 +4,7 @@
         @include('layouts.partials.head')
         <title>{{ __('portal.system_name') }}</title>
     </head>
-    <body class="font-sans antialiased bg-brand-mist text-gray-900">
+    <body class="flex min-h-screen flex-col font-sans antialiased bg-brand-mist text-gray-900">
         {{-- Hero: foto del tren difuminada con capa verde --}}
         <section class="relative isolate overflow-hidden text-white">
             <img src="{{ asset('images/tren-maya.jpeg') }}" alt="" aria-hidden="true"
@@ -42,7 +42,7 @@
         </section>
 
         {{-- Pasos, montados sobre el borde del hero --}}
-        <main class="relative z-10 mx-auto -mt-28 max-w-6xl px-4 pb-16 sm:px-6 lg:px-8">
+        <main class="relative z-10 mx-auto -mt-28 w-full max-w-6xl flex-1 px-4 pb-16 sm:px-6 lg:px-8">
             <h2 class="sr-only">{{ __('portal.welcome.steps_title') }}</h2>
             <ol class="grid gap-4 md:grid-cols-3">
                 @foreach ([1, 2, 3] as $n)
@@ -55,7 +55,7 @@
             </ol>
         </main>
 
-        <footer class="border-t border-brand-green/10 bg-white py-6 text-center text-xs text-gray-500">
+        <footer class="bg-brand-green py-6 text-center text-xs text-white/90">
             {{ __('portal.welcome.footer') }}
         </footer>
     </body>
