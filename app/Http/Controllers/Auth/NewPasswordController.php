@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Jobs\ProvisionAccess;
 use App\Models\User;
+use App\Models\UsuarioSubsistema;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
@@ -49,6 +51,13 @@ class NewPasswordController extends Controller
                 ])->save();
 
                 event(new PasswordReset($user));
+
+                // Cuenta creada por un administrador: sus cuentas en los sistemas esperaban a que definiera la
+                // contraseña para crearse con ella (si ya se crearon, ProvisionAccess no hace nada).
+                if ($user->isActive()) {
+                    $user->accesos()->where('aprovisionamiento', UsuarioSubsistema::PENDIENTE)->whereNull('accion_pendiente')->whereNull('aprovisionado_at')
+                        ->pluck('id')->each(fn (int $id) => ProvisionAccess::dispatch($id));
+                }
             }
         );
 

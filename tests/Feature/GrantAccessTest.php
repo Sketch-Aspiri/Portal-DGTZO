@@ -95,8 +95,9 @@ class GrantAccessTest extends TestCase
         // La pantalla ofrece solo el que falta.
         $this->asVerified($admin)->get("/usuarios/{$target->id}")->assertOk()
             ->assertSee(__('portal.approvals.add_access_button'))
-            ->assertSee('accesos[dashboard][activo]', false)
-            ->assertDontSee('accesos[tickets][activo]', false);
+            ->assertSee('type="checkbox" name="accesos[dashboard][activo]"', false)
+            // Tickets ya lo tiene: no se ofrece como casilla de "dar acceso" (solo su formulario de edición).
+            ->assertDontSee('type="checkbox" name="accesos[tickets][activo]"', false);
     }
 
     public function test_the_form_is_not_offered_when_the_person_has_every_system(): void

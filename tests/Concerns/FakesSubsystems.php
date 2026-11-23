@@ -35,6 +35,8 @@ trait FakesSubsystems
             'https://dashboard.test/interno/portal/catalogo' => Http::response($this->dashboardCatalog()),
             'https://tickets.test/interno/portal/cuentas' => Http::response(['estado' => 'creada', 'user_id' => 1]),
             'https://dashboard.test/interno/portal/cuentas' => Http::response(['estado' => 'creada', 'user_id' => 1]),
+            'https://tickets.test/interno/portal/cuentas/*' => Http::response(['estado' => 'actualizada', 'user_id' => 1]),
+            'https://dashboard.test/interno/portal/cuentas/*' => Http::response(['estado' => 'actualizada', 'user_id' => 1]),
         ]);
     }
 
@@ -85,6 +87,25 @@ trait FakesSubsystems
             "https://$subsystem.test/interno/portal/cuentas" => $response,
             'https://tickets.test/interno/portal/catalogo' => Http::response($this->ticketsCatalog()),
             'https://dashboard.test/interno/portal/catalogo' => Http::response($this->dashboardCatalog()),
+        ]);
+    }
+
+    /** Cambia lo que responde un subsistema a los cambios posteriores al alta (PUT cuentas/{id}). */
+    protected function fakeSyncResponse(string $subsystem, mixed $response): void
+    {
+        Http::swap(new Factory);
+        Cache::flush();
+
+        // El otro subsistema conserva su respuesta por omision (no se repite la llave del que se cambia).
+        $other = $subsystem === 'tickets' ? 'dashboard' : 'tickets';
+
+        Http::fake([
+            "https://$subsystem.test/interno/portal/cuentas/*" => $response,
+            "https://$other.test/interno/portal/cuentas/*" => Http::response(['estado' => 'actualizada']),
+            'https://tickets.test/interno/portal/catalogo' => Http::response($this->ticketsCatalog()),
+            'https://dashboard.test/interno/portal/catalogo' => Http::response($this->dashboardCatalog()),
+            'https://tickets.test/interno/portal/cuentas' => Http::response(['estado' => 'creada', 'user_id' => 1]),
+            'https://dashboard.test/interno/portal/cuentas' => Http::response(['estado' => 'creada', 'user_id' => 1]),
         ]);
     }
 

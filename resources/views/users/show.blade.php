@@ -13,8 +13,49 @@
             @endif
 
             <div class="bg-white border border-brand-green/10 shadow-sm shadow-brand-green/5 rounded-xl p-6">
-                <p class="text-sm text-gray-600">{{ $user->email }}</p>
-                <p class="mt-1 text-sm">{{ $user->status->label() }}</p>
+                <div class="flex flex-wrap items-start justify-between gap-3">
+                    <div>
+                        <p class="text-sm text-gray-600">{{ $user->email }}</p>
+                        <p class="mt-1 flex flex-wrap items-center gap-2 text-sm">
+                            <span @class([
+                                'rounded-full px-2 py-0.5 text-xs font-semibold',
+                                'bg-green-100 text-green-800' => $user->status === \App\Enums\UserStatus::Active,
+                                'bg-amber-100 text-amber-800' => $user->status === \App\Enums\UserStatus::Pending,
+                                'bg-gray-200 text-gray-700' => $user->status === \App\Enums\UserStatus::Inactive,
+                            ])>{{ $user->status->label() }}</span>
+                            @if ($user->portal_role !== \App\Enums\PortalRole::Usuario)
+                                <span class="rounded-full bg-brand-mist px-2 py-0.5 text-xs font-semibold text-brand-green">{{ __('portal.roles.'.$user->portal_role->value) }}</span>
+                            @endif
+                        </p>
+                    </div>
+
+                    @if ($puedeGestionar)
+                        <div class="flex flex-wrap items-center gap-2">
+                            @if ($user->status === \App\Enums\UserStatus::Active)
+                                <form method="POST" action="{{ route('users.invite', $user) }}">
+                                    @csrf
+                                    <button type="submit" class="min-h-[40px] rounded-lg border border-brand-green/20 px-3 text-sm font-semibold text-brand-green hover:bg-brand-mist focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal">{{ __('portal.approvals.send_password_link') }}</button>
+                                </form>
+                                <details class="relative">
+                                    <summary class="inline-flex min-h-[40px] cursor-pointer list-none items-center rounded-lg border border-red-200 px-3 text-sm font-semibold text-red-700 hover:bg-red-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400">{{ __('portal.approvals.deactivate') }}</summary>
+                                    <form method="POST" action="{{ route('users.deactivate', $user) }}" class="absolute right-0 z-20 mt-2 w-72 space-y-3 rounded-xl border border-red-200 bg-white p-4 shadow-lg">
+                                        @csrf
+                                        <p class="text-sm text-gray-700">{{ __('portal.approvals.deactivate_confirm') }}</p>
+                                        <x-danger-button>{{ __('portal.approvals.deactivate_yes') }}</x-danger-button>
+                                    </form>
+                                </details>
+                            @elseif ($puedeReactivar)
+                                <form method="POST" action="{{ route('users.reactivate', $user) }}">
+                                    @csrf
+                                    <x-primary-button>{{ __('portal.approvals.reactivate') }}</x-primary-button>
+                                </form>
+                            @endif
+                        </div>
+                    @endif
+                </div>
+                @if ($puedeGestionar && $user->status === \App\Enums\UserStatus::Active)
+                    <p class="mt-3 text-xs text-gray-500">{{ __('portal.approvals.deactivate_help') }}</p>
+                @endif
             </div>
 
             @if ($solicitud)
@@ -58,33 +99,61 @@
                     <ul class="mt-3 divide-y text-sm">
                         @foreach ($user->accesos as $acceso)
                             @php($sistema = $catalogo[$acceso->subsistema] ?? null)
-                            <li class="flex flex-wrap items-center justify-between gap-2 py-2">
-                                <span>
-                                    <strong>{{ $sistema['nombre'] ?? $acceso->subsistema }}</strong>
-                                    — {{ $sistema['roles'][$acceso->rol] ?? $acceso->rol }}
-                                </span>
-                                <span class="flex items-center gap-3">
-                                    <span @class([
-                                        'text-green-700' => $acceso->aprovisionamiento === 'ok',
-                                        'text-amber-700' => in_array($acceso->aprovisionamiento, ['pendiente', 'conflicto'], true),
-                                        'text-red-700' => $acceso->aprovisionamiento === 'error',
-                                    ])>{{ __('portal.provision.state.'.$acceso->aprovisionamiento) }}</span>
-                                    @if ($acceso->aprovisionamiento === 'error')
-                                        <form method="POST" action="{{ route('users.retry', [$user, $acceso->subsistema]) }}">
-                                            @csrf
-                                            <button type="submit" class="underline">{{ __('portal.approvals.retry') }}</button>
-                                        </form>
-                                    @endif
-                                </span>
+                            <li class="py-3">
+                                <div class="flex flex-wrap items-center justify-between gap-2">
+                                    <span>
+                                        <strong>{{ $sistema['nombre'] ?? $acceso->subsistema }}</strong>
+                                        — {{ $sistema['roles'][$acceso->rol] ?? $acceso->rol }}
+                                    </span>
+                                    <span class="flex items-center gap-3">
+                                        <span @class([
+                                            'text-green-700' => $acceso->aprovisionamiento === 'ok',
+                                            'text-amber-700' => in_array($acceso->aprovisionamiento, ['pendiente', 'conflicto'], true),
+                                            'text-red-700' => $acceso->aprovisionamiento === 'error',
+                                        ])>
+                                            {{ __('portal.provision.state.'.$acceso->aprovisionamiento) }}@if ($acceso->accion_pendiente && $acceso->aprovisionamiento !== 'ok') · {{ __('portal.provision.action.'.$acceso->accion_pendiente) }}@endif
+                                        </span>
+                                        @if ($acceso->aprovisionamiento === 'error')
+                                            <form method="POST" action="{{ route('users.retry', [$user, $acceso->subsistema]) }}">
+                                                @csrf
+                                                <button type="submit" class="underline">{{ __('portal.approvals.retry') }}</button>
+                                            </form>
+                                        @endif
+                                        @if ($puedeEditar)
+                                            <details class="relative">
+                                                <summary class="cursor-pointer list-none font-semibold text-red-700 underline">{{ __('portal.approvals.revoke') }}</summary>
+                                                <form method="POST" action="{{ route('users.access.revoke', [$user, $acceso->subsistema]) }}" class="absolute right-0 z-20 mt-2 w-64 space-y-3 rounded-xl border border-red-200 bg-white p-4 shadow-lg">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <p class="text-sm text-gray-700">{{ __('portal.approvals.revoke_confirm', ['sistema' => $sistema['nombre'] ?? $acceso->subsistema]) }}</p>
+                                                    <x-danger-button>{{ __('portal.approvals.revoke_yes') }}</x-danger-button>
+                                                </form>
+                                            </details>
+                                        @endif
+                                    </span>
+                                </div>
                                 @if ($acceso->ultimo_error)
-                                    <span class="basis-full text-xs text-gray-500">{{ $acceso->ultimo_error }}</span>
+                                    <p class="mt-1 text-xs text-gray-500">{{ $acceso->ultimo_error }}</p>
+                                @endif
+
+                                @if ($puedeEditar)
+                                    <details class="mt-2" @if ($errors->has('accesos') || collect($errors->keys())->contains(fn ($k) => str_starts_with($k, 'accesos.'.$acceso->subsistema.'.'))) open @endif>
+                                        <summary class="cursor-pointer text-sm font-semibold text-brand-teal">{{ __('portal.approvals.edit_access') }}</summary>
+                                        <form method="POST" action="{{ route('users.access.update', [$user, $acceso->subsistema]) }}" class="mt-3 space-y-3">
+                                            @csrf
+                                            @method('PUT')
+                                            @include('users._access-fields', [
+                                                'omitir' => array_values(array_diff(array_keys($catalogo), [$acceso->subsistema])),
+                                                'fijo' => true,
+                                                'prefill' => [$acceso->subsistema => ['rol' => $acceso->rol] + (array) $acceso->contexto],
+                                            ])
+                                            <x-primary-button>{{ __('portal.approvals.save_changes') }}</x-primary-button>
+                                        </form>
+                                    </details>
                                 @endif
                             </li>
                         @endforeach
                     </ul>
-                    @if ($user->status === \App\Enums\UserStatus::Active)
-                        <p class="mt-3 text-xs text-gray-500">{{ __('portal.approvals.no_removal') }}</p>
-                    @endif
                 </div>
             @endif
 

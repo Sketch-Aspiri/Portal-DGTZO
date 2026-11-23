@@ -57,7 +57,19 @@ Route::middleware('auth')->group(function () {
 
         Route::middleware('can:approve-accounts')->prefix('usuarios')->name('users.')->group(function () {
             Route::get('/', [UserApprovalController::class, 'index'])->name('index');
+            Route::get('/nueva', [UserApprovalController::class, 'create'])->name('create');
+            Route::post('/', [UserApprovalController::class, 'store'])->middleware('throttle:approvals')->name('store');
             Route::get('/{user}', [UserApprovalController::class, 'show'])->name('show');
+            Route::put('/{user}/accesos/{subsistema}', [UserApprovalController::class, 'updateAccess'])
+                ->where('subsistema', '[a-z_]{2,40}')->middleware('throttle:approvals')->name('access.update');
+            Route::delete('/{user}/accesos/{subsistema}', [UserApprovalController::class, 'revokeAccess'])
+                ->where('subsistema', '[a-z_]{2,40}')->middleware('throttle:approvals')->name('access.revoke');
+            Route::post('/{user}/desactivar', [UserApprovalController::class, 'deactivate'])
+                ->middleware('throttle:approvals')->name('deactivate');
+            Route::post('/{user}/reactivar', [UserApprovalController::class, 'reactivate'])
+                ->middleware('throttle:approvals')->name('reactivate');
+            Route::post('/{user}/enlace-contrasena', [UserApprovalController::class, 'invite'])
+                ->middleware('throttle:approvals')->name('invite');
             Route::post('/{user}/aprobar', [UserApprovalController::class, 'approve'])
                 ->middleware('throttle:approvals')->name('approve');
             Route::post('/{user}/rechazar', [UserApprovalController::class, 'reject'])

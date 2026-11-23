@@ -14,8 +14,8 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-use NotificationChannels\WebPush\HasPushSubscriptions;
 use Illuminate\Support\Str;
+use NotificationChannels\WebPush\HasPushSubscriptions;
 
 class User extends Authenticatable
 {
@@ -67,7 +67,14 @@ class User extends Authenticatable
         return $this->notificationPreferences()->where('subsistema', $subsistema)->where('muted', true)->exists();
     }
 
+    /** Accesos vigentes (los quitados desde el portal no cuentan: ni lanzador, ni SSO, ni avisos). */
     public function accesos(): HasMany
+    {
+        return $this->hasMany(UsuarioSubsistema::class)->whereNull('revocado_at');
+    }
+
+    /** Todos los accesos, también los quitados (para reactivarlos sin chocar con el índice único). */
+    public function todosLosAccesos(): HasMany
     {
         return $this->hasMany(UsuarioSubsistema::class);
     }

@@ -18,6 +18,7 @@
         <div class="mx-auto max-w-5xl px-4 pb-20 pt-9 sm:px-6 lg:px-8">
             <h1 class="rise font-heading text-3xl font-bold sm:text-4xl">{{ __('portal.approvals.title') }}</h1>
             <p class="rise mt-2 max-w-2xl text-white/90" style="animation-delay:.08s">{{ __('portal.approvals.subtitle') }}</p>
+            <a href="{{ route('users.create') }}" class="rise mt-5 inline-flex min-h-[44px] items-center rounded-xl bg-white px-5 text-sm font-semibold text-brand-green shadow-sm transition hover:bg-brand-mist focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-brand-green" style="animation-delay:.12s">+ {{ __('portal.approvals.new_account') }}</a>
         </div>
     </section>
 

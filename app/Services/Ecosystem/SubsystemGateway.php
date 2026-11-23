@@ -47,13 +47,7 @@ final class SubsystemGateway
             'role' => $access->rol,
         ];
 
-        $body += match ($access->subsistema) {
-            'tickets' => ['team_ids' => $context['team_ids'] ?? [], 'coordination_ids' => $context['coordination_ids'] ?? []]
-                + (isset($context['estacion'], $context['area']) ? ['estacion' => $context['estacion'], 'area' => $context['area']] : []),
-            'dashboard' => ['estacion_id' => $context['estacion_id'] ?? null]
-                + (isset($context['area']) ? ['area' => $context['area']] : []),
-            default => [],
-        };
+        $body += $this->contextBody($access->subsistema, $context);
 
         $response = $this->bridge->send($access->subsistema, 'POST', '/interno/portal/cuentas', body: $body);
 
@@ -76,6 +70,64 @@ final class SubsystemGateway
             'reintentar' => $response->serverError(),
             'mensaje' => __('portal.provision.rejected', ['code' => $response->status()]),
         ];
+    }
+
+    /**
+     * Lleva al subsistema un cambio posterior al alta: baja/reactivacion (`estado`) o nuevo rol y ubicacion.
+     * Se localiza por `portal_user_id`, nunca por correo.
+     *
+     * @return array{estado: string, reintentar: bool, mensaje: ?string}
+     */
+    public function sync(User $user, UsuarioSubsistema $access, string $accion): array
+    {
+        $body = match ($accion) {
+            UsuarioSubsistema::ACCION_REVOCAR, UsuarioSubsistema::ACCION_DESACTIVAR => ['estado' => 'inactivo'],
+            UsuarioSubsistema::ACCION_REACTIVAR => ['estado' => 'activo'],
+            default => ['estado' => 'activo', 'role' => $access->rol] + $this->contextBody($access->subsistema, (array) $access->contexto),
+        };
+
+        $response = $this->bridge->send($access->subsistema, 'PUT', '/interno/portal/cuentas/'.$user->portal_user_id, body: $body);
+
+        if ($response === null) {
+            return ['estado' => UsuarioSubsistema::ERROR, 'reintentar' => true, 'mensaje' => __('portal.provision.unreachable')];
+        }
+
+        if ($response->successful()) {
+            return ['estado' => UsuarioSubsistema::OK, 'reintentar' => false, 'mensaje' => null];
+        }
+
+        // 404: la cuenta de ahi no esta emparejada con la del portal (existia antes y aun no se vincula al entrar).
+        // Quitar o dar de baja no tiene nada que hacer; cambiar el rol hay que hacerlo en ese sistema.
+        if ($response->status() === 404) {
+            return $accion === UsuarioSubsistema::ACCION_ACTUALIZAR
+                ? ['estado' => UsuarioSubsistema::ERROR, 'reintentar' => false, 'mensaje' => __('portal.sync.not_paired')]
+                : ['estado' => UsuarioSubsistema::OK, 'reintentar' => false, 'mensaje' => __('portal.sync.not_paired_nothing')];
+        }
+
+        if ($response->status() === 409) {
+            return ['estado' => UsuarioSubsistema::ERROR, 'reintentar' => false, 'mensaje' => __('portal.sync.last_admin')];
+        }
+
+        return [
+            'estado' => UsuarioSubsistema::ERROR,
+            'reintentar' => $response->serverError(),
+            'mensaje' => __('portal.provision.rejected', ['code' => $response->status()]),
+        ];
+    }
+
+    /**
+     * @param  array<string, mixed>  $context
+     * @return array<string, mixed>
+     */
+    private function contextBody(string $subsystem, array $context): array
+    {
+        return match ($subsystem) {
+            'tickets' => ['team_ids' => $context['team_ids'] ?? [], 'coordination_ids' => $context['coordination_ids'] ?? []]
+                + (isset($context['estacion'], $context['area']) ? ['estacion' => $context['estacion'], 'area' => $context['area']] : []),
+            'dashboard' => ['estacion_id' => $context['estacion_id'] ?? null]
+                + (isset($context['area']) ? ['area' => $context['area']] : []),
+            default => [],
+        };
     }
 
     /**

@@ -39,7 +39,7 @@ class ProvisionAccess implements ShouldQueue
         $access = UsuarioSubsistema::query()->with('user')->find($this->accessId);
 
         // Ya resuelto o la cuenta del portal dejó de estar activa (p. ej. se revocó): nada que hacer.
-        if ($access === null || $access->user === null || ! $access->user->isActive() || $access->aprovisionamiento === UsuarioSubsistema::OK) {
+        if ($access === null || $access->user === null || ! $access->user->isActive() || $access->isRevoked() || $access->aprovisionamiento === UsuarioSubsistema::OK) {
             return;
         }
 

@@ -7,8 +7,10 @@ namespace App\Http\Controllers;
 use App\Enums\PortalRole;
 use App\Enums\UserStatus;
 use App\Http\Requests\ApproveUserRequest;
+use App\Http\Requests\CreateUserRequest;
 use App\Http\Requests\GrantAccessRequest;
 use App\Http\Requests\RejectUserRequest;
+use App\Http\Requests\UpdateAccessRequest;
 use App\Models\User;
 use App\Services\Ecosystem\SubsystemGateway;
 use App\Services\UserApprovalService;
@@ -57,8 +59,16 @@ class UserApprovalController extends Controller
         $canGrant = $user->status === UserStatus::Active && ! $request->user()->is($user);
         $missing = array_values(array_diff(Subsistemas::claves(), $user->accesos->pluck('subsistema')->all()));
 
+        // Gestionar (editar/quitar accesos, dar de baja o reactivar): solo aprobadores, nunca la propia cuenta, y las
+        // cuentas con rol amplio solo un administrador del portal.
+        $canManage = ! $pending && $this->approvals->canManage($user, $request->user());
+        $canEdit = $canManage && $user->status === UserStatus::Active;
+
         // El formulario ofrece lo que cada subsistema tiene hoy (equipos, estaciones); null = no responde.
-        $offered = $pending ? Subsistemas::claves() : ($canGrant ? $missing : []);
+        $offered = $pending ? Subsistemas::claves() : array_values(array_unique([
+            ...($canGrant ? $missing : []),
+            ...($canEdit ? $user->accesos->pluck('subsistema')->all() : []),
+        ]));
 
         return view('users.show', [
             'user' => $user,
@@ -69,6 +79,9 @@ class UserApprovalController extends Controller
             )->all(),
             'esAdministrador' => $request->user()->portal_role === PortalRole::Administrador,
             'puedeDarAcceso' => $canGrant,
+            'puedeGestionar' => $canManage,
+            'puedeEditar' => $canEdit,
+            'puedeReactivar' => $canManage && $user->status === UserStatus::Inactive && $user->todosLosAccesos()->exists(),
             'faltantes' => $missing,
         ]);
     }
@@ -92,6 +105,60 @@ class UserApprovalController extends Controller
         $this->approvals->reject($user, $request->user(), $request->validated('reason'));
 
         return redirect()->route('users.index')->with('status', __('portal.rejected'));
+    }
+
+    public function create(Request $request): View
+    {
+        return view('users.create', [
+            'catalogo' => Subsistemas::todos(),
+            'catalogos' => collect(Subsistemas::claves())->mapWithKeys(fn (string $key): array => [$key => $this->gateway->catalog($key)])->all(),
+            'esAdministrador' => $request->user()->portal_role === PortalRole::Administrador,
+        ]);
+    }
+
+    public function store(CreateUserRequest $request): RedirectResponse
+    {
+        $user = $this->approvals->createAccount($request->user(), $request->validated('name'), $request->validated('email'), $request->portalRole(), $request->accesos());
+
+        return redirect()->route('users.show', $user)->with('status', __('portal.account_created'));
+    }
+
+    public function updateAccess(UpdateAccessRequest $request, User $user, string $subsistema): RedirectResponse
+    {
+        $datos = $request->accesos()[$subsistema] ?? null;
+        abort_if($datos === null, 422);
+
+        $this->approvals->changeAccess($user, $request->user(), $subsistema, $datos);
+
+        return redirect()->route('users.show', $user)->with('status', __('portal.access_changed'));
+    }
+
+    public function revokeAccess(Request $request, User $user, string $subsistema): RedirectResponse
+    {
+        $this->approvals->revokeAccess($user, $request->user(), $subsistema);
+
+        return redirect()->route('users.show', $user)->with('status', __('portal.access_revoked'));
+    }
+
+    public function deactivate(Request $request, User $user): RedirectResponse
+    {
+        $this->approvals->deactivate($user, $request->user());
+
+        return redirect()->route('users.show', $user)->with('status', __('portal.deactivated'));
+    }
+
+    public function reactivate(Request $request, User $user): RedirectResponse
+    {
+        $this->approvals->reactivate($user, $request->user());
+
+        return redirect()->route('users.show', $user)->with('status', __('portal.reactivated'));
+    }
+
+    public function invite(Request $request, User $user): RedirectResponse
+    {
+        $this->approvals->invite($user, $request->user());
+
+        return redirect()->route('users.show', $user)->with('status', __('portal.password_link_sent'));
     }
 
     public function retry(Request $request, User $user, string $subsistema): RedirectResponse

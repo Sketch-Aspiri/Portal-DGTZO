@@ -18,17 +18,31 @@ class UsuarioSubsistema extends Model
 
     public const ERROR = 'error';
 
+    /** Cambios que el portal lleva al subsistema después del alta. */
+    public const ACCION_ACTUALIZAR = 'actualizar';
+
+    public const ACCION_REVOCAR = 'revocar';
+
+    public const ACCION_DESACTIVAR = 'desactivar';
+
+    public const ACCION_REACTIVAR = 'reactivar';
+
     protected $table = 'usuario_subsistema';
 
     protected $fillable = ['user_id', 'subsistema', 'rol', 'contexto'];
 
     protected function casts(): array
     {
-        return ['aprovisionado_at' => 'datetime', 'contexto' => 'array'];
+        return ['aprovisionado_at' => 'datetime', 'revocado_at' => 'datetime', 'contexto' => 'array'];
     }
 
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
+    }
+
+    public function isRevoked(): bool
+    {
+        return $this->revocado_at !== null;
     }
 }

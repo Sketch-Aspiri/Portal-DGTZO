@@ -1,18 +1,24 @@
 {{--
     Campos de acceso por subsistema (rol y ubicación), compartidos por la aprobación y por "dar acceso".
     Variables: $catalogo (config), $catalogos (catálogo vivo de cada subsistema o null), $esAdministrador,
-    $omitir (claves de subsistemas que no se ofrecen).
+    $omitir (claves de subsistemas que no se ofrecen), $prefill (clave => rol y contexto actuales, al editar),
+    $fijo (true: el sistema ya esta elegido y no se puede desmarcar, al editar).
 --}}
 @foreach ($catalogo as $clave => $sistema)
     @continue(in_array($clave, $omitir ?? [], true))
     @php($cat = $catalogos[$clave] ?? null)
     @php($privilegiados = $sistema['roles_privilegiados'] ?? [])
-    @php($pref = isset($solicitud) && $solicitud ? (array) ($solicitud->accesos[$clave] ?? []) : [])
+    @php($pref = isset($prefill[$clave]) ? (array) $prefill[$clave] : (isset($solicitud) && $solicitud ? (array) ($solicitud->accesos[$clave] ?? []) : []))
     <fieldset class="rounded-lg border p-4 space-y-3" @disabled($cat === null)>
-        <label class="flex items-center gap-2 font-medium">
-            <input type="checkbox" name="accesos[{{ $clave }}][activo]" value="1" @checked(old("accesos.$clave.activo", ! empty($pref))) @disabled($cat === null)>
-            {{ $sistema['nombre'] }}
-        </label>
+        @if (! empty($fijo))
+            <input type="hidden" name="accesos[{{ $clave }}][activo]" value="1">
+            <p class="font-medium">{{ $sistema['nombre'] }}</p>
+        @else
+            <label class="flex items-center gap-2 font-medium">
+                <input type="checkbox" name="accesos[{{ $clave }}][activo]" value="1" @checked(old("accesos.$clave.activo", ! empty($pref))) @disabled($cat === null)>
+                {{ $sistema['nombre'] }}
+            </label>
+        @endif
 
         @if ($cat === null)
             <p class="text-sm text-red-700">{{ __('portal.catalog_unavailable') }}</p>
