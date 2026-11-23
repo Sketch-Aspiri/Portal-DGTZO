@@ -14,12 +14,13 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use NotificationChannels\WebPush\HasPushSubscriptions;
 use Illuminate\Support\Str;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable;
+    use HasFactory, HasPushSubscriptions, Notifiable;
 
     // status, rol y 2FA nunca se asignan en masa: solo desde los servicios.
     protected $fillable = ['name', 'email', 'password'];
@@ -53,6 +54,17 @@ class User extends Authenticatable
     public function solicitudAcceso(): HasOne
     {
         return $this->hasOne(SolicitudAcceso::class);
+    }
+
+    public function notificationPreferences(): HasMany
+    {
+        return $this->hasMany(NotificationPreference::class);
+    }
+
+    /** ¿Silenció el push de este sistema? (el aviso igual queda en su centro de notificaciones). */
+    public function mutesPush(string $subsistema): bool
+    {
+        return $this->notificationPreferences()->where('subsistema', $subsistema)->where('muted', true)->exists();
     }
 
     public function accesos(): HasMany

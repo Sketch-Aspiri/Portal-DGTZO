@@ -31,3 +31,80 @@
         .reveal { opacity: 1; transform: none; transition: none; }
     }
 }
+
+/*
+ * Modo oscuro. La clase "dark" en <html> la pone el script del <head> (layouts/partials/tema.blade.php) según la
+ * preferencia guardada o la del sistema. En vez de repetir dark: en cada vista, aquí se reinterpretan las utilidades de
+ * color más usadas (mismo enfoque que el Dashboard y Tickets).
+ */
+:root { color-scheme: light; }
+.dark {
+    color-scheme: dark;
+    --o-fondo: #0b1513;
+    --o-sup: #12201d;
+    --o-sup2: #192b27;
+    --o-sup3: #213833;
+    --o-borde: rgb(255 255 255 / 0.08);
+    --o-borde2: rgb(255 255 255 / 0.15);
+    --o-texto: #e4eeeb;
+    --o-texto2: #b6c7c2;
+    --o-texto3: #8fa39d;
+    --o-marca: #86d6c1;
+    --o-enlace: #6fcab3;
+}
+.dark body { background-color: var(--o-fondo); color: var(--o-texto); }
+
+/* Superficies */
+.dark .bg-white, .dark .bg-white\/70 { background-color: var(--o-sup); }
+.dark .bg-white\/95 { background-color: rgb(18 32 29 / 0.95); }
+.dark .bg-brand-mist, .dark .bg-gray-50, .dark .bg-gray-100 { background-color: var(--o-sup2); }
+.dark .bg-brand-mist\/50 { background-color: rgb(25 43 39 / 0.6); }
+.dark .bg-gray-200, .dark .bg-brand-green\/10 { background-color: var(--o-sup3); }
+.dark .bg-brand-mist.text-gray-900, .dark body.bg-brand-mist { background-color: var(--o-fondo); }
+.dark .hover\:bg-brand-mist:hover, .dark .hover\:bg-gray-50:hover, .dark .hover\:bg-gray-100:hover,
+.dark .focus\:bg-brand-mist:focus, .dark .focus\:bg-gray-50:focus, .dark .focus\:bg-gray-100:focus,
+.dark .hover\:bg-white:hover { background-color: var(--o-sup3); }
+
+/* Texto */
+.dark .text-gray-900, .dark .text-gray-800 { color: var(--o-texto); }
+.dark .text-gray-700, .dark .text-gray-600 { color: var(--o-texto2); }
+.dark .text-gray-500, .dark .text-gray-400 { color: var(--o-texto3); }
+.dark .text-brand-green, .dark .text-brand-green-dark, .dark .hover\:text-brand-green:hover,
+.dark .hover\:text-brand-green-dark:hover, .dark .focus\:text-brand-green-dark:focus { color: var(--o-marca) !important; }
+.dark .text-brand-teal { color: var(--o-enlace); }
+.dark .hover\:text-gray-800:hover, .dark .hover\:text-gray-700:hover, .dark .focus\:text-gray-800:focus,
+.dark .focus\:text-gray-700:focus, .dark .hover\:text-gray-500:hover, .dark .focus\:text-gray-500:focus { color: #fff; }
+.dark .text-red-600, .dark .text-red-700 { color: #fca5a5; }
+.dark .text-amber-700, .dark .text-amber-800 { color: #fcd34d; }
+.dark .text-green-600, .dark .text-green-700, .dark .text-green-800 { color: #86efac; }
+/* Sobre fondo verde de marca el texto sigue blanco. */
+.dark .bg-brand-green .text-brand-green, .dark .bg-brand-green.text-brand-green,
+.dark .bg-brand-green-dark .text-brand-green { color: #fff !important; }
+
+/* Bordes y divisores */
+.dark .border-gray-200, .dark .border-brand-green\/10, .dark .border-brand-green\/15,
+.dark .divide-brand-green\/10 > * + * { border-color: var(--o-borde); }
+.dark .border-gray-300, .dark .border-brand-green\/25, .dark .border-brand-green\/30,
+.dark .border-brand-teal\/30, .dark .border-brand-teal\/40, .dark .border-brand-teal\/50 { border-color: var(--o-borde2); }
+.dark .ring-black { --tw-ring-color: rgb(255 255 255 / 0.1); }
+
+/* Colores de estado (fondos claros a tintes oscuros) */
+.dark .bg-red-50 { background-color: rgb(127 29 29 / 0.3); }
+.dark .hover\:bg-red-50:hover { background-color: rgb(127 29 29 / 0.45); }
+.dark .bg-amber-50, .dark .bg-amber-100 { background-color: rgb(120 53 15 / 0.3); }
+.dark .bg-green-100 { background-color: rgb(20 83 45 / 0.35); }
+.dark .ring-amber-200 { --tw-ring-color: rgb(251 191 36 / 0.35); }
+
+/* Formularios: @tailwindcss/forms pinta un fondo blanco fijo. */
+.dark input:not([type="checkbox"]):not([type="radio"]):not([type="file"]):not([type="range"]),
+.dark select, .dark textarea {
+    background-color: var(--o-sup2);
+    border-color: var(--o-borde2);
+    color: var(--o-texto);
+}
+.dark input::placeholder, .dark textarea::placeholder { color: var(--o-texto3); }
+.dark input:disabled, .dark select:disabled, .dark textarea:disabled { background-color: var(--o-sup); color: var(--o-texto3); }
+.dark [type="checkbox"]:not(:checked), .dark [type="radio"]:not(:checked) { background-color: var(--o-sup2); border-color: var(--o-borde2); }
+
+/* El logotipo es verde oscuro: en modo oscuro va sobre una placa clara. */
+.dark .logo-placa { background-color: #f2f7f5; border-radius: 0.5rem; padding: 0.25rem 0.5rem; }

@@ -1,6 +1,7 @@
 <x-app-layout>
     @php
-        $hora = now()->hour;
+        // La hora de la persona (Cancún), no la del servidor (UTC): a las 10:00 locales aún es "Buenos días".
+        $hora = now(config('app.display_timezone'))->hour;
         $saludo = $hora < 12 ? 'greeting_morning' : ($hora < 19 ? 'greeting_afternoon' : 'greeting_evening');
         $nombre = explode(' ', trim(auth()->user()->name))[0];
         $iconos = [
@@ -87,6 +88,34 @@
                     <div class="relative mt-5 border-t border-white/20 pt-4 text-xs text-white/75">{{ __('portal.launcher.temayin_note') }}</div>
                 </div>
             </div>
+
+        {{-- Notificaciones recientes de todos los sistemas --}}
+        <section class="mt-12" aria-labelledby="notificaciones-recientes">
+            <div class="flex items-center justify-between gap-3">
+                <h2 id="notificaciones-recientes" class="font-heading text-sm font-semibold uppercase tracking-wider text-brand-teal">
+                    {{ __('push.center.title') }}
+                    @if ($sinLeer > 0)
+                        <span class="ms-2 rounded-full bg-red-600 px-2 py-0.5 text-xs font-bold normal-case tracking-normal text-white">{{ $sinLeer }}</span>
+                    @endif
+                </h2>
+                <a href="{{ route('notifications.index') }}" class="inline-flex min-h-[44px] items-center text-sm font-semibold text-brand-teal hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal">{{ __('Ver todas') }}</a>
+            </div>
+            <div class="mt-3 space-y-2">
+                @forelse ($recientes as $aviso)
+                    <a href="{{ route('notifications.open', $aviso->id) }}"
+                       class="flex items-start gap-3 rounded-xl border border-brand-green/10 bg-white p-4 shadow-sm shadow-brand-green/5 transition hover:border-brand-mint focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal">
+                        <span class="mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full {{ $aviso->read_at === null ? 'bg-brand-teal' : 'bg-gray-200' }}" aria-hidden="true"></span>
+                        <span class="min-w-0 flex-1">
+                            <span class="block text-sm {{ $aviso->read_at === null ? 'font-semibold text-gray-900' : 'font-medium text-gray-700' }}">{{ $aviso->data['title'] ?? '' }}</span>
+                            <span class="block truncate text-sm text-gray-600">{{ $aviso->data['body'] ?? '' }}</span>
+                        </span>
+                        <span class="shrink-0 text-xs text-gray-500">{{ __('push.systems.'.($aviso->data['source'] ?? 'portal')) }} · {{ $aviso->created_at->diffForHumans() }}</span>
+                    </a>
+                @empty
+                    <p class="rounded-xl border border-dashed border-brand-green/25 bg-white p-5 text-sm text-gray-600">{{ __('push.center.empty') }}</p>
+                @endforelse
+            </div>
+        </section>
 
         {{-- Accesos rápidos --}}
         <section class="mt-12" aria-labelledby="accesos-rapidos">

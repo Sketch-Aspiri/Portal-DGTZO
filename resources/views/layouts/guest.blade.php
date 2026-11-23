@@ -35,6 +35,10 @@
                     </a>
                 </x-auth-brand-panel>
 
+                <div class="flex justify-end px-4 pt-4 sm:px-8">
+                    <x-selector-tema />
+                </div>
+
                 <main class="flex flex-1 items-center justify-center px-4 py-8 sm:px-8">
                     <div class="w-full {{ $attributes->has('wide') ? 'max-w-2xl' : 'max-w-md' }}">
                         <div class="rounded-2xl border border-brand-green/10 bg-white p-6 shadow-lg shadow-brand-green/5 sm:p-8">

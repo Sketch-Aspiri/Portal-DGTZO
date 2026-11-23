@@ -69,6 +69,19 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Zona horaria para mostrar
+    |--------------------------------------------------------------------------
+    |
+    | Los datos se guardan en UTC (arriba); lo que ve la persona (saludo, horas)
+    | va en la zona de la Zona Oriente: Quintana Roo (America/Cancun, UTC-5 todo
+    | el año). Igual que el Dashboard y Tickets.
+    |
+    */
+
+    'display_timezone' => env('APP_DISPLAY_TIMEZONE', 'America/Cancun'),
+
+    /*
+    |--------------------------------------------------------------------------
     | Application Locale Configuration
     |--------------------------------------------------------------------------
     |

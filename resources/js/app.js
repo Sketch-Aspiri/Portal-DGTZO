@@ -6,10 +6,15 @@ import '@fontsource/poppins/700.css';
 
 import './shader-background';
 import accessWizard from './access-wizard';
+import { registerPush, registerServiceWorker } from './push';
+import { selectorTema } from './tema';
 import Alpine from 'alpinejs';
 
 window.Alpine = Alpine;
 Alpine.data('accessWizard', accessWizard);
+Alpine.data('selectorTema', selectorTema);
+registerPush(Alpine);
+registerServiceWorker();
 
 Alpine.start();
 

@@ -6,8 +6,10 @@ use App\Http\Controllers\Auth\EcosystemSessionController;
 use App\Http\Controllers\Auth\TwoFactorChallengeController;
 use App\Http\Controllers\Auth\TwoFactorSetupController;
 use App\Http\Controllers\LauncherController;
+use App\Http\Controllers\NotificationCenterController;
 use App\Http\Controllers\ProfileAvatarController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\Push\PushSubscriptionController;
 use App\Http\Controllers\UserApprovalController;
 use Illuminate\Support\Facades\Route;
 
@@ -37,6 +39,15 @@ Route::middleware('auth')->group(function () {
 
     Route::middleware(['account.active', 'two-factor'])->group(function () {
         Route::get('/inicio', LauncherController::class)->name('dashboard');
+
+        Route::prefix('notificaciones')->name('notifications.')->group(function () {
+            Route::get('/', [NotificationCenterController::class, 'index'])->name('index');
+            Route::post('/leer-todas', [NotificationCenterController::class, 'readAll'])->name('read-all');
+            Route::put('/preferencias', [NotificationCenterController::class, 'updatePreferences'])->name('preferences');
+            Route::get('/{id}', [NotificationCenterController::class, 'open'])->whereUuid('id')->name('open');
+        });
+        Route::post('/push/subscribe', [PushSubscriptionController::class, 'store'])->middleware('throttle:push-write')->name('push.subscribe');
+        Route::post('/push/unsubscribe', [PushSubscriptionController::class, 'destroy'])->middleware('throttle:push-write')->name('push.unsubscribe');
 
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

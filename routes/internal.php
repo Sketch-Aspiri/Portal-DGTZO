@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Internal\SubsystemAvatarController;
+use App\Http\Controllers\Internal\SubsystemNoticeController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -9,3 +10,5 @@ use Illuminate\Support\Facades\Route;
  */
 Route::put('avatar', [SubsystemAvatarController::class, 'update'])->name('avatar.update');
 Route::delete('avatar', [SubsystemAvatarController::class, 'destroy'])->name('avatar.destroy');
+// Avisos de los sistemas (Dashboard, Tickets): centro de notificaciones + Web Push de las cuentas activas del portal.
+Route::post('notificaciones', SubsystemNoticeController::class)->middleware('throttle:ecosystem-bridge')->name('notificaciones.store');

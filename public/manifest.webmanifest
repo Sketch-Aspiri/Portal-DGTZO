@@ -1,0 +1,17 @@
+{
+    "name": "Sistema de Gestión Territorial Zona Oriente Tren Maya",
+    "short_name": "Zona Oriente TM",
+    "description": "Portal central de la Zona Oriente del Tren Maya: acceso a sus sistemas y notificaciones.",
+    "lang": "es-MX",
+    "id": "/inicio",
+    "start_url": "/inicio",
+    "scope": "/",
+    "display": "standalone",
+    "background_color": "#F1F7F6",
+    "theme_color": "#06534D",
+    "icons": [
+        { "src": "/icons/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+        { "src": "/icons/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+        { "src": "/icons/maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+    ]
+}

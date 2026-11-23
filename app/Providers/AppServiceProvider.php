@@ -2,13 +2,16 @@
 
 namespace App\Providers;
 
+use App\Listeners\LogFailedPush;
 use App\Models\User;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Event;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Validation\Rules\Password;
+use NotificationChannels\WebPush\Events\NotificationFailed;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -28,12 +31,16 @@ class AppServiceProvider extends ServiceProvider
 
         Gate::define('approve-accounts', fn (User $user): bool => $user->canApprove());
 
+        Event::listen(NotificationFailed::class, LogFailedPush::class);
+
         RateLimiter::for('register', fn (Request $request) => Limit::perHour(10)->by($request->ip()));
         RateLimiter::for('two-factor', fn (Request $request) => Limit::perMinute(10)->by((string) $request->user()?->id));
         RateLimiter::for('ecosystem-sso', fn (Request $request) => Limit::perMinute(60)->by($request->ip()));
         RateLimiter::for('access-request', fn (Request $request) => Limit::perHour(10)->by((string) $request->user()?->id));
         RateLimiter::for('avatar-upload', fn (Request $request) => Limit::perHour(20)->by((string) $request->user()?->id));
         RateLimiter::for('avatar-view', fn (Request $request) => Limit::perMinute(600)->by((string) $request->user()?->id));
+        RateLimiter::for('push-write', fn (Request $request) => Limit::perMinute(20)->by((string) $request->user()?->id));
+        RateLimiter::for('ecosystem-bridge', fn (Request $request) => Limit::perMinute(240)->by($request->ip()));
         RateLimiter::for('approvals', fn (Request $request) => Limit::perMinute(30)->by((string) $request->user()?->id));
     }
 }
