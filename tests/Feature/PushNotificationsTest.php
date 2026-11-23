@@ -305,16 +305,49 @@ class PushNotificationsTest extends TestCase
         $this->assertSame(0, $ana->unreadNotifications()->count());
     }
 
-    public function test_a_person_mutes_and_unmutes_a_system(): void
+    public function test_a_person_turns_a_system_off_and_on_with_the_switch(): void
     {
         $ana = User::factory()->active()->create();
 
-        $this->asVerified($ana)->put(route('notifications.preferences'), ['muted' => ['tickets' => '1']])->assertRedirect(route('notifications.index'));
+        // Un interruptor encendido manda `active[sistema]`; el apagado no manda nada: ese sistema queda silenciado.
+        $this->asVerified($ana)->put(route('notifications.preferences'), ['active' => ['dashboard' => '1']])
+            ->assertRedirect(route('notifications.index'));
         $this->assertTrue($ana->mutesPush('tickets'));
         $this->assertFalse($ana->mutesPush('dashboard'));
 
-        $this->asVerified($ana)->put(route('notifications.preferences'), [])->assertRedirect();
+        $this->asVerified($ana)->put(route('notifications.preferences'), ['active' => ['dashboard' => '1', 'tickets' => '1']])->assertRedirect();
         $this->assertFalse($ana->fresh()->mutesPush('tickets'));
+        $this->assertFalse($ana->fresh()->mutesPush('dashboard'));
+
+        $this->asVerified($ana)->put(route('notifications.preferences'), [])->assertRedirect();
+        $this->assertTrue($ana->fresh()->mutesPush('dashboard'));
+        $this->assertTrue($ana->fresh()->mutesPush('tickets'));
+    }
+
+    public function test_the_switch_saves_without_reloading_the_page(): void
+    {
+        $ana = User::factory()->active()->create();
+
+        $this->asVerified($ana)->putJson(route('notifications.preferences'), ['active' => ['tickets' => '1']])
+            ->assertOk()->assertExactJson(['ok' => true, 'active' => ['dashboard' => false, 'tickets' => true]]);
+
+        $this->assertTrue($ana->mutesPush('dashboard'));
+        $this->assertFalse($ana->mutesPush('tickets'));
+    }
+
+    public function test_the_systems_section_shows_a_clear_on_or_muted_state_with_one_switch_per_system(): void
+    {
+        $ana = User::factory()->active()->create();
+        $ana->notificationPreferences()->create(['subsistema' => 'tickets', 'muted' => true]);
+
+        $html = $this->asVerified($ana)->get(route('notifications.index'))->assertOk()->getContent();
+
+        $this->assertSame(2, substr_count($html, 'role="switch"'));
+        $this->assertStringContainsString(__('push.center.state_on'), $html);
+        $this->assertStringContainsString(__('push.center.state_muted'), $html);
+        $this->assertStringNotContainsString('name="muted[', $html);
+        $this->assertMatchesRegularExpression('/name="active\[dashboard\]"[^>]*checked|checked[^>]*name="active\[dashboard\]"/s', $html);
+        $this->assertDoesNotMatchRegularExpression('/name="active\[tickets\]"[^>]*checked/s', $html);
     }
 
     public function test_the_home_shows_recent_notices_and_the_bell_counts_unread(): void

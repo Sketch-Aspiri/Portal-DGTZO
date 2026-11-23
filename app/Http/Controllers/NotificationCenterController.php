@@ -8,6 +8,7 @@ use App\Http\Requests\UpdateNotificationPreferencesRequest;
 use App\Notifications\SubsystemNotice;
 use App\Services\Ecosystem\NotificationHubService;
 use App\Support\EcosystemUrl;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -49,15 +50,22 @@ class NotificationCenterController extends Controller
         return back();
     }
 
-    public function updatePreferences(UpdateNotificationPreferencesRequest $request): RedirectResponse
+    /**
+     * Cada sistema es un interruptor: encendido manda `active[sistema]`, apagado no manda nada y ese sistema queda
+     * silenciado. Con JavaScript se guarda al instante (JSON); sin él, el formulario normal redirige.
+     */
+    public function updatePreferences(UpdateNotificationPreferencesRequest $request): RedirectResponse|JsonResponse
     {
         $user = $request->user();
+        $active = [];
 
         foreach (NotificationHubService::SYSTEMS as $system) {
-            $user->notificationPreferences()->updateOrCreate(
-                ['subsistema' => $system],
-                ['muted' => $request->boolean('muted.'.$system)],
-            );
+            $active[$system] = $request->boolean('active.'.$system);
+            $user->notificationPreferences()->updateOrCreate(['subsistema' => $system], ['muted' => ! $active[$system]]);
+        }
+
+        if ($request->wantsJson()) {
+            return response()->json(['ok' => true, 'active' => $active]);
         }
 
         return redirect()->route('notifications.index')->with('status', __('push.center.saved'));
