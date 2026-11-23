@@ -329,7 +329,7 @@ class PushNotificationsTest extends TestCase
 
     public function test_the_pwa_files_exist_and_the_head_links_them(): void
     {
-        $manifest = json_decode((string) file_get_contents(public_path('manifest.webmanifest')), true, 512, JSON_THROW_ON_ERROR);
+        $manifest = json_decode((string) file_get_contents(public_path('manifest.json')), true, 512, JSON_THROW_ON_ERROR);
 
         $this->assertSame('standalone', $manifest['display']);
         $this->assertSame('/', $manifest['scope']);
@@ -340,7 +340,7 @@ class PushNotificationsTest extends TestCase
         $this->assertFileExists(public_path('offline.html'));
         $this->assertFileExists(public_path('icons/apple-touch-icon.png'));
 
-        $this->get('/login')->assertOk()->assertSee('manifest.webmanifest', false)->assertSee('apple-mobile-web-app-capable', false);
+        $this->get('/login')->assertOk()->assertSee('manifest.json', false)->assertSee('apple-mobile-web-app-capable', false);
     }
 
     public function test_the_service_worker_only_opens_this_site_or_the_ecosystem(): void
