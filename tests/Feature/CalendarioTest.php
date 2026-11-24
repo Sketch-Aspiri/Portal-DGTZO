@@ -48,6 +48,16 @@ class CalendarioTest extends TestCase
             ->assertOk()->assertSee('Visita de obra')->assertDontSee(route('calendar.events.create'));
     }
 
+    public function test_the_launcher_counts_the_calendar_as_an_available_system(): void
+    {
+        $user = User::factory()->active()->create();
+
+        // Sin accesos a Dashboard ni Tickets, el Calendario sigue siendo un sistema disponible.
+        $html = $this->asVerified($user)->get(route('dashboard'))->assertOk()
+            ->assertSee('1 sistema disponible')->assertSee(route('calendar.index'))->getContent();
+        $this->assertStringContainsString(__('portal.launcher.available'), $html);
+    }
+
     public function test_regular_users_cannot_create_edit_or_delete(): void
     {
         $user = User::factory()->active()->create();

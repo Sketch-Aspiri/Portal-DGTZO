@@ -89,6 +89,16 @@
                                 </span>
                                 <span class="rounded-md bg-brand-mist px-2 py-1 text-xs font-semibold text-brand-teal">{{ __('portal.launcher.open') }}</span>
                             </div>
+                            <div class="flex items-center gap-3 rounded-xl bg-white p-3.5 text-gray-900 shadow-lg">
+                                <span class="flex h-11 w-11 items-center justify-center rounded-lg bg-brand-green-dark text-white">
+                                    <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg>
+                                </span>
+                                <span class="min-w-0 flex-1">
+                                    <span class="block font-heading text-sm font-semibold text-brand-green">{{ __('portal.welcome.sys_calendar') }}</span>
+                                    <span class="block truncate text-xs text-gray-500">{{ __('portal.welcome.sys_calendar_text') }}</span>
+                                </span>
+                                <span class="rounded-md bg-brand-mist px-2 py-1 text-xs font-semibold text-brand-teal">{{ __('portal.launcher.open') }}</span>
+                            </div>
                             <div class="flex items-center gap-3 rounded-xl border border-dashed border-white/40 p-3.5">
                                 <span class="flex h-11 w-11 items-center justify-center rounded-lg bg-white/15 text-white">
                                     <svg class="h-6 w-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg>
