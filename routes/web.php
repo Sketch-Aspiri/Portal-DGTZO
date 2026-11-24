@@ -5,6 +5,8 @@ use App\Http\Controllers\AccountStatusController;
 use App\Http\Controllers\Auth\EcosystemSessionController;
 use App\Http\Controllers\Auth\TwoFactorChallengeController;
 use App\Http\Controllers\Auth\TwoFactorSetupController;
+use App\Http\Controllers\CalendarioController;
+use App\Http\Controllers\CalendarioEventoController;
 use App\Http\Controllers\LauncherController;
 use App\Http\Controllers\NotificationCenterController;
 use App\Http\Controllers\ProfileAvatarController;
@@ -48,6 +50,16 @@ Route::middleware('auth')->group(function () {
         });
         Route::post('/push/subscribe', [PushSubscriptionController::class, 'store'])->middleware('throttle:push-write')->name('push.subscribe');
         Route::post('/push/unsubscribe', [PushSubscriptionController::class, 'destroy'])->middleware('throttle:push-write')->name('push.unsubscribe');
+
+        // Calendario oficial: lo consulta toda cuenta activa; solo quien administra el portal lo edita.
+        Route::get('/calendario', [CalendarioController::class, 'index'])->name('calendar.index');
+        Route::middleware('can:manage-calendar')->prefix('calendario/eventos')->name('calendar.events.')->group(function () {
+            Route::get('/nuevo', [CalendarioEventoController::class, 'create'])->name('create');
+            Route::post('/', [CalendarioEventoController::class, 'store'])->middleware('throttle:calendar-write')->name('store');
+            Route::get('/{evento}/editar', [CalendarioEventoController::class, 'edit'])->name('edit');
+            Route::put('/{evento}', [CalendarioEventoController::class, 'update'])->middleware('throttle:calendar-write')->name('update');
+            Route::delete('/{evento}', [CalendarioEventoController::class, 'destroy'])->middleware('throttle:calendar-write')->name('destroy');
+        });
 
         Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
         Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');

@@ -8,6 +8,7 @@ return [
     'systems' => [
         'dashboard' => 'Dashboard',
         'tickets' => 'Tickets',
+        'calendario' => 'Calendario',
         'portal' => 'Portal',
     ],
     'ui' => [

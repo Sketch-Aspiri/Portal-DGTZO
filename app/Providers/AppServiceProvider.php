@@ -31,6 +31,9 @@ class AppServiceProvider extends ServiceProvider
 
         Gate::define('approve-accounts', fn (User $user): bool => $user->canApprove());
 
+        // Calendario oficial: lo edita quien administra el portal (mismos roles que aprueban cuentas).
+        Gate::define('manage-calendar', fn (User $user): bool => $user->canApprove());
+
         Event::listen(NotificationFailed::class, LogFailedPush::class);
 
         RateLimiter::for('register', fn (Request $request) => Limit::perHour(10)->by($request->ip()));
@@ -41,6 +44,7 @@ class AppServiceProvider extends ServiceProvider
         RateLimiter::for('avatar-view', fn (Request $request) => Limit::perMinute(600)->by((string) $request->user()?->id));
         RateLimiter::for('push-write', fn (Request $request) => Limit::perMinute(20)->by((string) $request->user()?->id));
         RateLimiter::for('ecosystem-bridge', fn (Request $request) => Limit::perMinute(240)->by($request->ip()));
+        RateLimiter::for('calendar-write', fn (Request $request) => Limit::perMinute(30)->by((string) $request->user()?->id));
         RateLimiter::for('approvals', fn (Request $request) => Limit::perMinute(30)->by((string) $request->user()?->id));
     }
 }

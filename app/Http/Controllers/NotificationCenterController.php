@@ -27,7 +27,7 @@ class NotificationCenterController extends Controller
         return view('notifications.index', [
             'notifications' => $user->notifications()->where('data->type', SubsystemNotice::TYPE)->latest()->paginate(20),
             'unread' => $user->unreadNotifications()->where('data->type', SubsystemNotice::TYPE)->count(),
-            'systems' => NotificationHubService::SYSTEMS,
+            'systems' => NotificationHubService::silenciables(),
             'muted' => $muted,
         ]);
     }
@@ -59,7 +59,7 @@ class NotificationCenterController extends Controller
         $user = $request->user();
         $active = [];
 
-        foreach (NotificationHubService::SYSTEMS as $system) {
+        foreach (NotificationHubService::silenciables() as $system) {
             $active[$system] = $request->boolean('active.'.$system);
             $user->notificationPreferences()->updateOrCreate(['subsistema' => $system], ['muted' => ! $active[$system]]);
         }

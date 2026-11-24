@@ -22,6 +22,19 @@ final class NotificationHubService
     /** Sistemas que pueden emitir avisos y que cada persona puede silenciar. */
     public const SYSTEMS = ['dashboard', 'tickets'];
 
+    /** Avisos que genera el propio portal (no entran por el puente) y que también se pueden silenciar. */
+    public const LOCAL_SOURCES = ['calendario'];
+
+    /**
+     * Fuentes que la persona puede silenciar en su centro de notificaciones.
+     *
+     * @return list<string>
+     */
+    public static function silenciables(): array
+    {
+        return [...self::SYSTEMS, ...self::LOCAL_SOURCES];
+    }
+
     /**
      * @param  list<string>  $emails
      * @return int Cuentas a las que se envió el aviso.

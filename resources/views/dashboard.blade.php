@@ -71,9 +71,24 @@
                     </a>
                 @endforeach
 
+                {{-- Calendario oficial: módulo propio del portal, disponible para toda cuenta activa. --}}
+                <a href="{{ route('calendar.index') }}"
+                   class="rise group relative flex flex-col overflow-hidden rounded-2xl border border-brand-green/10 bg-white p-6 shadow-lg shadow-brand-green/10 transition duration-300 hover:-translate-y-1 hover:border-brand-mint hover:shadow-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal"
+                   style="animation-delay: {{ 0.15 + count($subsistemas) * 0.08 }}s">
+                    <span class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-brand-teal to-brand-mint opacity-0 transition group-hover:opacity-100" aria-hidden="true"></span>
+                    <span class="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-brand-teal to-brand-green text-white shadow-md shadow-brand-green/30 transition group-hover:scale-105" aria-hidden="true">
+                        <svg class="h-7 w-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M16 3v4M8 3v4M3 10h18"/></svg>
+                    </span>
+                    <h2 class="mt-5 font-heading text-xl font-semibold text-brand-green">{{ __('portal.calendar.title') }}</h2>
+                    <p class="mt-2 flex-1 text-sm leading-relaxed text-gray-600">{{ __('portal.calendar.launcher_text') }}</p>
+                    <div class="mt-5 flex items-center justify-end border-t border-brand-green/10 pt-4">
+                        <span class="inline-flex items-center gap-1 text-sm font-semibold text-brand-teal">{{ __('portal.launcher.open') }}</span>
+                    </div>
+                </a>
+
                 {{-- Temayin AI: aún sin dirección; se muestra a todas las cuentas activas como próxima herramienta. --}}
                 <div class="rise relative flex flex-col overflow-hidden rounded-2xl border border-brand-green/10 bg-gradient-to-br from-brand-green-dark via-brand-green to-brand-teal p-6 text-white shadow-lg shadow-brand-green/20"
-                     style="animation-delay: {{ 0.15 + count($subsistemas) * 0.08 }}s" role="group" aria-label="{{ __('portal.launcher.temayin_name') }}">
+                     style="animation-delay: {{ 0.15 + (count($subsistemas) + 1) * 0.08 }}s" role="group" aria-label="{{ __('portal.launcher.temayin_name') }}">
                     <span class="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-brand-mint/20 blur-2xl" aria-hidden="true"></span>
                     <div class="relative flex items-start justify-between">
                         <span class="flex h-14 w-14 items-center justify-center rounded-xl bg-white/15 ring-1 ring-white/30 backdrop-blur" aria-hidden="true">

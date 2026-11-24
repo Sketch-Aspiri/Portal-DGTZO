@@ -22,7 +22,7 @@ class UpdateNotificationPreferencesRequest extends FormRequest
     {
         $rules = ['active' => ['nullable', 'array']];
 
-        foreach (NotificationHubService::SYSTEMS as $system) {
+        foreach (NotificationHubService::silenciables() as $system) {
             $rules['active.'.$system] = ['nullable', 'boolean'];
         }
 

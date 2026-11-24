@@ -329,7 +329,7 @@ class PushNotificationsTest extends TestCase
         $ana = User::factory()->active()->create();
 
         $this->asVerified($ana)->putJson(route('notifications.preferences'), ['active' => ['tickets' => '1']])
-            ->assertOk()->assertExactJson(['ok' => true, 'active' => ['dashboard' => false, 'tickets' => true]]);
+            ->assertOk()->assertExactJson(['ok' => true, 'active' => ['dashboard' => false, 'tickets' => true, 'calendario' => false]]);
 
         $this->assertTrue($ana->mutesPush('dashboard'));
         $this->assertFalse($ana->mutesPush('tickets'));
@@ -342,7 +342,8 @@ class PushNotificationsTest extends TestCase
 
         $html = $this->asVerified($ana)->get(route('notifications.index'))->assertOk()->getContent();
 
-        $this->assertSame(2, substr_count($html, 'role="switch"'));
+        // Dashboard, Tickets y Calendario (avisos propios del portal).
+        $this->assertSame(3, substr_count($html, 'role="switch"'));
         $this->assertStringContainsString(__('push.center.state_on'), $html);
         $this->assertStringContainsString(__('push.center.state_muted'), $html);
         $this->assertStringNotContainsString('name="muted[', $html);
