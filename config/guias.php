@@ -116,7 +116,7 @@ return [
         'dashboard-inicio' => [
             'sistema' => 'dashboard', 'titulo' => 'Dashboard: primeros pasos',
             'resumen' => 'Inicio, menú, perfil y uso en el celular.',
-            'publicada' => '2026-11-25',
+            'publicada' => '2026-11-25', 'actualizada' => '2026-11-25',
         ],
         'dashboard-asistencia' => [
             'sistema' => 'dashboard', 'titulo' => 'Capturar la asistencia diaria',
@@ -136,7 +136,7 @@ return [
         'dashboard-vacaciones' => [
             'sistema' => 'dashboard', 'titulo' => 'Vacaciones',
             'resumen' => 'Consulta el rol, elige tus periodos y revisa las selecciones.',
-            'publicada' => '2026-11-25',
+            'publicada' => '2026-11-25', 'actualizada' => '2026-11-25',
         ],
         'dashboard-cumpleanos' => [
             'sistema' => 'dashboard', 'titulo' => 'Cumpleaños',
@@ -151,7 +151,7 @@ return [
         'dashboard-insumos' => [
             'sistema' => 'dashboard', 'titulo' => 'Solicitud de insumos',
             'resumen' => 'Captura la solicitud mensual y síguela hasta su aprobación.',
-            'publicada' => '2026-11-25',
+            'publicada' => '2026-11-25', 'actualizada' => '2026-11-25',
         ],
         'dashboard-insumos-zona' => [
             'sistema' => 'dashboard', 'titulo' => 'Catálogo, cotizaciones y facturas',
@@ -171,17 +171,17 @@ return [
         'dashboard-afluencia' => [
             'sistema' => 'dashboard', 'titulo' => 'Flujo de pasajeros',
             'resumen' => 'Captura diaria de abordajes y boletos por estación.',
-            'publicada' => '2026-11-25',
+            'publicada' => '2026-11-25', 'actualizada' => '2026-11-25',
         ],
         'dashboard-ptar' => [
             'sistema' => 'dashboard', 'titulo' => 'Reporte de estatus PTAR',
             'resumen' => 'Reporte mensual de la planta de tratamiento y sus hallazgos.',
-            'publicada' => '2026-11-25',
+            'publicada' => '2026-11-25', 'actualizada' => '2026-11-25',
         ],
         'dashboard-administracion' => [
             'sistema' => 'dashboard', 'titulo' => 'Administrar cuentas, equipos y menú',
             'resumen' => 'Cuentas del Dashboard, equipos por estación y secciones del menú.',
-            'roles' => ['jefe_zona', 'administrador'], 'publicada' => '2026-11-25',
+            'roles' => ['jefe_zona', 'administrador'], 'publicada' => '2026-11-25', 'actualizada' => '2026-11-25',
         ],
     ],
 ];

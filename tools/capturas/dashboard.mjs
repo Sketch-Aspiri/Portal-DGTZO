@@ -59,7 +59,10 @@ const guias = {
         await pantalla(e, g, '/dashboard', '01-inicio-estacion');
         const j = await entrar(b, 'jefe');
         await pantalla(j, g, '/dashboard', '02-inicio-zona');
-        await captura(j, g, '03-menu', { resaltar: j.getByText('RR.HH.', { exact: false }).locator('visible=true').first() });
+        await j.setViewportSize({ width: 1280, height: 800 });
+        await j.evaluate(() => window.scrollTo(0, 0));
+        await j.getByRole('button', { name: 'RR.HH.' }).click();
+        await captura(j, g, '03-menu');
         await pantalla(e, g, '/profile', '04-perfil');
         const m = await entrar(b, 'estacion', { celular: true });
         await abrir(m, '/dashboard');

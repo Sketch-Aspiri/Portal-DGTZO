@@ -7,7 +7,7 @@ En **Recursos materiales → Solicitud de insumos**:
 1. Completa los datos del servicio.
 2. Agrega cada partida: al escribir la descripción elige del catálogo. Indica cantidad, unidad y la **justificación** (obligatoria); la ficha técnica es opcional.
 3. Vigila el presupuesto disponible, arriba.
-4. Toca **Guardar borrador** y, al terminar, **Enviar a la Zona**.
+4. Toca **Guardar borrador** y, al terminar, **Enviar a la Zona**. Si sales sin guardar, el navegador te avisa.
 
 ![Solicitud de insumos de una estación](01-solicitud.png)
 
