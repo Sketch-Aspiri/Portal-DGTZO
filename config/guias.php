@@ -41,7 +41,7 @@ return [
         'app-y-notificaciones' => [
             'sistema' => 'portal', 'titulo' => 'La app y las notificaciones',
             'resumen' => 'Instala el portal en tu celular y recibe los avisos de tus sistemas.',
-            'publica' => true, 'publicada' => '2026-11-25',
+            'publica' => true, 'publicada' => '2026-11-25', 'actualizada' => '2026-11-25',
         ],
         'perfil' => [
             'sistema' => 'portal', 'titulo' => 'Tu perfil',
@@ -66,7 +66,7 @@ return [
         'tickets-primeros-pasos' => [
             'sistema' => 'tickets', 'titulo' => 'Tickets: primeros pasos',
             'resumen' => 'Qué es un ticket y una actividad, el menú, tus pendientes, avisos y perfil.',
-            'publicada' => '2026-11-25',
+            'publicada' => '2026-11-25', 'actualizada' => '2026-11-25',
         ],
         'tickets-solicitudes' => [
             'sistema' => 'tickets', 'titulo' => 'Crear y tomar tickets',

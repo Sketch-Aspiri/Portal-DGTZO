@@ -1,5 +1,7 @@
 Puedes instalar el portal como una aplicación y recibir en tu celular los avisos de todos los sistemas.
 
+> Los avisos del **Dashboard** y de **Tickets** llegan aquí. Actívalos en el portal: Tickets ya no los manda por separado a tu celular.
+
 ## Instala la app en tu celular
 
 - **Android (Chrome):** abre el portal, toca el menú **⋮** y elige **Instalar aplicación** o **Agregar a la pantalla principal**.
@@ -32,4 +34,6 @@ En **Avisos al celular** apaga los sistemas que no quieras que suenen. Sus aviso
 
 ## Revisa y marca como leídos
 
-Toca un aviso para abrirlo en su sistema, o usa **Marcar todas como leídas**.
+Toca un aviso para abrirlo en su sistema, o usa **Marcar todas como leídas**. Cada aviso indica de qué sistema viene.
+
+Solo llegan al portal los avisos generados desde que tu cuenta está activa. Si no recibes alguno, revisa que tu cuenta del sistema use el **mismo correo** que la del portal.

@@ -1,7 +1,6 @@
 // Capturas de las guías de Tickets.  Uso: node tickets.mjs [slug ...]
 // TICKETS_DIR: copia de Tickets (rama desplegada) con vendor y `npm run build`.
 import { execFileSync } from 'node:child_process';
-import crypto from 'node:crypto';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
@@ -12,10 +11,6 @@ const BASE = 'http://127.0.0.1:8020';
 const SECRETO = 'JBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXP';
 const baseDatos = path.join(os.tmpdir(), 'tutoriales_tickets_capturas.sqlite').replaceAll('\\', '/');
 
-// Llaves de usar y tirar para que aparezca el botón de notificaciones.
-const vapid = crypto.createECDH('prime256v1');
-vapid.generateKeys();
-
 const env = {
     ...process.env,
     APP_ENV: 'local', APP_DEBUG: 'false', APP_URL: BASE,
@@ -23,7 +18,8 @@ const env = {
     SESSION_DRIVER: 'file', CACHE_STORE: 'file', QUEUE_CONNECTION: 'sync', MAIL_MAILER: 'array',
     DEMO_USER_PASSWORD: CLAVE, PASSWORD_CHECK_BREACHED: 'false', CLOUD_SYNC_ENABLED: 'false',
     ECOSISTEMA_SSO_SECRET: '',
-    VAPID_SUBJECT: 'mailto:capturas@ejemplo.mx', VAPID_PUBLIC_KEY: vapid.getPublicKey('base64url'), VAPID_PRIVATE_KEY: vapid.getPrivateKey('base64url'),
+    // Como en producción: el push de Tickets sale por el portal.
+    ECOSISTEMA_PUSH_DESTINO: 'portal',
 };
 
 const php = (args) => execFileSync('php', args, { cwd: TICKETS, env, stdio: 'pipe' }).toString();
@@ -66,8 +62,7 @@ const tarjeta = (p, selector) => p.locator(selector).first().locator('xpath=ance
 
 const guias = {
     async 'tickets-primeros-pasos'(b, g) {
-        const p = await entrar(b, 'laura.gomez', { conServiceWorker: true });
-        await p.context().grantPermissions(['notifications'], { origin: BASE });
+        const p = await entrar(b, 'laura.gomez');
         await abrir(p, '/dashboard');
         await captura(p, g, '01-inicio', { completa: true });
         await captura(p, g, '02-menu', { resaltar: [enlaceMenu(p, '/tickets/pending'), enlaceMenu(p, '/tickets'), enlaceMenu(p, '/notifications')] });

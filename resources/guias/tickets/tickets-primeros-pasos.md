@@ -32,7 +32,9 @@ Reúne tus tickets y actividades abiertos, ordenados por fecha límite y priorid
 
 ## Notificaciones
 
-Aquí ves asignaciones, comentarios y mensajes. Toca un aviso para abrirlo. **Activar notificaciones** hace que lleguen a tu dispositivo.
+Aquí ves asignaciones, comentarios y mensajes. Toca un aviso para abrirlo.
+
+Las notificaciones al celular llegan por la **app del portal**: usa **Abrir notificaciones del portal** y actívalas allá. Consulta [La app y las notificaciones](/tutoriales/app-y-notificaciones).
 
 ![Pantalla de notificaciones](04-notificaciones.png)
 
