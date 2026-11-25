@@ -3,7 +3,7 @@ import { execFileSync } from 'node:child_process';
 import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
-import { AQUI, CLAVE, PORTAL, detenerTodo, navegador, persona, servidor } from './lib.mjs';
+import { AQUI, CLAVE, PORTAL, detenerTodo, navegador, persona, servidor, totp } from './lib.mjs';
 
 const salida = process.argv[2] ?? path.join(os.tmpdir(), 'tutoriales_revision');
 fs.mkdirSync(salida, { recursive: true });
@@ -35,6 +35,11 @@ try {
             await p.fill('#email', correo);
             await p.fill('#password', CLAVE);
             await p.locator('form button:not([type="button"])').first().click();
+            await p.waitForLoadState('networkidle');
+            if (p.url().includes('/two-factor/challenge')) {
+                await p.fill('#code', totp('JBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXP'));
+                await p.getByRole('button', { name: 'Verificar' }).click();
+            }
             await p.waitForURL('**/inicio');
         }
         await p.goto('/tutoriales');
@@ -71,6 +76,7 @@ try {
         await p.context().close();
     }
 
+    await recorrer('administradora', 'alejandra.ruiz@ejemplo.mx');
     await recorrer('visitante', null);
     await recorrer('usuaria-celular', 'laura.gomez@ejemplo.mx', { celular: true });
     await recorrer('usuario-oscuro', 'diego.hernandez@ejemplo.mx', { oscuro: true });

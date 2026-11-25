@@ -113,5 +113,75 @@ return [
             'resumen' => 'Estructura de la organización y buzón de correo de cada coordinación.',
             'roles' => ['administrador'], 'publicada' => '2026-11-25',
         ],
+        'dashboard-inicio' => [
+            'sistema' => 'dashboard', 'titulo' => 'Dashboard: primeros pasos',
+            'resumen' => 'Inicio, menú, perfil y uso en el celular.',
+            'publicada' => '2026-11-25',
+        ],
+        'dashboard-asistencia' => [
+            'sistema' => 'dashboard', 'titulo' => 'Capturar la asistencia diaria',
+            'resumen' => 'Registra el estatus del personal, los comisionados y genera el oficio.',
+            'publicada' => '2026-11-25',
+        ],
+        'dashboard-asistencia-zona' => [
+            'sistema' => 'dashboard', 'titulo' => 'Asistencia de la Zona',
+            'resumen' => 'Quién ya capturó, el detalle por estación y el oficio de la Zona.',
+            'roles' => ['jefe_zona', 'administrador', 'edificio'], 'publicada' => '2026-11-25',
+        ],
+        'dashboard-horarios' => [
+            'sistema' => 'dashboard', 'titulo' => 'Rol de horarios',
+            'resumen' => 'Consulta el horario semanal, pide cambios y autorízalos.',
+            'publicada' => '2026-11-25',
+        ],
+        'dashboard-vacaciones' => [
+            'sistema' => 'dashboard', 'titulo' => 'Vacaciones',
+            'resumen' => 'Consulta el rol, elige tus periodos y revisa las selecciones.',
+            'publicada' => '2026-11-25',
+        ],
+        'dashboard-cumpleanos' => [
+            'sistema' => 'dashboard', 'titulo' => 'Cumpleaños',
+            'resumen' => 'Quién cumple hoy, en los próximos días y en cada mes.',
+            'publicada' => '2026-11-25',
+        ],
+        'dashboard-personal' => [
+            'sistema' => 'dashboard', 'titulo' => 'Personal',
+            'resumen' => 'Consulta, registra y actualiza la plantilla.',
+            'roles' => ['jefe_zona', 'administrador', 'edificio'], 'publicada' => '2026-11-25',
+        ],
+        'dashboard-insumos' => [
+            'sistema' => 'dashboard', 'titulo' => 'Solicitud de insumos',
+            'resumen' => 'Captura la solicitud mensual y síguela hasta su aprobación.',
+            'publicada' => '2026-11-25',
+        ],
+        'dashboard-insumos-zona' => [
+            'sistema' => 'dashboard', 'titulo' => 'Catálogo, cotizaciones y facturas',
+            'resumen' => 'Administra el catálogo, proveedores, inventario, cotizaciones y comprobación.',
+            'roles' => ['jefe_zona', 'administrador', 'edificio'], 'publicada' => '2026-11-25',
+        ],
+        'dashboard-papeleria' => [
+            'sistema' => 'dashboard', 'titulo' => 'Solicitud de papelería',
+            'resumen' => 'Pide los artículos del mes y revisa las solicitudes.',
+            'publicada' => '2026-11-25',
+        ],
+        'dashboard-agua' => [
+            'sistema' => 'dashboard', 'titulo' => 'Registro de agua',
+            'resumen' => 'Registra las compras de garrafones del mes y envíalas a la Zona.',
+            'publicada' => '2026-11-25',
+        ],
+        'dashboard-afluencia' => [
+            'sistema' => 'dashboard', 'titulo' => 'Flujo de pasajeros',
+            'resumen' => 'Captura diaria de abordajes y boletos por estación.',
+            'publicada' => '2026-11-25',
+        ],
+        'dashboard-ptar' => [
+            'sistema' => 'dashboard', 'titulo' => 'Reporte de estatus PTAR',
+            'resumen' => 'Reporte mensual de la planta de tratamiento y sus hallazgos.',
+            'publicada' => '2026-11-25',
+        ],
+        'dashboard-administracion' => [
+            'sistema' => 'dashboard', 'titulo' => 'Administrar cuentas, equipos y menú',
+            'resumen' => 'Cuentas del Dashboard, equipos por estación y secciones del menú.',
+            'roles' => ['jefe_zona', 'administrador'], 'publicada' => '2026-11-25',
+        ],
     ],
 ];

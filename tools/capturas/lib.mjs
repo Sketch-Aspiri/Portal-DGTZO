@@ -94,12 +94,19 @@ export async function persona(browser, base, { celular = false, conServiceWorker
  * Toma una captura. `resaltar`: selectores o locators que se marcan con un recuadro numerado.
  * `recortar`: selector o locator cuya zona (con margen) es lo único que se guarda. `completa`: página entera.
  */
-export async function captura(page, guia, nombre, { resaltar = [], recortar = null, completa = false } = {}) {
+export async function captura(page, guia, nombre, { resaltar = [], recortar = null, completa = false, expandir = false } = {}) {
     await page.waitForLoadState('networkidle');
     await page.evaluate(() => document.fonts.ready);
     await page.waitForTimeout(300);
 
     const locator = (s) => (typeof s === 'string' ? page.locator(s).first() : s);
+    const ventana = page.viewportSize();
+    if (expandir) {
+        const alto = await page.evaluate(() => document.documentElement.scrollHeight);
+        await page.setViewportSize({ width: ventana.width, height: Math.max(ventana.height, alto) });
+        await page.waitForTimeout(300);
+        completa = false;
+    }
     const marcas = [].concat(resaltar);
 
     for (const [i, m] of marcas.entries()) {
@@ -142,6 +149,7 @@ export async function captura(page, guia, nombre, { resaltar = [], recortar = nu
     }
 
     await page.screenshot(opciones);
+    if (expandir) await page.setViewportSize(ventana);
     await page.evaluate(() => document.querySelectorAll('.__marca').forEach((n) => n.remove()));
     console.log(`  ${guia.slug}/${nombre}.png`);
 }
