@@ -158,7 +158,7 @@ return [
         'register_title' => 'Crea tu cuenta',
         'register_subtitle' => 'Tu cuenta será revisada por la Zona antes de activarse.',
         'email_hint' => 'Usa tu correo institucional.',
-        'password_hint' => 'Mínimo 8 caracteres.',
+        'password_hint' => 'Mínimo 12 caracteres, con mayúsculas, minúsculas, números y símbolos.',
         'show_password' => 'Mostrar contraseña',
         'hide_password' => 'Ocultar contraseña',
         'no_account' => '¿No tienes cuenta?',

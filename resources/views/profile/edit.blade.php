@@ -25,7 +25,7 @@
                         <span class="h-1.5 w-1.5 rounded-full bg-brand-mint"></span>{{ __('portal.profile_page.one_profile') }}
                     </span>
                     <span class="inline-flex items-center gap-1.5 rounded-full border border-white/25 bg-white/10 px-3 py-1 text-xs font-semibold backdrop-blur">
-                        {{ __('portal.profile_page.systems_count', ['count' => count($accesos)]) }}
+                        {{ trans_choice('portal.profile_page.systems_count', count($accesos), ['count' => count($accesos)]) }}
                     </span>
                 </div>
             </div>
