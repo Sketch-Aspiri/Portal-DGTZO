@@ -65,9 +65,9 @@ class TutorialesTest extends TestCase
         $this->get(route('tutorials.index'))->assertOk()
             ->assertSee('Guía pública')->assertDontSee('Guía de perfil')->assertDontSee('Guía de tickets');
         $this->get(route('tutorials.show', 'acceso'))->assertOk()->assertSee('Texto de acceso.');
-        $this->get(route('tutorials.image', ['acceso', '01-pantalla.png']))->assertOk()->assertHeader('X-Content-Type-Options', 'nosniff');
+        $this->get(route('tutorials.image', ['acceso', '01-pantalla']))->assertOk()->assertHeader('X-Content-Type-Options', 'nosniff');
         $this->get(route('tutorials.show', 'perfil'))->assertRedirect(route('login'));
-        $this->get(route('tutorials.image', ['perfil', '01-pantalla.png']))->assertRedirect(route('login'));
+        $this->get(route('tutorials.image', ['perfil', '01-pantalla']))->assertRedirect(route('login'));
     }
 
     public function test_pending_accounts_only_see_public_guides(): void
@@ -93,7 +93,7 @@ class TutorialesTest extends TestCase
         $this->get(route('tutorials.index'))->assertOk()
             ->assertSee('Guía de perfil')->assertDontSee('Guía de cuentas')->assertDontSee('Guía de tickets');
         $this->get(route('tutorials.show', 'tickets-uso'))->assertNotFound();
-        $this->get(route('tutorials.image', ['tickets-uso', '01-pantalla.png']))->assertNotFound();
+        $this->get(route('tutorials.image', ['tickets-uso', '01-pantalla']))->assertNotFound();
         $this->get(route('tutorials.show', 'cuentas'))->assertNotFound();
     }
 
@@ -125,7 +125,9 @@ class TutorialesTest extends TestCase
         $this->get(route('tutorials.show', 'acceso'))->assertOk()
             ->assertSee('id="primer-paso"', false)
             ->assertSee('href="#segundo-paso"', false)
-            ->assertSee('/tutoriales/acceso/img/01-pantalla.png', false)
+            ->assertSee('/tutoriales/acceso/img/01-pantalla?v=', false)
+            // En producción nginx se queda con las direcciones terminadas en extensión de imagen.
+            ->assertDontSee('/tutoriales/acceso/img/01-pantalla.png', false)
             ->assertDontSee('<script>alert(1)</script>', false)
             ->assertDontSee('javascript:alert', false);
     }
@@ -133,8 +135,8 @@ class TutorialesTest extends TestCase
     public function test_unknown_guides_and_unsafe_file_names_are_not_found(): void
     {
         $this->get('/tutoriales/no-existe')->assertNotFound();
-        $this->get('/tutoriales/acceso/img/no-existe.png')->assertNotFound();
-        $this->get('/tutoriales/acceso/img/..%2F..%2Fperfil%2F01-pantalla.png')->assertNotFound();
+        $this->get('/tutoriales/acceso/img/no-existe')->assertNotFound();
+        $this->get('/tutoriales/acceso/img/..%2F..%2Fperfil%2F01-pantalla')->assertNotFound();
         $this->get('/tutoriales/acceso/img/acceso.md')->assertNotFound();
     }
 }

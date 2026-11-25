@@ -28,8 +28,9 @@ Route::prefix('ecosistema')->middleware('throttle:ecosystem-sso')->group(functio
 Route::prefix('tutoriales')->name('tutorials.')->middleware('throttle:tutorials')->group(function () {
     Route::get('/', [TutorialController::class, 'index'])->name('index');
     Route::get('/{slug}', [TutorialController::class, 'show'])->where('slug', '[a-z0-9-]{1,80}')->name('show');
-    Route::get('/{slug}/img/{archivo}', [TutorialController::class, 'image'])
-        ->where(['slug' => '[a-z0-9-]{1,80}', 'archivo' => '[a-z0-9][a-z0-9-]{0,80}\.png'])->name('image');
+    // Sin extensión en la dirección: el servidor web atiende los *.png como archivos de public/ y no llegarían aquí.
+    Route::get('/{slug}/img/{captura}', [TutorialController::class, 'image'])
+        ->where(['slug' => '[a-z0-9-]{1,80}', 'captura' => '[a-z0-9][a-z0-9-]{0,80}'])->name('image');
 });
 
 Route::middleware('auth')->group(function () {

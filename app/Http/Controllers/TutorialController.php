@@ -53,7 +53,7 @@ class TutorialController extends Controller
         ] + $renderizador->renderizar($guia));
     }
 
-    public function image(Request $request, string $slug, string $archivo): BinaryFileResponse|RedirectResponse
+    public function image(Request $request, string $slug, string $captura): BinaryFileResponse|RedirectResponse
     {
         $guia = $this->catalogo->buscar($slug);
         abort_if($guia === null, 404);
@@ -62,8 +62,8 @@ class TutorialController extends Controller
             return $this->sinPermiso($request->user());
         }
 
-        // La ruta solo admite nombres simples terminados en .png: no hay forma de salir de la carpeta.
-        $ruta = $guia->carpetaImagenes().DIRECTORY_SEPARATOR.$archivo;
+        // La ruta solo admite nombres simples (sin puntos ni diagonales): no hay forma de salir de la carpeta.
+        $ruta = $guia->carpetaImagenes().DIRECTORY_SEPARATOR.$captura.'.png';
         abort_unless(is_file($ruta), 404);
 
         $respuesta = response()->file($ruta, [

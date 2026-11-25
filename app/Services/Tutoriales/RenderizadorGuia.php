@@ -39,7 +39,7 @@ final class RenderizadorGuia
             function (array $m) use ($guia): string {
                 $ruta = $guia->carpetaImagenes().DIRECTORY_SEPARATOR.$m[1];
                 $existe = is_file($ruta);
-                $url = e(route('tutorials.image', ['slug' => $guia->slug, 'archivo' => $m[1], 'v' => $existe ? filemtime($ruta) : 0]));
+                $url = e(route('tutorials.image', ['slug' => $guia->slug, 'captura' => basename($m[1], '.png'), 'v' => $existe ? filemtime($ruta) : 0]));
                 [$ancho, $alto] = $existe ? (getimagesize($ruta) ?: [0, 0]) : [0, 0];
                 $medidas = $ancho > 0 ? ' width="'.$ancho.'" height="'.$alto.'"' : '';
                 $clase = $alto > $ancho ? 'captura captura-celular' : 'captura';
