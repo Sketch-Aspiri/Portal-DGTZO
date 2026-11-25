@@ -45,6 +45,7 @@ class AppServiceProvider extends ServiceProvider
         RateLimiter::for('push-write', fn (Request $request) => Limit::perMinute(20)->by((string) $request->user()?->id));
         RateLimiter::for('ecosystem-bridge', fn (Request $request) => Limit::perMinute(240)->by($request->ip()));
         RateLimiter::for('calendar-write', fn (Request $request) => Limit::perMinute(30)->by((string) $request->user()?->id));
+        RateLimiter::for('tutorials', fn (Request $request) => Limit::perMinute(600)->by((string) ($request->user()?->id ?? $request->ip())));
         RateLimiter::for('approvals', fn (Request $request) => Limit::perMinute(30)->by((string) $request->user()?->id));
     }
 }

@@ -108,3 +108,27 @@
 
 /* El logotipo es verde oscuro: en modo oscuro va sobre una placa clara. */
 .dark .logo-placa { background-color: #f2f7f5; border-radius: 0.5rem; padding: 0.25rem 0.5rem; }
+
+[x-cloak] { display: none !important; }
+
+/* Tutoriales: el HTML sale de Markdown, así que Tailwind no ve sus clases y se estilan aquí. */
+@layer components {
+    .guia-contenido { line-height: 1.7; overflow-wrap: break-word; }
+    .guia-contenido > :first-child { margin-top: 0; }
+    .guia-contenido h2 { @apply mt-10 mb-3 scroll-mt-4 border-t border-brand-green/10 pt-6 font-heading text-xl font-semibold text-brand-green; }
+    .guia-contenido h2:first-child { @apply border-t-0 pt-0; }
+    .guia-contenido h3 { @apply mt-6 mb-2 font-heading text-base font-semibold text-brand-green; }
+    .guia-contenido p { @apply my-3; }
+    .guia-contenido ul { @apply my-3 list-disc space-y-1 pl-6; }
+    .guia-contenido ol { @apply my-3 list-decimal space-y-1 pl-6; }
+    .guia-contenido a { @apply text-brand-teal underline; }
+    .guia-contenido strong { @apply font-semibold; }
+    .guia-contenido code { @apply rounded bg-gray-100 px-1.5 py-0.5 text-sm; }
+    .guia-contenido blockquote { @apply my-4 rounded-r-lg border-l-4 border-brand-mint bg-brand-mist px-4 py-1 text-sm; }
+    .guia-contenido table { @apply my-4 block w-full overflow-x-auto text-sm; }
+    .guia-contenido th, .guia-contenido td { @apply border border-brand-green/15 px-3 py-2 text-left align-top; }
+    .guia-contenido th { @apply bg-brand-mist font-semibold; }
+    .guia-contenido .captura { @apply my-4 block w-full cursor-zoom-in overflow-hidden rounded-xl border border-brand-green/15 shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal; }
+    .guia-contenido .captura img { @apply block h-auto w-full; }
+    .guia-contenido .captura-celular { @apply mx-auto max-w-xs; }
+}

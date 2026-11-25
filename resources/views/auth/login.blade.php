@@ -44,4 +44,8 @@
             <a href="{{ route('register') }}" class="font-semibold text-brand-teal hover:text-brand-green-dark hover:underline">{{ __('portal.welcome.register') }}</a>
         </p>
     @endif
+
+    <p class="mt-3 text-center text-sm">
+        <a href="{{ route('tutorials.index') }}" class="text-brand-teal hover:text-brand-green-dark hover:underline">{{ __('portal.tutorials.login_help') }}</a>
+    </p>
 </x-guest-layout>

@@ -22,7 +22,7 @@
             <h1 class="rise mt-2 font-heading text-3xl font-bold sm:text-4xl" style="animation-delay:.06s">{{ __('portal.launcher.'.$saludo) }}, {{ $nombre }}</h1>
             <p class="rise mt-3 max-w-2xl text-white/90" style="animation-delay:.12s">{{ __('portal.launcher.subtitle') }}</p>
             <p class="rise mt-5 inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-3 py-1 text-xs font-semibold backdrop-blur" style="animation-delay:.18s">
-                <span class="h-1.5 w-1.5 rounded-full bg-brand-mint"></span>{{ trans_choice('portal.launcher.count', count($subsistemas) + 1, ['count' => count($subsistemas) + 1]) }}
+                <span class="h-1.5 w-1.5 rounded-full bg-brand-mint"></span>{{ trans_choice('portal.launcher.count', count($subsistemas) + 2, ['count' => count($subsistemas) + 2]) }}
             </p>
         </div>
     </section>
@@ -95,9 +95,33 @@
                     </div>
                 </a>
 
+                {{-- Tutoriales: guías de los sistemas, filtradas según los accesos de la cuenta. --}}
+                <a href="{{ route('tutorials.index') }}"
+                   class="rise group relative flex flex-col overflow-hidden rounded-2xl border border-brand-green/10 bg-white p-6 shadow-lg shadow-brand-green/10 transition duration-300 hover:-translate-y-1 hover:border-brand-mint hover:shadow-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal"
+                   style="animation-delay: {{ 0.15 + (count($subsistemas) + 1) * 0.08 }}s">
+                    <span class="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-brand-teal to-brand-mint opacity-0 transition group-hover:opacity-100" aria-hidden="true"></span>
+                    <div class="flex items-start justify-between">
+                        <span class="flex h-14 w-14 items-center justify-center rounded-xl bg-gradient-to-br from-brand-teal to-brand-green text-white shadow-md shadow-brand-green/30 transition group-hover:scale-105" aria-hidden="true">
+                            <svg class="h-7 w-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 6C10 4.5 7.5 4 4 4v14c3.5 0 6 .5 8 2 2-1.5 4.500-2 8-2V4c-3.5 0-6 .5-8 2zm0 0v14"/></svg>
+                        </span>
+                        <span class="inline-flex items-center gap-1.5 rounded-full bg-brand-mist px-2.5 py-1 text-xs font-semibold text-brand-teal">
+                            <span class="h-1.5 w-1.5 rounded-full bg-emerald-500"></span>{{ __('portal.launcher.available') }}
+                        </span>
+                    </div>
+                    <h2 class="mt-5 font-heading text-xl font-semibold text-brand-green">{{ __('portal.tutorials.title') }}</h2>
+                    <p class="mt-2 flex-1 text-sm leading-relaxed text-gray-600">{{ __('portal.tutorials.launcher_text') }}</p>
+                    <div class="mt-5 flex items-center justify-between border-t border-brand-green/10 pt-4">
+                        <span class="text-xs text-gray-500">{{ __('portal.tutorials.launcher_scope') }}</span>
+                        <span class="inline-flex items-center gap-1 text-sm font-semibold text-brand-teal">
+                            {{ __('portal.launcher.open') }}
+                            <svg class="h-4 w-4 transition group-hover:translate-x-1" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10.3 4.3a1 1 0 011.4 0l5 5a1 1 0 010 1.4l-5 5a1 1 0 01-1.4-1.4L13.6 11H4a1 1 0 110-2h9.6l-3.3-3.3a1 1 0 010-1.4z" clip-rule="evenodd"/></svg>
+                        </span>
+                    </div>
+                </a>
+
                 {{-- Temayin AI: aún sin dirección; se muestra a todas las cuentas activas como próxima herramienta. --}}
                 <div class="rise relative flex flex-col overflow-hidden rounded-2xl border border-brand-green/10 bg-gradient-to-br from-brand-green-dark via-brand-green to-brand-teal p-6 text-white shadow-lg shadow-brand-green/20"
-                     style="animation-delay: {{ 0.15 + (count($subsistemas) + 1) * 0.08 }}s" role="group" aria-label="{{ __('portal.launcher.temayin_name') }}">
+                     style="animation-delay: {{ 0.15 + (count($subsistemas) + 2) * 0.08 }}s" role="group" aria-label="{{ __('portal.launcher.temayin_name') }}">
                     <span class="absolute -right-10 -top-10 h-40 w-40 rounded-full bg-brand-mint/20 blur-2xl" aria-hidden="true"></span>
                     <div class="relative flex items-start justify-between">
                         <span class="flex h-14 w-14 items-center justify-center rounded-xl bg-white/15 ring-1 ring-white/30 backdrop-blur" aria-hidden="true">

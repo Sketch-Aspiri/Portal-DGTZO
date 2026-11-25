@@ -52,9 +52,9 @@ class CalendarioTest extends TestCase
     {
         $user = User::factory()->active()->create();
 
-        // Sin accesos a Dashboard ni Tickets, el Calendario sigue siendo un sistema disponible.
+        // Sin accesos a Dashboard ni Tickets, el Calendario y los Tutoriales siguen disponibles.
         $html = $this->asVerified($user)->get(route('dashboard'))->assertOk()
-            ->assertSee('1 sistema disponible')->assertSee(route('calendar.index'))->getContent();
+            ->assertSee('2 sistemas disponibles')->assertSee(route('calendar.index'))->getContent();
         $this->assertStringContainsString(__('portal.launcher.available'), $html);
     }
 

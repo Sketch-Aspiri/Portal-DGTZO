@@ -25,6 +25,7 @@
                     <x-application-logo class="h-12 sm:h-14 [&_img]:brightness-0 [&_img]:invert" />
                 </a>
                 <nav class="flex items-center gap-2 sm:gap-3">
+                    <a href="{{ route('tutorials.index') }}" class="inline-flex min-h-[44px] items-center rounded-lg px-3 text-sm font-semibold text-white hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white">{{ __('portal.tutorials.help') }}</a>
                     @auth
                         <a href="{{ route('dashboard') }}" class="{{ $btnPrimary }} !min-h-[44px] !rounded-lg !px-4">{{ __('portal.welcome.open') }}</a>
                     @else

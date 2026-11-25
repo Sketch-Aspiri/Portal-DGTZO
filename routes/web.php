@@ -12,6 +12,7 @@ use App\Http\Controllers\NotificationCenterController;
 use App\Http\Controllers\ProfileAvatarController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Push\PushSubscriptionController;
+use App\Http\Controllers\TutorialController;
 use App\Http\Controllers\UserApprovalController;
 use Illuminate\Support\Facades\Route;
 
@@ -21,6 +22,14 @@ Route::view('/', 'welcome')->name('home');
 Route::prefix('ecosistema')->middleware('throttle:ecosystem-sso')->group(function () {
     Route::get('/sso', [EcosystemSessionController::class, 'ask'])->name('ecosistema.sso');
     Route::get('/salir', [EcosystemSessionController::class, 'leave'])->name('ecosistema.salir');
+});
+
+// Tutoriales: van fuera de auth porque las guías de acceso son públicas; el permiso de cada guía lo decide el controlador.
+Route::prefix('tutoriales')->name('tutorials.')->middleware('throttle:tutorials')->group(function () {
+    Route::get('/', [TutorialController::class, 'index'])->name('index');
+    Route::get('/{slug}', [TutorialController::class, 'show'])->where('slug', '[a-z0-9-]{1,80}')->name('show');
+    Route::get('/{slug}/img/{archivo}', [TutorialController::class, 'image'])
+        ->where(['slug' => '[a-z0-9-]{1,80}', 'archivo' => '[a-z0-9][a-z0-9-]{0,80}\.png'])->name('image');
 });
 
 Route::middleware('auth')->group(function () {
