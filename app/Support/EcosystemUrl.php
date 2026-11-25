@@ -20,7 +20,7 @@ final class EcosystemUrl
      * Rutas a las que puede llevar un aviso: pantallas de consulta del portal, Tickets y el Dashboard. Nada de sesión
      * (`/ecosistema/...`, `/logout`), puente (`/interno`), archivos (`/storage`) ni descargas.
      */
-    private const ALLOWED = '#^/(?:|(?:inicio|notificaciones|calendario|profile|cuenta|tickets|activities|notifications|chat|tracking|dashboard|insumos|asistencia|horarios|vacaciones|cumpleanos|secciones|agenda)(?:/.*)?)$#D';
+    private const ALLOWED = '#^/(?:|(?:inicio|notificaciones|calendario|profile|cuenta|tickets|activities|notifications|chat|tracking|dashboard|insumos|asistencia|horarios|vacaciones|cumpleanos|secciones|agenda|agua|ptar|papeleria|afluencia|incoming-emails|users)(?:/.*)?)$#D';
 
     /** Segmentos que descargan archivos o cambian la sesión con un simple GET. */
     private const DENIED = '#/(?:export|exportar|descargar|download|reporte|reportes|salir|logout|preview)(?:/|$)#i';
