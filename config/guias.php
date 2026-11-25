@@ -63,5 +63,55 @@ return [
             'resumen' => 'Aprueba solicitudes, crea cuentas, cambia roles y da de baja.',
             'roles' => ['administrador', 'jefe_zona'], 'publicada' => '2026-11-25',
         ],
+        'tickets-primeros-pasos' => [
+            'sistema' => 'tickets', 'titulo' => 'Tickets: primeros pasos',
+            'resumen' => 'Qué es un ticket y una actividad, el menú, tus pendientes, avisos y perfil.',
+            'publicada' => '2026-11-25',
+        ],
+        'tickets-solicitudes' => [
+            'sistema' => 'tickets', 'titulo' => 'Crear y tomar tickets',
+            'resumen' => 'Levanta una solicitud, envíala al equipo correcto y toma tickets de la bolsa.',
+            'publicada' => '2026-11-25',
+        ],
+        'tickets-avance' => [
+            'sistema' => 'tickets', 'titulo' => 'Avanzar, revisar y comentar',
+            'resumen' => 'El flujo de estados, comentarios, archivos adjuntos y aprobación del trabajo.',
+            'publicada' => '2026-11-25',
+        ],
+        'tickets-asignar' => [
+            'sistema' => 'tickets', 'titulo' => 'Asignar y dar seguimiento al equipo',
+            'resumen' => 'Asigna responsables, revisa lo de tu equipo y exporta a Excel.',
+            'roles' => ['administrador', 'jefe_zona', 'coordinador'], 'publicada' => '2026-11-25',
+        ],
+        'tickets-actividades' => [
+            'sistema' => 'tickets', 'titulo' => 'Actividades y tareas recurrentes',
+            'resumen' => 'Planifica actividades, divide en subtareas y programa las que se repiten.',
+            'roles' => ['administrador', 'jefe_zona', 'coordinador'], 'publicada' => '2026-11-25',
+        ],
+        'tickets-correos' => [
+            'sistema' => 'tickets', 'titulo' => 'Correos entrantes',
+            'resumen' => 'Revisa las solicitudes que llegan por correo y conviértelas en actividades.',
+            'roles' => ['administrador', 'jefe_zona', 'coordinador'], 'publicada' => '2026-11-25',
+        ],
+        'tickets-seguimiento' => [
+            'sistema' => 'tickets', 'titulo' => 'Panel de seguimiento',
+            'resumen' => 'Indicadores, gráficas y carga de trabajo por persona.',
+            'roles' => ['administrador', 'jefe_zona', 'coordinador'], 'publicada' => '2026-11-25',
+        ],
+        'tickets-chat' => [
+            'sistema' => 'tickets', 'titulo' => 'Chat',
+            'resumen' => 'Mensajes directos y el canal de tu equipo.',
+            'publicada' => '2026-11-25',
+        ],
+        'tickets-administracion' => [
+            'sistema' => 'tickets', 'titulo' => 'Administrar usuarios, equipos y categorías',
+            'resumen' => 'Cuentas, roles, equipos, categorías y la bitácora.',
+            'roles' => ['administrador', 'jefe_zona'], 'publicada' => '2026-11-25',
+        ],
+        'tickets-estructura' => [
+            'sistema' => 'tickets', 'titulo' => 'Estaciones, coordinaciones y buzones',
+            'resumen' => 'Estructura de la organización y buzón de correo de cada coordinación.',
+            'roles' => ['administrador'], 'publicada' => '2026-11-25',
+        ],
     ],
 ];
