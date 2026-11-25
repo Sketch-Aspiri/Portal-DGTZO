@@ -13,13 +13,15 @@
      @keydown.escape.window="captura = null">
     <a href="{{ route('tutorials.index') }}" class="inline-flex min-h-[44px] items-center text-sm font-semibold text-brand-teal hover:underline">&larr; {{ __('portal.tutorials.back') }}</a>
 
-    <div class="mt-2 flex flex-col gap-4 lg:grid lg:grid-cols-[minmax(0,1fr)_16rem] lg:items-start lg:gap-8">
-        <article class="order-2 min-w-0 lg:order-1">
-            <p class="text-sm font-semibold uppercase tracking-wider text-brand-teal">{{ $sistema }}</p>
-            <h1 class="mt-1 font-heading text-3xl font-bold text-brand-green">{{ $guia->titulo }}</h1>
-            <p class="mt-2 text-sm text-gray-500">{{ __('portal.tutorials.updated', ['date' => $guia->actualizada->locale('es')->isoFormat('D [de] MMMM [de] YYYY')]) }}</p>
+    <header class="mt-2">
+    <p class="text-sm font-semibold uppercase tracking-wider text-brand-teal">{{ $sistema }}</p>
+    <h1 class="mt-1 font-heading text-3xl font-bold text-brand-green">{{ $guia->titulo }}</h1>
+    <p class="mt-2 text-sm text-gray-500">{{ __('portal.tutorials.updated', ['date' => $guia->actualizada->locale('es')->isoFormat('D [de] MMMM [de] YYYY')]) }}</p>
+    </header>
 
-            <div class="guia-contenido mt-6 rounded-2xl border border-brand-green/10 bg-white p-5 sm:p-8" @click="abrir($event)">
+    <div class="mt-6 flex flex-col gap-4 lg:grid lg:grid-cols-[minmax(0,1fr)_16rem] lg:items-start lg:gap-8">
+        <article class="order-2 min-w-0 lg:order-1">
+            <div class="guia-contenido rounded-2xl border border-brand-green/10 bg-white p-5 sm:p-8" @click="abrir($event)">
                 {!! $html !!}
             </div>
 
