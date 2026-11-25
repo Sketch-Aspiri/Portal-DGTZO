@@ -22,5 +22,11 @@
         <p>No se pudo conectar con el portal. Revisa tu conexión a internet e inténtalo de nuevo.</p>
         <a href="/inicio">Reintentar</a>
     </main>
+    <script>
+        // Reintenta solo: al volver la red y cada 8 s mientras la pagina siga abierta.
+        function retry() { location.replace('/inicio'); }
+        window.addEventListener('online', retry);
+        setInterval(function () { if (navigator.onLine) { retry(); } }, 8000);
+    </script>
 </body>
 </html>

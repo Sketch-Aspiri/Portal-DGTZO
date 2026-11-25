@@ -3,7 +3,7 @@
 // Seguridad: NO se cachea ninguna respuesta autenticada ni dinamica (paginas, JSON, avatares). Solo se guardan la
 // pagina de "sin conexion", los iconos y los assets versionados de /build/ (nombres con hash, sin datos de usuario).
 // Subir la version invalida la cache anterior.
-const VERSION = 'v1';
+const VERSION = 'v2';
 
 // Sistemas del ecosistema a los que puede llevar una notificacion (ademas de este sitio). Lista exacta, sin
 // comodines: un subdominio de terceros no debe abrirse desde un aviso. Mantenerla igual a config('ecosistema.urls') y
@@ -27,6 +27,16 @@ self.addEventListener('activate', (event) => {
     );
 });
 
+function fetchWithRetry(request, retries) {
+    return fetch(request).catch((error) => {
+        if (retries <= 0) {
+            throw error;
+        }
+
+        return new Promise((resolve) => setTimeout(resolve, 800)).then(() => fetchWithRetry(request, retries - 1));
+    });
+}
+
 self.addEventListener('fetch', (event) => {
     const { request } = event;
     const url = new URL(request.url);
@@ -35,9 +45,10 @@ self.addEventListener('fetch', (event) => {
         return;
     }
 
-    // Navegaciones: siempre red (contenido autenticado); si no hay conexion, pagina offline.
+    // Navegaciones: siempre red (contenido autenticado). Un fallo suelto (DNS lento, paquete perdido, cambio de
+    // Wi-Fi a datos) no es "sin conexion": se reintenta dos veces antes de mostrar la pagina offline.
     if (request.mode === 'navigate') {
-        event.respondWith(fetch(request).catch(() => caches.match(OFFLINE_URL)));
+        event.respondWith(fetchWithRetry(request, 2).catch(() => caches.match(OFFLINE_URL)));
 
         return;
     }
