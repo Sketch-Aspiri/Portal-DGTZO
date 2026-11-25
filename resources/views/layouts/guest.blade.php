@@ -57,5 +57,7 @@
                 </main>
             </div>
         </div>
+
+        <x-pantalla-carga />
     </body>
 </html>

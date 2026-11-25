@@ -22,6 +22,8 @@ Escribe tu correo y pide el enlace. Llegará a tu bandeja (revisa también el co
 
 ![Pantalla para solicitar el enlace de recuperación](03-recuperar.png)
 
+Mientras el portal o tus sistemas cargan una pantalla o guardan algo, verás el logo del Tren Maya con unos puntos en movimiento y no podrás tocar nada más. Si tarda demasiado, aparece el botón **Cerrar**.
+
 ## Abre tus sistemas
 
 En **Mis sistemas** aparece una tarjeta por cada sistema que tienes asignado, con tu rol. Toca **Abrir**. Abajo ves tus avisos recientes.

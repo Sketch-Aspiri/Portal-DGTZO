@@ -23,5 +23,7 @@
                 {{ __('portal.system_name') }}
             </footer>
         </div>
+
+        <x-pantalla-carga />
     </body>
 </html>

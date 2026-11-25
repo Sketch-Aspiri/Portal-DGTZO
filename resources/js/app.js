@@ -8,6 +8,7 @@ import './shader-background';
 import accessWizard from './access-wizard';
 import { registerPush, registerServiceWorker } from './push';
 import { selectorTema } from './tema';
+import { durante, mostrar, ocultar, registrar as registrarPantalla } from './pantalla-carga';
 import Alpine from 'alpinejs';
 
 window.Alpine = Alpine;
@@ -15,6 +16,10 @@ Alpine.data('accessWizard', accessWizard);
 Alpine.data('selectorTema', selectorTema);
 registerPush(Alpine);
 registerServiceWorker();
+
+// Pantalla de carga: window.PantallaCarga la usan también los scripts escritos en las vistas.
+window.PantallaCarga = { mostrar, ocultar, durante };
+registrarPantalla(document, window);
 
 Alpine.start();
 

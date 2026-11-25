@@ -27,6 +27,8 @@
                 @include($contenido)
             </main>
             <footer class="bg-brand-green py-6 text-center text-xs text-white/90">{{ __('portal.system_name') }}</footer>
+
+            <x-pantalla-carga />
         </body>
     </html>
 @endif

@@ -188,5 +188,7 @@
             <div class="mb-3 flex justify-center"><x-application-logo class="h-10 opacity-90 [&_img]:brightness-0 [&_img]:invert" /></div>
             {{ __('portal.welcome.footer') }}
         </footer>
+
+        <x-pantalla-carga />
     </body>
 </html>
