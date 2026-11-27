@@ -24,7 +24,7 @@
 
     <div class="relative z-10 mx-auto -mt-12 w-full max-w-5xl px-4 pb-16 sm:px-6 lg:px-8">
         @if (session('status'))
-            <p class="mb-4 rounded-lg bg-green-100 px-4 py-2 text-sm text-green-800" role="status">{{ session('status') }}</p>
+            <p data-aviso class="mb-4 rounded-lg bg-green-100 px-4 py-2 text-sm text-green-800">{{ session('status') }}</p>
         @endif
 
         {{-- Estados --}}

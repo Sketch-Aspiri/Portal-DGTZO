@@ -1,4 +1,6 @@
 <x-app-layout>
+    <x-slot name="title">{{ __('Dashboard') }}</x-slot>
+
     @php
         // La hora de la persona (Cancún), no la del servidor (UTC): a las 10:00 locales aún es "Buenos días".
         $hora = now(config('app.display_timezone'))->hour;
@@ -29,7 +31,7 @@
 
     <div class="relative z-10 mx-auto -mt-12 w-full max-w-7xl px-4 pb-16 sm:px-6 lg:px-8">
         @if (session('status'))
-            <p class="mb-4 rounded-lg bg-green-100 px-3 py-2 text-sm text-green-800">{{ session('status') }}</p>
+            <p data-aviso class="mb-4 rounded-lg bg-green-100 px-3 py-2 text-sm text-green-800">{{ session('status') }}</p>
         @endif
 
         @if (! count($subsistemas))

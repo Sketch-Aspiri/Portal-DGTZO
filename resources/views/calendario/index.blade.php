@@ -2,7 +2,7 @@
     <x-slot name="header">
         <div class="flex flex-wrap items-center justify-between gap-3">
             <div>
-                <h2 class="font-heading font-semibold text-xl text-brand-green leading-tight">{{ __('portal.calendar.title') }}</h2>
+                <h1 class="font-heading font-semibold text-xl text-brand-green leading-tight">{{ __('portal.calendar.title') }}</h1>
                 <p class="text-sm text-gray-600">{{ __('portal.calendar.subtitle') }}</p>
             </div>
             @can('manage-calendar')
@@ -20,7 +20,7 @@
     <div class="py-8">
         <div class="mx-auto max-w-7xl space-y-6 px-4 sm:px-6 lg:px-8">
             @if (session('status'))
-                <p class="rounded-lg bg-green-100 px-3 py-2 text-sm text-green-800" role="status">{{ session('status') }}</p>
+                <p data-aviso class="rounded-lg bg-green-100 px-3 py-2 text-sm text-green-800">{{ session('status') }}</p>
             @endif
 
             {{-- Navegación de mes y filtro por tipo --}}
@@ -28,7 +28,7 @@
                 <div class="flex items-center gap-2">
                     <a href="{{ route('calendar.index', $consulta(['mes' => $previo])) }}" aria-label="{{ __('portal.calendar.previous') }}"
                        class="inline-flex h-11 w-11 items-center justify-center rounded-md border border-brand-green/15 bg-white text-brand-green hover:border-brand-mint focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal">‹</a>
-                    <h3 class="min-w-[10rem] text-center font-heading text-lg font-semibold text-brand-green">{{ $mesTexto }}</h3>
+                    <h2 class="min-w-[10rem] text-center font-heading text-lg font-semibold text-brand-green">{{ $mesTexto }}</h2>
                     <a href="{{ route('calendar.index', $consulta(['mes' => $siguiente])) }}" aria-label="{{ __('portal.calendar.next') }}"
                        class="inline-flex h-11 w-11 items-center justify-center rounded-md border border-brand-green/15 bg-white text-brand-green hover:border-brand-mint focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal">›</a>
                     <a href="{{ route('calendar.index', array_filter(['tipo' => $tipo?->value, 'capas' => $capasActivas ?: null])) }}"
@@ -123,7 +123,7 @@
 
             {{-- Próximas entradas --}}
             <section aria-labelledby="proximas">
-                <h3 id="proximas" class="font-heading text-sm font-semibold uppercase tracking-wider text-brand-teal">{{ __('portal.calendar.upcoming') }}</h3>
+                <h2 id="proximas" class="font-heading text-sm font-semibold uppercase tracking-wider text-brand-teal">{{ __('portal.calendar.upcoming') }}</h2>
                 <div class="mt-3 space-y-2">
                     @forelse ($proximas as $entrada)
                         @php $inicio = $entrada->inicioLocal()->locale('es'); @endphp

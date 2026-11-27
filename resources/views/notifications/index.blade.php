@@ -18,7 +18,7 @@
         </div>
 
         @if (session('status'))
-            <p class="mt-4 rounded-lg bg-green-100 px-3 py-2 text-sm text-green-800" role="status">{{ session('status') }}</p>
+            <p data-aviso class="mt-4 rounded-lg bg-green-100 px-3 py-2 text-sm text-green-800">{{ session('status') }}</p>
         @endif
 
         <div class="mt-6 grid gap-6 lg:grid-cols-[minmax(0,1fr)_20rem]">

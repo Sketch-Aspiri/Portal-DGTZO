@@ -1,4 +1,6 @@
 <x-app-layout>
+    <x-slot name="title">{{ __('portal.profile') }}</x-slot>
+
     @php
         $accesos = $user->subsistemasAccesibles();
         $card = 'rounded-2xl border border-brand-green/10 bg-white p-6 shadow-lg shadow-brand-green/5 sm:p-8';
@@ -34,7 +36,7 @@
 
     <div class="relative z-10 mx-auto -mt-14 w-full max-w-5xl space-y-6 px-4 pb-16 sm:px-6 lg:px-8">
         @if (session('status') === 'avatar-updated' || session('status') === 'avatar-removed')
-            <p class="rounded-lg bg-green-100 px-4 py-2 text-sm text-green-800" role="status">
+            <p data-aviso class="rounded-lg bg-green-100 px-4 py-2 text-sm text-green-800">
                 {{ __('portal.profile_page.'.session('status')) }}
             </p>
         @endif

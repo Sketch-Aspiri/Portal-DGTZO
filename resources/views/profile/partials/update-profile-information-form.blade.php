@@ -24,7 +24,7 @@
             <x-primary-button>{{ __('portal.save') }}</x-primary-button>
 
             @if (session('status') === 'profile-updated')
-                <p class="text-sm text-gray-600">{{ __('portal.saved') }}</p>
+                <p data-aviso class="text-sm text-gray-600">{{ __('portal.saved') }}</p>
             @endif
         </div>
     </form>

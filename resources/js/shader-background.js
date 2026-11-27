@@ -89,7 +89,8 @@ function start(canvas) {
     const uRes = u('u_resolution');
     const uTime = u('u_time');
 
-    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const sistema = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    const quieto = () => sistema || document.documentElement.classList.contains('a11y-sin-movimiento');
     const t0 = performance.now();
     let raf = 0;
     let visible = true;
@@ -115,14 +116,15 @@ function start(canvas) {
         gl.uniform2f(uRes, canvas.width, canvas.height);
         gl.uniform1f(uTime, ((now - t0) / 1000) * 0.309);
         gl.drawArrays(gl.TRIANGLES, 0, 3);
-        if (!reduced && visible) raf = requestAnimationFrame(draw);
+        if (!quieto() && visible) raf = requestAnimationFrame(draw);
     };
 
     new IntersectionObserver(([e]) => {
         visible = e.isIntersecting;
         if (visible && !raf) raf = requestAnimationFrame(draw);
     }).observe(canvas);
-    window.addEventListener('resize', () => { if (reduced) requestAnimationFrame(draw); });
+    window.addEventListener('resize', () => { if (quieto()) requestAnimationFrame(draw); });
+    window.addEventListener('a11y-cambiado', () => { if (!raf) raf = requestAnimationFrame(draw); });
     raf = requestAnimationFrame(draw);
 }
 

@@ -7,14 +7,16 @@
     <!DOCTYPE html>
     <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
         <head>
-            @include('layouts.partials.head')
+            @include('layouts.partials.head', ['title' => isset($guia) ? $guia->titulo : __('portal.tutorials.title')])
         </head>
         <body class="flex min-h-screen flex-col bg-brand-mist font-sans text-gray-900 antialiased">
+            <x-saltar-contenido />
             <header class="border-b border-brand-green/10 bg-white">
                 <div class="mx-auto flex h-16 max-w-7xl items-center justify-between gap-3 px-4 sm:px-6 lg:px-8">
                     <a href="{{ route('home') }}" class="logo-placa"><x-application-logo class="h-10" /></a>
                     <div class="flex items-center gap-2">
                         <x-selector-tema />
+                        <x-panel-accesibilidad><x-selector-tema variante="segmentos" /></x-panel-accesibilidad>
                         @guest
                             <a href="{{ route('login') }}" class="inline-flex min-h-[44px] items-center rounded-lg bg-brand-green px-4 text-sm font-semibold text-white hover:bg-brand-green-dark">{{ __('portal.welcome.login') }}</a>
                         @else
@@ -23,11 +25,12 @@
                     </div>
                 </div>
             </header>
-            <main class="flex-1">
+            <main id="contenido" tabindex="-1" class="flex-1">
                 @include($contenido)
             </main>
             <footer class="bg-brand-green py-6 text-center text-xs text-white/90">{{ __('portal.system_name') }}</footer>
 
+            <x-accesibilidad-base />
             <x-pantalla-carga />
         </body>
     </html>

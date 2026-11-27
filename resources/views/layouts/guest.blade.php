@@ -5,6 +5,8 @@
         <style>[x-cloak]{display:none !important}</style>
     </head>
     <body class="font-sans text-gray-900 antialiased bg-brand-mist">
+        <x-saltar-contenido />
+
         <div class="min-h-screen lg:grid lg:grid-cols-[minmax(0,5fr)_minmax(0,6fr)]">
             {{-- Marca --}}
             <x-auth-brand-panel class="hidden lg:flex lg:flex-col lg:justify-between lg:p-12">
@@ -13,7 +15,7 @@
                 </a>
 
                 <div>
-                    <h2 class="font-heading text-3xl font-bold leading-tight">{{ __('portal.auth.panel_title') }}</h2>
+                    <p class="font-heading text-3xl font-bold leading-tight">{{ __('portal.auth.panel_title') }}</p>
                     <ul class="mt-8 space-y-4 text-white/90">
                         @foreach ([1, 2, 3] as $n)
                             <li class="flex gap-3">
@@ -35,11 +37,12 @@
                     </a>
                 </x-auth-brand-panel>
 
-                <div class="flex justify-end px-4 pt-4 sm:px-8">
+                <div class="flex justify-end gap-2 px-4 pt-4 sm:px-8">
                     <x-selector-tema />
+                    <x-panel-accesibilidad><x-selector-tema variante="segmentos" /></x-panel-accesibilidad>
                 </div>
 
-                <main class="flex flex-1 items-center justify-center px-4 py-8 sm:px-8">
+                <main id="contenido" tabindex="-1" class="flex flex-1 items-center justify-center px-4 py-8 sm:px-8">
                     <div class="w-full {{ $attributes->has('wide') ? 'max-w-2xl' : 'max-w-md' }}">
                         <div class="rounded-2xl border border-brand-green/10 bg-white p-6 shadow-lg shadow-brand-green/5 sm:p-8">
                             @isset($title)
@@ -58,6 +61,7 @@
             </div>
         </div>
 
+        <x-accesibilidad-base />
         <x-pantalla-carga />
     </body>
 </html>

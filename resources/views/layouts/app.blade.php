@@ -4,6 +4,8 @@
         @include('layouts.partials.head')
     </head>
     <body class="font-sans antialiased bg-brand-mist text-gray-900">
+        <x-saltar-contenido />
+
         <div class="min-h-screen flex flex-col">
             @include('layouts.navigation')
 
@@ -15,7 +17,7 @@
                 </header>
             @endisset
 
-            <main class="flex-1">
+            <main id="contenido" tabindex="-1" class="flex-1">
                 {{ $slot }}
             </main>
 
@@ -24,6 +26,7 @@
             </footer>
         </div>
 
+        <x-accesibilidad-base />
         <x-pantalla-carga />
     </body>
 </html>

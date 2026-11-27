@@ -8,7 +8,7 @@
     @endphp
 
     <x-slot name="header">
-        <h2 class="font-heading font-semibold text-xl text-brand-green leading-tight">{{ $editando ? __('portal.calendar.edit_title') : __('portal.calendar.new_title') }}</h2>
+        <h1 class="font-heading font-semibold text-xl text-brand-green leading-tight">{{ $editando ? __('portal.calendar.edit_title') : __('portal.calendar.new_title') }}</h1>
     </x-slot>
 
     <div class="py-12">

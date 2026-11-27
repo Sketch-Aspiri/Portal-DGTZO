@@ -1,14 +1,15 @@
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="scroll-smooth">
     <head>
-        @include('layouts.partials.head')
-        <title>{{ __('portal.system_name') }}</title>
+        @include('layouts.partials.head', ['title' => __('portal.system_name')])
     </head>
     <body class="flex min-h-screen flex-col bg-brand-mist font-sans text-gray-900 antialiased">
         @php
             $btnPrimary = 'inline-flex min-h-[48px] items-center justify-center rounded-xl bg-white px-6 text-sm font-semibold text-brand-green shadow-lg shadow-black/10 transition hover:-translate-y-0.5 hover:bg-brand-mist focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-brand-green';
             $btnGhost = 'inline-flex min-h-[48px] items-center justify-center rounded-xl border border-white/40 bg-white/5 px-6 text-sm font-semibold text-white backdrop-blur transition hover:bg-white/15 focus:outline-none focus-visible:ring-2 focus-visible:ring-white';
         @endphp
+
+        <x-saltar-contenido />
 
         {{-- Hero --}}
         <section class="relative isolate overflow-hidden text-white">
@@ -25,6 +26,7 @@
                     <x-application-logo class="h-12 sm:h-14 [&_img]:brightness-0 [&_img]:invert" />
                 </a>
                 <nav class="flex items-center gap-2 sm:gap-3">
+                    <x-panel-accesibilidad class="rounded-md bg-white" />
                     <a href="{{ route('tutorials.index') }}" class="inline-flex min-h-[44px] items-center rounded-lg px-3 text-sm font-semibold text-white hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white">{{ __('portal.tutorials.help') }}</a>
                     @auth
                         <a href="{{ route('dashboard') }}" class="{{ $btnPrimary }} !min-h-[44px] !rounded-lg !px-4">{{ __('portal.welcome.open') }}</a>
@@ -115,7 +117,7 @@
             </div>
         </section>
 
-        <main class="relative z-10 mx-auto -mt-24 w-full max-w-6xl flex-1 px-4 pb-8 sm:px-6 lg:px-8">
+        <main id="contenido" tabindex="-1" class="relative z-10 mx-auto -mt-24 w-full max-w-6xl flex-1 px-4 pb-8 sm:px-6 lg:px-8">
             {{-- Cifras --}}
             <div class="reveal grid grid-cols-1 divide-y divide-brand-green/10 rounded-2xl border border-brand-green/10 bg-white shadow-xl shadow-brand-green/10 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
                 @foreach ([1, 2, 3] as $n)
@@ -190,5 +192,6 @@
         </footer>
 
         <x-pantalla-carga />
+        <x-accesibilidad-base />
     </body>
 </html>

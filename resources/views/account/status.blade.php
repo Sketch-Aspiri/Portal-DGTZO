@@ -8,7 +8,7 @@
 @else
     <x-guest-layout>
         @if (session('status'))
-            <p class="mb-4 rounded-lg bg-green-100 px-3 py-2 text-sm text-green-800">{{ session('status') }}</p>
+            <p data-aviso class="mb-4 rounded-lg bg-green-100 px-3 py-2 text-sm text-green-800">{{ session('status') }}</p>
         @endif
 
         @if ($status === \App\Enums\UserStatus::Pending)

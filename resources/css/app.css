@@ -59,6 +59,7 @@
 .dark .bg-white\/95 { background-color: rgb(18 32 29 / 0.95); }
 .dark .bg-brand-mist, .dark .bg-gray-50, .dark .bg-gray-100 { background-color: var(--o-sup2); }
 .dark .bg-brand-mist\/50 { background-color: rgb(25 43 39 / 0.6); }
+.dark .bg-gray-50\/70 { background-color: rgb(25 43 39 / 0.35); }
 .dark .bg-gray-200, .dark .bg-brand-green\/10 { background-color: var(--o-sup3); }
 .dark .bg-brand-mist.text-gray-900, .dark body.bg-brand-mist { background-color: var(--o-fondo); }
 .dark .hover\:bg-brand-mist:hover, .dark .hover\:bg-gray-50:hover, .dark .hover\:bg-gray-100:hover,

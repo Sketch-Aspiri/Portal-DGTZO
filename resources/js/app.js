@@ -8,12 +8,16 @@ import './shader-background';
 import accessWizard from './access-wizard';
 import { registerPush, registerServiceWorker } from './push';
 import { selectorTema } from './tema';
+import { registrarAccesibilidad } from './accesibilidad';
+import { iniciarAccesibilidad } from './accesibilidad-base';
+import '../css/accesibilidad.css';
 import { durante, mostrar, ocultar, registrar as registrarPantalla } from './pantalla-carga';
 import Alpine from 'alpinejs';
 
 window.Alpine = Alpine;
 Alpine.data('accessWizard', accessWizard);
 Alpine.data('selectorTema', selectorTema);
+registrarAccesibilidad(Alpine);
 registerPush(Alpine);
 registerServiceWorker();
 
@@ -22,6 +26,7 @@ window.PantallaCarga = { mostrar, ocultar, durante };
 registrarPantalla(document, window);
 
 Alpine.start();
+iniciarAccesibilidad(document, window);
 
 // Aparición suave al desplazarse (elementos con .reveal).
 const revealables = document.querySelectorAll('.reveal');

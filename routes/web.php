@@ -34,6 +34,9 @@ Route::prefix('tutoriales')->name('tutorials.')->middleware('throttle:tutorials'
 });
 
 Route::middleware('auth')->group(function () {
+    // Aviso de sesión por vencer (accesibilidad): cualquier petición la renueva; esta no hace nada más.
+    Route::get('/sesion/viva', fn () => response()->noContent())->name('sesion.viva');
+
     // Cuenta pendiente, rechazada o inactiva: solo ve su estado y puede salir.
     Route::get('/cuenta', AccountStatusController::class)->name('account.status');
     Route::put('/cuenta/solicitud', [AccessRequestController::class, 'store'])->middleware('throttle:access-request')->name('account.request');

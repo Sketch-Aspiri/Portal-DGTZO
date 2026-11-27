@@ -5,7 +5,7 @@
          class="scroll-mt-4 rounded-2xl border bg-white transition-all duration-300 motion-reduce:transition-none"
          :class="[
              step === {{ $index }} ? 'border-brand-teal/40 shadow-lg shadow-brand-green/10' : 'border-brand-green/10 shadow-sm',
-             {{ $index }} > reached ? 'opacity-60' : ''
+             {{ $index }} > reached ? 'border-dashed' : ''
          ]">
     <header class="flex items-center gap-3 p-4 sm:p-5">
         <span class="flex h-9 w-9 shrink-0 items-center justify-center rounded-full font-heading text-sm font-bold transition-colors duration-300 motion-reduce:transition-none"
