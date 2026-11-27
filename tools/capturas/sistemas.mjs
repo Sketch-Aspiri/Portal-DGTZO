@@ -69,12 +69,23 @@ export const SISTEMAS = {
     },
 };
 
+function entorno(nombre) {
+    const s = SISTEMAS[nombre];
+
+    return { ...process.env, ...comun, ...s.env, APP_URL: `http://127.0.0.1:${s.puerto}` };
+}
+
+/** Ejecuta PHP en la carpeta del sistema, con su base desechable. */
+export function ejecutarPhp(nombre, args) {
+    return execFileSync('php', args, { cwd: SISTEMAS[nombre].dir, env: entorno(nombre), stdio: 'pipe' }).toString();
+}
+
 /** Base limpia con datos de ejemplo y el servidor local arriba. Devuelve la URL base. */
 export async function levantar(nombre) {
     const s = SISTEMAS[nombre];
     const base = `http://127.0.0.1:${s.puerto}`;
-    const env = { ...process.env, ...comun, ...s.env, APP_URL: base };
-    const php = (args) => execFileSync('php', args, { cwd: s.dir, env, stdio: 'pipe' });
+    const env = entorno(nombre);
+    const php = (args) => ejecutarPhp(nombre, args);
 
     if (env.DB_CONNECTION === 'sqlite') fs.writeFileSync(env.DB_DATABASE, '');
     php(['artisan', 'config:clear']);

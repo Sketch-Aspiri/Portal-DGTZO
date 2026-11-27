@@ -8,6 +8,7 @@ conformidad**.
 | Qué | Cómo |
 |---|---|
 | Revisión automática (axe) en claro, oscuro y 320 px | En `tools/capturas`: `node a11y.mjs <carpeta> [portal tickets dashboard] [--preferencias=t150.c]` |
+| Hoja de cálculo del Dashboard en Chrome | En `tools/capturas`: `node hoja.mjs` |
 | Panel de preferencias en Chrome | En `tools/capturas`: `node panel.mjs <carpeta>` |
 | Arreglos comunes en Chrome (salto, errores, menús, ventanas, sesión) | En `tools/capturas`: `node base.mjs [sistemas]` |
 | Archivos compartidos sin divergencias | En la raíz: `node tools/comparar_compartidos.mjs` |
@@ -32,9 +33,19 @@ desplazamiento y sesión), `<x-accesibilidad-base />`, `<x-saltar-contenido />` 
 - Una ventana propia lleva `role="dialog"`, `aria-modal="true"`, nombre y cierre con Escape; el foco lo maneja el
   script.
 
-Pendiente (entregas 3 y 4): hoja de cálculo, asistente de alta, calendarios, `scope` y nombre en tablas, controles sin
+Pendiente (entrega 4): asistente de alta, calendarios, `scope` y nombre en tablas, controles sin
 etiqueta (agenda de personal), nombres de los enlaces de horarios, columnas ocultas en celular y pantallas que se salen
 a 320 px (calendario del portal; actividades, seguimiento y chat de Tickets; insumos y flujo de pasajeros del Dashboard).
+
+## Hoja de cálculo del Dashboard (entrega 3)
+
+- **Teclado:** flechas, F2, Escape y luego Tab para salir (en la primera o última columna Tab sale solo), Mayús+F10 o el
+  botón «Acciones» para el menú, Alt+Mayús+flechas para el ancho de columna.
+- **Lector de pantalla:** cuadrícula con filas y celdas; la activa se anuncia con posición, columna y contenido; el
+  guardado y los avisos se anuncian y los errores se quedan hasta cerrarlos.
+- **Alternativa:** «Ver como tabla» (se recuerda en la cookie `hoja_vista`). Permite editar los registros; no ofrece
+  formato ni calcula fórmulas (muestra su texto), y sí crece con la letra grande.
+- **Prueba:** `tools/capturas/hoja.mjs`. **Falta** probarla con NVDA y con quienes capturan a diario.
 
 ## Preferencias de cada persona (entrega 1)
 
@@ -72,10 +83,10 @@ lector de pantalla. `Por evaluar` = sin evidencia todavía. Un criterio solo pas
 | 1.4.11 Contraste no textual | AA | En parte (bordes y foco corregidos; sin medir) | En parte (bordes y foco corregidos; sin medir) | En parte (bordes y foco corregidos; sin medir) |
 | 1.4.12 Espaciado del texto | AA | Por evaluar | Por evaluar | Por evaluar |
 | 1.4.13 Contenido al pasar el puntero o enfocar | AA | Por evaluar | Por evaluar | Por evaluar |
-| 2.1.1 Teclado | A | Falla (asistente de alta) | Falla (hoja de cálculo) | Por evaluar |
-| 2.1.2 Sin trampas de teclado | A | Por evaluar | Falla (hoja de cálculo) | Por evaluar |
+| 2.1.1 Teclado | A | Falla (asistente de alta) | En parte (hoja con teclado; falta recorrer el resto) | Por evaluar |
+| 2.1.2 Sin trampas de teclado | A | Por evaluar | En parte (la hoja ya no atrapa el foco, hoja.mjs) | Por evaluar |
 | 2.1.4 Atajos de una tecla | A | Por evaluar | Por evaluar | Por evaluar |
-| 2.2.1 Tiempo ajustable | A | Cumple (aviso de sesión, base.mjs) | En parte (aviso de sesión; la hoja borra avisos solos) | Cumple (aviso de sesión, base.mjs) |
+| 2.2.1 Tiempo ajustable | A | Cumple (aviso de sesión, base.mjs) | Cumple (aviso de sesión y errores que no se borran) | Cumple (aviso de sesión, base.mjs) |
 | 2.2.2 Pausar, detener, ocultar | A | Por evaluar (el panel detiene el fondo animado) | Por evaluar | Por evaluar |
 | 2.3.1 Tres destellos | A | Por evaluar | Por evaluar | Por evaluar |
 | 2.4.1 Evitar bloques | A | Cumple (a11y.mjs y base.mjs) | Cumple (a11y.mjs y base.mjs) | Cumple (a11y.mjs y base.mjs) |
@@ -90,7 +101,7 @@ lector de pantalla. `Por evaluar` = sin evidencia todavía. Un criterio solo pas
 | 2.5.2 Cancelación del puntero | A | Por evaluar | Por evaluar | Por evaluar |
 | 2.5.3 Etiqueta en el nombre | A | Por evaluar | Falla | Por evaluar |
 | 2.5.4 Activación por movimiento | A | Por evaluar | Por evaluar | Por evaluar |
-| 2.5.7 Movimientos de arrastre | AA | Por evaluar | Falla (ancho de columnas) | Por evaluar |
+| 2.5.7 Movimientos de arrastre | AA | Por evaluar | Cumple (ancho de columna por teclado y menú, hoja.mjs) | Por evaluar |
 | 2.5.8 Tamaño del objetivo | AA | Por evaluar | Por evaluar | Por evaluar |
 | 3.1.1 Idioma de la página | A | Por evaluar | Por evaluar | Por evaluar |
 | 3.1.2 Idioma de las partes | AA | En parte (paginación, correos y errores en español) | En parte (idioma español agregado) | En parte (paginación en español) |
@@ -105,5 +116,5 @@ lector de pantalla. `Por evaluar` = sin evidencia todavía. Un criterio solo pas
 | 3.3.4 Prevención de errores | AA | Por evaluar | Por evaluar | Por evaluar |
 | 3.3.7 Entrada redundante | A | Por evaluar | Por evaluar | Por evaluar |
 | 3.3.8 Autenticación accesible | AA | Por evaluar | Por evaluar | Por evaluar |
-| 4.1.2 Nombre, función, valor | A | En parte (menús corregidos) | Falla (hoja de cálculo) | En parte (menú y ventanas) |
-| 4.1.3 Mensajes de estado | AA | En parte (avisos anunciados; falta lector de pantalla) | Falla (autoguardado sin anuncio) | En parte (avisos anunciados; falta lector de pantalla) |
+| 4.1.2 Nombre, función, valor | A | En parte (menús corregidos) | En parte (hoja con nombre y posición por celda; falta lector de pantalla) | En parte (menú y ventanas) |
+| 4.1.3 Mensajes de estado | AA | En parte (avisos anunciados; falta lector de pantalla) | En parte (guardado y avisos anunciados; falta lector de pantalla) | En parte (avisos anunciados; falta lector de pantalla) |
