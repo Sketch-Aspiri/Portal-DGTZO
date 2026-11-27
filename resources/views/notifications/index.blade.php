@@ -33,7 +33,7 @@
                             <span class="flex flex-wrap items-center gap-2">
                                 <span class="text-sm {{ $unreadItem ? 'font-semibold text-gray-900' : 'font-medium text-gray-700' }}">{{ $notification->data['title'] ?? '' }}</span>
                                 <span class="rounded-full bg-brand-mist px-2 py-0.5 text-xs font-semibold text-brand-teal">{{ __('push.systems.'.($notification->data['source'] ?? 'portal')) }}</span>
-                                @if ($unreadItem)<span class="sr-only">{{ __('push.center.unread') }}</span>@endif
+                                @if ($unreadItem)<span class="rounded-full border border-brand-teal/40 px-2 py-0.5 text-xs font-bold text-brand-green">{{ __('push.center.unread') }}</span>@endif
                             </span>
                             <span class="mt-0.5 block text-sm text-gray-600">{{ $notification->data['body'] ?? '' }}</span>
                             <span class="mt-1 block text-xs text-gray-500">{{ $notification->created_at->diffForHumans() }}</span>

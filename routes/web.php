@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AccessibilityStatementController;
 use App\Http\Controllers\AccessRequestController;
 use App\Http\Controllers\AccountStatusController;
 use App\Http\Controllers\Auth\EcosystemSessionController;
@@ -14,9 +15,13 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\Push\PushSubscriptionController;
 use App\Http\Controllers\TutorialController;
 use App\Http\Controllers\UserApprovalController;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 Route::view('/', 'welcome')->name('home');
+
+// Declaración de accesibilidad: pública, enlazada desde los pies de página.
+Route::get('/accesibilidad', AccessibilityStatementController::class)->name('accessibility');
 
 // Inicio y cierre de sesión únicos: llegan por redirección desde Dashboard/Tickets; sin sesión previa ni CSRF.
 Route::prefix('ecosistema')->middleware('throttle:ecosystem-sso')->group(function () {
@@ -35,7 +40,9 @@ Route::prefix('tutoriales')->name('tutorials.')->middleware('throttle:tutorials'
 
 Route::middleware('auth')->group(function () {
     // Aviso de sesión por vencer (accesibilidad): cualquier petición la renueva; esta no hace nada más.
-    Route::get('/sesion/viva', fn () => response()->noContent())->name('sesion.viva');
+    Route::get('/sesion/viva', fn (Request $request) => response()->noContent(
+        hash_equals((string) $request->session()->token(), (string) $request->header('X-CSRF-TOKEN')) ? 204 : 409,
+    ))->name('sesion.viva');
 
     // Cuenta pendiente, rechazada o inactiva: solo ve su estado y puede salir.
     Route::get('/cuenta', AccountStatusController::class)->name('account.status');

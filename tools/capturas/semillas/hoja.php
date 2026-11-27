@@ -6,6 +6,7 @@
  */
 
 use App\Enums\TipoColumna;
+use App\Models\MenuGrupo;
 use App\Models\Seccion;
 use App\Models\SeccionFila;
 use Illuminate\Contracts\Console\Kernel;
@@ -22,7 +23,9 @@ if (! str_ends_with($base, '_capturas') || ! app()->environment('local')) {
     exit(1);
 }
 
-$seccion = Seccion::factory()->create(['nombre' => 'Inventario de radios', 'slug' => 'inventario-de-radios']);
+// En un grupo real del menú: la guía de accesibilidad muestra esta pantalla.
+$grupo = MenuGrupo::query()->where('nombre', 'Recursos materiales')->value('id');
+$seccion = Seccion::factory()->create(array_filter(['menu_grupo_id' => $grupo, 'nombre' => 'Inventario de radios', 'slug' => 'inventario-de-radios']));
 $tabla = $seccion->tablas()->create(['nombre' => 'Radios', 'orden' => 1]);
 
 $orden = 0;

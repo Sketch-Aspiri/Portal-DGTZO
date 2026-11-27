@@ -60,6 +60,11 @@ class CalendarioEvento extends Model
         return $this->tipo->chip();
     }
 
+    public function simbolo(): string
+    {
+        return $this->tipo->simbolo();
+    }
+
     public function editable(): bool
     {
         return true;

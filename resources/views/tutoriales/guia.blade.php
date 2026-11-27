@@ -2,15 +2,24 @@
      x-data="{
         captura: null,
         texto: '',
+        origen: null,
         abrir(evento) {
             const boton = evento.target.closest('[data-captura]');
             if (! boton) return;
+            this.origen = boton;
             this.captura = boton.dataset.captura;
             this.texto = boton.querySelector('img').alt;
+            document.documentElement.classList.add('overflow-hidden');
             this.$nextTick(() => this.$refs.cerrar.focus());
         },
+        cerrar() {
+            if (! this.captura) return;
+            this.captura = null;
+            document.documentElement.classList.remove('overflow-hidden');
+            this.$nextTick(() => this.origen.focus());
+        },
      }"
-     @keydown.escape.window="captura = null">
+     @keydown.escape.window="cerrar()">
     <a href="{{ route('tutorials.index') }}" class="inline-flex min-h-[44px] items-center text-sm font-semibold text-brand-teal hover:underline">&larr; {{ __('portal.tutorials.back') }}</a>
 
     <header class="mt-2">
@@ -56,8 +65,12 @@
     </div>
 
     {{-- Captura ampliada --}}
-    <div x-cloak x-show="captura" class="fixed inset-0 z-50 overflow-auto bg-black/85 p-4" role="dialog" aria-modal="true" :aria-label="texto" @click="captura = null">
-        <button type="button" x-ref="cerrar" class="fixed right-4 top-4 inline-flex min-h-[44px] items-center rounded-lg bg-white px-4 text-sm font-semibold text-gray-900">{{ __('portal.tutorials.close') }}</button>
-        <img :src="captura" :alt="texto" class="mx-auto mt-14 max-w-none sm:max-w-full">
+    <div x-cloak x-show="captura" class="fixed inset-0 z-50 flex flex-col gap-3 bg-black/85 p-4" role="dialog" aria-modal="true"
+         aria-label="{{ __('portal.tutorials.zoomed') }}" :aria-label="texto || {{ Js::from(__('portal.tutorials.zoomed')) }}" @click="cerrar()">
+        <button type="button" x-ref="cerrar" class="inline-flex min-h-[44px] shrink-0 items-center self-end rounded-lg bg-white px-4 text-sm font-semibold text-gray-900">{{ __('portal.tutorials.close') }}</button>
+        {{-- Con foco propio para desplazarse con las flechas cuando la imagen es más grande que la pantalla. --}}
+        <div class="min-h-0 flex-1 overflow-auto rounded-lg focus:outline-none focus-visible:ring-4 focus-visible:ring-white" tabindex="0" role="region" aria-label="{{ __('portal.tutorials.zoomed_scroll') }}">
+            <img src="data:," alt="" :src="captura || 'data:,'" :alt="texto" class="mx-auto max-w-none sm:max-w-full">
+        </div>
     </div>
 </div>

@@ -31,8 +31,12 @@ Cambia tu foto, nombre y contraseña. Tu cuenta se administra desde el portal: n
 
 ![Pantalla de perfil](04-perfil.png)
 
+## Accesibilidad
+
+El botón **Accesibilidad**, junto al de apariencia, permite agrandar la letra, subir el contraste y más. Consulta la guía [Accesibilidad](/tutoriales/accesibilidad).
+
 ## En el celular
 
-El menú se abre con **☰**.
+El menú se abre con **☰**. Ahí están también la apariencia y **Accesibilidad**.
 
 ![Dashboard en un celular](05-celular.png)

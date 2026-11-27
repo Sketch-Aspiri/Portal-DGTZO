@@ -6,7 +6,7 @@ En **Recursos materiales → Registro de agua** ves el programa del mes y la cuo
 
 ## Tablero (Zona)
 
-Muestra quién envió, lo comprado, la cuota y el saldo; se descarga en Excel.
+Muestra quién envió, lo comprado, la cuota y el saldo; se descarga en Excel. Para ver otro mes usa las flechas, o elige mes y año y toca **Ver**.
 
 ![Tablero mensual de agua](02-tablero.png)
 

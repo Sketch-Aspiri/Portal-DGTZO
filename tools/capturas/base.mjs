@@ -149,6 +149,7 @@ try {
             assert.equal(await aviso.getAttribute('open'), null);
             await p.clock.fastForward('01:56:00');
             await p.locator('dialog[data-a11y-sesion][open]').waitFor();
+            assert.ok(await aviso.locator('[data-sesion-entrar]').isHidden(), 'con la sesión viva no se ofrece volver a entrar');
             await aviso.getByRole('button', { name: 'Seguir conectado' }).click();
             await p.locator('dialog[data-a11y-sesion][open]').waitFor({ state: 'detached', timeout: 3000 }).catch(() => {});
             assert.equal(await p.locator('dialog[data-a11y-sesion][open]').count(), 0, 'continuar cierra el aviso');

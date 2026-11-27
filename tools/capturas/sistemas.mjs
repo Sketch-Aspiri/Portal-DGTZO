@@ -7,7 +7,8 @@ import { AQUI, CLAVE, PORTAL, persona, servidor, totp } from './lib.mjs';
 
 const SECRETO = 'JBSWY3DPEHPK3PXPJBSWY3DPEHPK3PXP';
 
-const comun = { APP_ENV: 'local', APP_DEBUG: 'false', SESSION_DRIVER: 'file', CACHE_STORE: 'file', QUEUE_CONNECTION: 'sync', MAIL_MAILER: 'array' };
+// DB_URL vacío: una dirección de base en el .env no puede ganar a la base desechable.
+const comun = { DB_URL: '', APP_ENV: 'local', APP_DEBUG: 'false', SESSION_DRIVER: 'file', CACHE_STORE: 'file', QUEUE_CONNECTION: 'sync', MAIL_MAILER: 'array' };
 
 const sqlite = (nombre) => ({ DB_CONNECTION: 'sqlite', DB_DATABASE: path.join(os.tmpdir(), nombre).replaceAll('\\', '/') });
 
@@ -18,7 +19,7 @@ export const SISTEMAS = {
         env: { ...sqlite('a11y_portal_capturas.sqlite') },
         preparar: [['artisan', 'migrate', '--force']],
         semilla: 'semillas/portal.php',
-        inicios: ['/', '/login', '/register', '/forgot-password', '/tutoriales'],
+        inicios: ['/', '/login', '/register', '/forgot-password', '/tutoriales', '/accesibilidad'],
         personas: {
             visitante: null,
             admin: 'alejandra.ruiz',

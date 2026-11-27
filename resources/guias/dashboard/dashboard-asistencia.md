@@ -1,4 +1,4 @@
-Captura la asistencia cada día en **RR.HH. → Captura de asistencia**.
+Captura la asistencia cada día en **RR.HH. → Captura de asistencia**. Si tu cuenta puede elegir estación y fecha, cámbialas arriba y toca **Ver**: elegirlas no cambia la pantalla por sí solo.
 
 ## Marca a cada persona
 

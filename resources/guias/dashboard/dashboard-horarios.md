@@ -1,6 +1,6 @@
 ## Consulta la semana
 
-En **RR.HH. → Rol de horarios** ves jornada y comida de cada persona. Cambia de semana con las flechas o busca por nombre.
+En **RR.HH. → Rol de horarios** ves jornada y comida de cada persona. Cambia de semana con las flechas, o busca por nombre y toca **Buscar**. La Zona elige la estación y toca el mismo botón.
 
 ![Horario semanal de una estación](01-semana.png)
 

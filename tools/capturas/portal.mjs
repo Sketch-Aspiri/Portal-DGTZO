@@ -5,6 +5,7 @@ import fs from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 import { AQUI, CLAVE, PORTAL, captura, detenerTodo, navegador, optimizar, persona, servidor, totp } from './lib.mjs';
+import { SISTEMAS, ejecutarPhp, levantar, sesion } from './sistemas.mjs';
 
 const PUERTO = 8010;
 const BASE = `http://127.0.0.1:${PUERTO}`;
@@ -152,6 +153,60 @@ const guias = {
         const m = await persona(b, BASE, { celular: true });
         await entrar(m, 'laura.gomez@ejemplo.mx');
         await captura(m, g, '03-celular');
+    },
+
+    async accesibilidad(b, g) {
+        const p = await persona(b, BASE);
+        await p.setViewportSize({ width: 1280, height: 900 });
+        await entrar(p, 'laura.gomez@ejemplo.mx');
+        const boton = p.getByRole('button', { name: 'Accesibilidad' }).locator('visible=true').first();
+        await captura(p, g, '01-boton', { resaltar: boton });
+        await boton.click();
+        await captura(p, g, '02-panel');
+        const panel = p.locator('dialog[open]');
+        await panel.locator('input[value="125"]').check();
+        await panel.locator('input[data-a11y="contraste"]').check();
+        await panel.getByRole('button', { name: 'Listo' }).click();
+        await captura(p, g, '03-aplicado');
+        await p.context().clearCookies({ name: 'a11y' });
+        await p.evaluate(() => localStorage.removeItem('a11y'));
+
+        await p.reload();
+        await p.waitForLoadState('networkidle');
+        await p.keyboard.press('Tab');
+        await captura(p, g, '05-saltar');
+        // El aviso real aparece cinco minutos antes de que venza la sesión; aquí se abre a mano.
+        await p.reload();
+        await p.waitForLoadState('networkidle');
+        await p.evaluate(() => document.querySelector('dialog[data-a11y-sesion]').showModal());
+        await captura(p, g, '08-sesion');
+
+        const m = await persona(b, BASE, { celular: true });
+        await entrar(m, 'laura.gomez@ejemplo.mx');
+        await m.locator('nav button[aria-expanded]').locator('visible=true').first().click();
+        const enMenu = m.getByRole('button', { name: 'Accesibilidad' }).locator('visible=true').first();
+        await enMenu.scrollIntoViewIfNeeded();
+        await captura(m, g, '04-celular', { resaltar: enMenu });
+
+        // La hoja de cálculo es del Dashboard: se levanta su copia (DASHBOARD_DIR) con datos ficticios.
+        const dashboard = await levantar('dashboard');
+        const seccion = ejecutarPhp('dashboard', [path.join(AQUI, 'semillas/hoja.php'), SISTEMAS.dashboard.dir]).trim();
+        const d = await sesion(b, dashboard, 'alejandra.ruiz');
+        await d.goto(`/secciones/${seccion}`);
+        await d.locator('.hoja-celda').first().waitFor();
+        // La hoja queda al principio de la ventana para que se vean sus renglones.
+        const subir = async (enlace) => {
+            await d.waitForLoadState('networkidle');
+            await enlace.evaluate((n) => window.scrollTo(0, n.getBoundingClientRect().top + scrollY - 30));
+        };
+        const verTabla = d.getByRole('link', { name: /Ver como tabla/ });
+        await subir(verTabla);
+        await captura(d, g, '06-hoja', { resaltar: [verTabla, d.getByRole('button', { name: /^Acciones/ }).locator('visible=true').first()] });
+        await verTabla.click();
+        const verHoja = d.getByRole('link', { name: 'Ver como hoja de cálculo' });
+        await verHoja.waitFor();
+        await subir(verHoja);
+        await captura(d, g, '07-tabla');
     },
 
     async perfil(b, g) {

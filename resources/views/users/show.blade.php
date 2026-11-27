@@ -36,9 +36,9 @@
                                     @csrf
                                     <button type="submit" class="min-h-[40px] rounded-lg border border-brand-green/20 px-3 text-sm font-semibold text-brand-green hover:bg-brand-mist focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal">{{ __('portal.approvals.send_password_link') }}</button>
                                 </form>
-                                <details class="relative">
+                                <details data-confirmacion class="relative">
                                     <summary class="inline-flex min-h-[40px] cursor-pointer list-none items-center rounded-lg border border-red-200 px-3 text-sm font-semibold text-red-700 hover:bg-red-50 focus:outline-none focus-visible:ring-2 focus-visible:ring-red-400">{{ __('portal.approvals.deactivate') }}</summary>
-                                    <form method="POST" action="{{ route('users.deactivate', $user) }}" class="absolute right-0 z-20 mt-2 w-72 space-y-3 rounded-xl border border-red-200 bg-white p-4 shadow-lg">
+                                    <form method="POST" action="{{ route('users.deactivate', $user) }}" class="mt-2 w-full max-w-[18rem] space-y-3 sm:absolute sm:right-0 sm:z-20 sm:w-72 rounded-xl border border-red-200 bg-white p-4 shadow-lg">
                                         @csrf
                                         <p class="text-sm text-gray-700">{{ __('portal.approvals.deactivate_confirm') }}</p>
                                         <x-danger-button>{{ __('portal.approvals.deactivate_yes') }}</x-danger-button>
@@ -61,7 +61,7 @@
             @if ($solicitud)
                 <div class="bg-white border border-brand-teal/30 shadow-sm shadow-brand-green/5 rounded-xl p-6">
                     <div class="flex items-center justify-between gap-2">
-                        <h3 class="font-heading font-semibold text-brand-green">{{ __('portal.access_request.applicant_card') }}</h3>
+                        <h2 class="font-heading font-semibold text-brand-green">{{ __('portal.access_request.applicant_card') }}</h2>
                         <span class="rounded-full bg-brand-mist px-2.5 py-0.5 text-xs font-semibold text-brand-green">{{ __('portal.access_request.states.'.$solicitud->estado) }}</span>
                     </div>
                     <dl class="mt-3 grid gap-x-6 gap-y-2 text-sm sm:grid-cols-2">
@@ -95,7 +95,7 @@
 
             @if ($user->accesos->isNotEmpty())
                 <div class="bg-white border border-brand-green/10 shadow-sm shadow-brand-green/5 rounded-xl p-6">
-                    <h3 class="font-semibold">{{ __('portal.approvals.accesses') }}</h3>
+                    <h2 class="font-semibold">{{ __('portal.approvals.accesses') }}</h2>
                     <ul class="mt-3 divide-y text-sm">
                         @foreach ($user->accesos as $acceso)
                             @php($sistema = $catalogo[$acceso->subsistema] ?? null)
@@ -105,7 +105,7 @@
                                         <strong>{{ $sistema['nombre'] ?? $acceso->subsistema }}</strong>
                                         — {{ $sistema['roles'][$acceso->rol] ?? $acceso->rol }}
                                     </span>
-                                    <span class="flex items-center gap-3">
+                                    <span class="flex flex-wrap items-center gap-3">
                                         <span @class([
                                             'text-green-700' => $acceso->aprovisionamiento === 'ok',
                                             'text-amber-700' => in_array($acceso->aprovisionamiento, ['pendiente', 'conflicto'], true),
@@ -116,13 +116,13 @@
                                         @if ($acceso->aprovisionamiento === 'error')
                                             <form method="POST" action="{{ route('users.retry', [$user, $acceso->subsistema]) }}">
                                                 @csrf
-                                                <button type="submit" class="underline">{{ __('portal.approvals.retry') }}</button>
+                                                <button type="submit" class="inline-flex min-h-6 items-center underline">{{ __('portal.approvals.retry') }}<span class="sr-only">: {{ $sistema['nombre'] ?? $acceso->subsistema }}</span></button>
                                             </form>
                                         @endif
                                         @if ($puedeEditar)
-                                            <details class="relative">
-                                                <summary class="cursor-pointer list-none font-semibold text-red-700 underline">{{ __('portal.approvals.revoke') }}</summary>
-                                                <form method="POST" action="{{ route('users.access.revoke', [$user, $acceso->subsistema]) }}" class="absolute right-0 z-20 mt-2 w-64 space-y-3 rounded-xl border border-red-200 bg-white p-4 shadow-lg">
+                                            <details data-confirmacion class="relative">
+                                                <summary class="inline-flex min-h-6 cursor-pointer list-none items-center font-semibold text-red-700 underline">{{ __('portal.approvals.revoke') }}<span class="sr-only">: {{ $sistema['nombre'] ?? $acceso->subsistema }}</span></summary>
+                                                <form method="POST" action="{{ route('users.access.revoke', [$user, $acceso->subsistema]) }}" class="mt-2 w-full max-w-[16rem] space-y-3 sm:absolute sm:right-0 sm:z-20 sm:w-64 rounded-xl border border-red-200 bg-white p-4 shadow-lg">
                                                     @csrf
                                                     @method('DELETE')
                                                     <p class="text-sm text-gray-700">{{ __('portal.approvals.revoke_confirm', ['sistema' => $sistema['nombre'] ?? $acceso->subsistema]) }}</p>
@@ -138,13 +138,14 @@
 
                                 @if ($puedeEditar)
                                     <details class="mt-2" @if ($errors->has('accesos') || collect($errors->keys())->contains(fn ($k) => str_starts_with($k, 'accesos.'.$acceso->subsistema.'.'))) open @endif>
-                                        <summary class="cursor-pointer text-sm font-semibold text-brand-teal">{{ __('portal.approvals.edit_access') }}</summary>
+                                        <summary class="min-h-6 cursor-pointer text-sm font-semibold text-brand-teal">{{ __('portal.approvals.edit_access') }}<span class="sr-only">: {{ $sistema['nombre'] ?? $acceso->subsistema }}</span></summary>
                                         <form method="POST" action="{{ route('users.access.update', [$user, $acceso->subsistema]) }}" class="mt-3 space-y-3">
                                             @csrf
                                             @method('PUT')
                                             @include('users._access-fields', [
                                                 'omitir' => array_values(array_diff(array_keys($catalogo), [$acceso->subsistema])),
                                                 'fijo' => true,
+                                                'prefijo' => 'editar-',
                                                 'prefill' => [$acceso->subsistema => ['rol' => $acceso->rol] + (array) $acceso->contexto],
                                             ])
                                             <x-primary-button>{{ __('portal.approvals.save_changes') }}</x-primary-button>
@@ -160,7 +161,7 @@
             @if ($user->status === \App\Enums\UserStatus::Pending)
                 <form method="POST" action="{{ route('users.approve', $user) }}" class="bg-white border border-brand-green/10 shadow-sm shadow-brand-green/5 rounded-xl p-6 space-y-4">
                     @csrf
-                    <h3 class="font-semibold">{{ __('portal.approvals.grant') }}</h3>
+                    <h2 class="font-semibold">{{ __('portal.approvals.grant') }}</h2>
                     <p class="text-sm text-gray-600">{{ __('portal.approvals.grant_help') }}</p>
                     <x-input-error :messages="$errors->get('accesos')" />
 
@@ -182,7 +183,7 @@
                 @else
                     <form method="POST" action="{{ route('users.grant', $user) }}" class="bg-white border border-brand-green/10 shadow-sm shadow-brand-green/5 rounded-xl p-6 space-y-4">
                         @csrf
-                        <h3 class="font-semibold">{{ __('portal.approvals.add_access') }}</h3>
+                        <h2 class="font-semibold">{{ __('portal.approvals.add_access') }}</h2>
                         <p class="text-sm text-gray-600">{{ __('portal.approvals.add_access_help') }}</p>
                         <x-input-error :messages="$errors->get('accesos')" />
 

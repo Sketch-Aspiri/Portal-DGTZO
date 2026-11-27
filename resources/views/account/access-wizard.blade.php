@@ -29,6 +29,8 @@
         'catalogos' => $catalogos,
         'roles' => $roles,
         'errorStep' => $errorStep,
+        'stepNames' => __('portal.access_request.steps'),
+        'announce' => __('portal.access_request.step_announce'),
         'labels' => collect(['req_puesto', 'req_ubicacion', 'req_system', 'req_role', 'req_station', 'req_teams', 'req_coordinations', 'req_functions'])
             ->mapWithKeys(fn ($k) => [$k => __('portal.access_request.'.$k)])->all()
             + collect($sistemas)->mapWithKeys(fn ($s, $k) => ['name_'.$k => $s['nombre']])->all(),
@@ -39,23 +41,26 @@
 @endphp
 
 <form method="POST" action="{{ route('account.request') }}" x-data="accessWizard(@js($config))" @submit="submit($event)"
-      @keydown.enter="if ($event.target.tagName !== 'TEXTAREA' && step < total - 1) { $event.preventDefault(); next(); }"
+      @keydown.enter="enter($event)"
       class="space-y-4" novalidate>
     @csrf
     @method('PUT')
 
-    {{-- Riel de progreso --}}
-    <div class="mb-2" aria-hidden="true">
-        <div class="relative h-1.5 overflow-hidden rounded-full bg-brand-green/10">
+    {{-- Riel de progreso: la barra es decorativa; la lista dice en qué paso va. --}}
+    <div class="mb-2">
+        <div class="relative h-1.5 overflow-hidden rounded-full bg-brand-green/10" aria-hidden="true">
             <div class="absolute inset-y-0 left-0 rounded-full bg-gradient-to-r from-brand-teal to-brand-green transition-all duration-500 motion-reduce:transition-none" :style="`width: ${progress}%`"></div>
         </div>
-        <ol class="mt-2 flex justify-between text-xs font-medium text-gray-500">
+        <ol class="sr-only text-xs font-medium text-gray-500 sm:not-sr-only sm:!mt-2 sm:flex sm:justify-between" aria-label="{{ __('portal.access_request.progress') }}">
             @foreach ($stepNames as $i => $name)
-                <li :class="step >= {{ $i }} ? 'text-brand-green' : ''" class="hidden sm:block">{{ $i + 1 }}. {{ $name }}</li>
+                <li :class="{ 'text-brand-green': step >= {{ $i }}, 'font-bold underline underline-offset-4': step === {{ $i }} }" :aria-current="step === {{ $i }} ? 'step' : false">{{ $i + 1 }}. {{ $name }}</li>
             @endforeach
-            <li class="sm:hidden text-brand-green" x-text="`{{ __('Paso') }} ${step + 1} / ${total}`"></li>
         </ol>
+        <p class="mt-2 text-xs font-medium text-brand-green sm:hidden" aria-hidden="true" x-text="`{{ __('Paso') }} ${step + 1} / ${total}`"></p>
     </div>
+
+    {{-- Cambios de paso y errores de la comprobación en el navegador, para el lector de pantalla. --}}
+    <p class="sr-only" role="status" data-asistente-aviso x-text="notice"></p>
 
     @if ($errors->any())
         <p class="rounded-lg bg-red-50 px-3 py-2 text-sm text-red-700" role="alert">{{ $errors->first() }}</p>
@@ -66,14 +71,14 @@
         <div class="space-y-4">
             <div>
                 <x-input-label for="puesto" :value="__('portal.access_request.puesto')" />
-                <input id="puesto" name="puesto" type="text" x-model="form.puesto" maxlength="120" autocomplete="organization-title" placeholder="{{ __('portal.access_request.puesto_ph') }}" class="{{ $input }}">
-                <p class="mt-1 text-sm text-red-600" x-show="errors.puesto" x-text="errors.puesto"></p>
+                <input id="puesto" name="puesto" type="text" x-model="form.puesto" aria-required="true" maxlength="120" autocomplete="organization-title" placeholder="{{ __('portal.access_request.puesto_ph') }}" class="{{ $input }}">
+                <p id="error-puesto" class="mt-1 text-sm text-red-600" x-show="errors.puesto" x-text="errors.puesto"></p>
                 <x-input-error :messages="$errors->get('puesto')" class="mt-1" />
             </div>
             <div>
                 <x-input-label for="ubicacion" :value="__('portal.access_request.ubicacion')" />
-                <input id="ubicacion" name="ubicacion" type="text" x-model="form.ubicacion" maxlength="120" placeholder="{{ __('portal.access_request.ubicacion_ph') }}" class="{{ $input }}">
-                <p class="mt-1 text-sm text-red-600" x-show="errors.ubicacion" x-text="errors.ubicacion"></p>
+                <input id="ubicacion" name="ubicacion" type="text" x-model="form.ubicacion" aria-required="true" maxlength="120" placeholder="{{ __('portal.access_request.ubicacion_ph') }}" class="{{ $input }}">
+                <p id="error-ubicacion" class="mt-1 text-sm text-red-600" x-show="errors.ubicacion" x-text="errors.ubicacion"></p>
                 <x-input-error :messages="$errors->get('ubicacion')" class="mt-1" />
             </div>
             <div>
@@ -90,9 +95,11 @@
     {{-- 2. Sistemas --}}
     <x-wizard.step :index="1" :title="__('portal.access_request.systems_title')" :help="__('portal.access_request.systems_help')">
         <div class="space-y-3">
-            <p class="text-sm text-red-600" x-show="errors.sistemas" x-text="errors.sistemas" role="alert"></p>
+            <p id="error-sistemas" class="text-sm text-red-600" x-show="errors.sistemas" x-text="errors.sistemas"></p>
             <x-input-error :messages="$errors->get('accesos')" class="mt-1" />
 
+            <fieldset class="min-w-0 space-y-3">
+            <legend class="sr-only">{{ __('portal.access_request.systems_title') }}</legend>
             @foreach ($sistemas as $clave => $sistema)
                 <div class="rounded-xl border transition-colors duration-300 motion-reduce:transition-none"
                      :class="sys.{{ $clave }}.activo ? 'border-brand-teal/50 bg-brand-mist/50' : 'border-gray-200 bg-white'">
@@ -110,8 +117,8 @@
                          :class="sys.{{ $clave }}.activo ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'"
                          :inert="! sys.{{ $clave }}.activo">
                         <div class="min-h-0 overflow-hidden">
-                            <div class="space-y-4 border-t border-brand-green/10 p-4">
-                                <fieldset>
+                            <div class="space-y-4 border-t border-brand-green/10 p-4" role="group" aria-label="{{ $sistema['nombre'] }}">
+                                <fieldset class="min-w-0">
                                     <legend class="text-sm font-medium text-brand-green">{{ __('portal.access_request.how_use') }}</legend>
                                     <div class="mt-2 grid gap-2 sm:grid-cols-2">
                                         @foreach ($roles[$clave] as $rolClave => $rolNombre)
@@ -124,7 +131,7 @@
                                             </label>
                                         @endforeach
                                     </div>
-                                    <p class="mt-1 text-sm text-red-600" x-show="errors.{{ $clave }}_rol" x-text="errors.{{ $clave }}_rol"></p>
+                                    <p id="error-{{ $clave }}_rol" class="mt-1 text-sm text-red-600" x-show="errors.{{ $clave }}_rol" x-text="errors.{{ $clave }}_rol"></p>
                                     <x-input-error :messages="$errors->get('accesos.'.$clave.'.rol')" class="mt-1" />
                                 </fieldset>
 
@@ -133,13 +140,13 @@
                                         <div class="grid gap-4 sm:grid-cols-2">
                                             <div>
                                                 <label for="estacion-dashboard" class="block text-sm font-medium text-brand-green">{{ __('portal.access_request.station') }}</label>
-                                                <select id="estacion-dashboard" name="accesos[dashboard][estacion_id]" x-model="sys.dashboard.estacion_id" class="{{ $input }}">
+                                                <select id="estacion-dashboard" name="accesos[dashboard][estacion_id]" x-model="sys.dashboard.estacion_id" aria-required="true" class="{{ $input }}">
                                                     <option value="">{{ __('portal.access_request.choose') }}</option>
                                                     <template x-for="s in catalogos.dashboard.estaciones" :key="s.id">
                                                         <option :value="String(s.id)" x-text="s.nombre"></option>
                                                     </template>
                                                 </select>
-                                                <p class="mt-1 text-sm text-red-600" x-show="errors.dashboard_estacion" x-text="errors.dashboard_estacion"></p>
+                                                <p id="error-dashboard_estacion" class="mt-1 text-sm text-red-600" x-show="errors.dashboard_estacion" x-text="errors.dashboard_estacion"></p>
                                                 <x-input-error :messages="$errors->get('accesos.dashboard.estacion_id')" class="mt-1" />
                                             </div>
                                             <div x-show="catalogos.dashboard.areas.length > 0">
@@ -156,32 +163,32 @@
                                 @else
                                     <template x-if="hasCatalog('tickets')">
                                         <div class="space-y-4">
-                                            <div x-show="sys.tickets.rol === 'empleado'">
-                                                <p class="text-sm font-medium text-brand-green">{{ __('portal.access_request.teams') }}</p>
-                                                <p class="text-xs text-gray-500">{{ __('portal.access_request.teams_help') }}</p>
+                                            <fieldset class="min-w-0" x-show="sys.tickets.rol === 'empleado'" aria-describedby="equipos-ayuda">
+                                                <legend class="text-sm font-medium text-brand-green">{{ __('portal.access_request.teams') }}</legend>
+                                                <p id="equipos-ayuda" class="text-xs text-gray-500">{{ __('portal.access_request.teams_help') }}</p>
                                                 <template x-for="g in teamGroups()" :key="g.name">
-                                                    <div class="mt-2">
-                                                        <p class="text-xs font-semibold text-gray-600" x-text="g.name"></p>
+                                                    <fieldset class="min-w-0 mt-2">
+                                                        <legend class="text-xs font-semibold text-gray-600" x-text="g.name"></legend>
                                                         <template x-for="e in g.items" :key="e.id">
                                                             <label class="flex min-h-[36px] items-center gap-2 text-sm">
                                                                 <input type="checkbox" name="accesos[tickets][team_ids][]" :value="e.id" x-model="sys.tickets.team_ids" class="h-4 w-4 rounded border-gray-300 text-brand-teal focus:ring-brand-teal">
                                                                 <span x-text="e.nombre"></span>
                                                             </label>
                                                         </template>
-                                                    </div>
+                                                    </fieldset>
                                                 </template>
-                                                <p class="mt-1 text-sm text-red-600" x-show="errors.tickets_equipos" x-text="errors.tickets_equipos"></p>
-                                            </div>
-                                            <div x-show="sys.tickets.rol === 'coordinador'">
-                                                <p class="text-sm font-medium text-brand-green">{{ __('portal.access_request.coordinations') }}</p>
+                                                <p id="error-tickets_equipos" class="mt-1 text-sm text-red-600" x-show="errors.tickets_equipos" x-text="errors.tickets_equipos"></p>
+                                            </fieldset>
+                                            <fieldset class="min-w-0" x-show="sys.tickets.rol === 'coordinador'">
+                                                <legend class="text-sm font-medium text-brand-green">{{ __('portal.access_request.coordinations') }}</legend>
                                                 <template x-for="c in catalogos.tickets.coordinaciones" :key="c.id">
                                                     <label class="flex min-h-[36px] items-center gap-2 text-sm">
                                                         <input type="checkbox" name="accesos[tickets][coordination_ids][]" :value="c.id" x-model="sys.tickets.coordination_ids" class="h-4 w-4 rounded border-gray-300 text-brand-teal focus:ring-brand-teal">
                                                         <span x-text="`${c.estacion} › ${c.nombre}`"></span>
                                                     </label>
                                                 </template>
-                                                <p class="mt-1 text-sm text-red-600" x-show="errors.tickets_coord" x-text="errors.tickets_coord"></p>
-                                            </div>
+                                                <p id="error-tickets_coord" class="mt-1 text-sm text-red-600" x-show="errors.tickets_coord" x-text="errors.tickets_coord"></p>
+                                            </fieldset>
                                         </div>
                                     </template>
                                 @endif
@@ -199,6 +206,7 @@
                     </div>
                 </div>
             @endforeach
+            </fieldset>
 
             <div class="flex items-center justify-between pt-1">
                 <x-secondary-button type="button" @click="back()">{{ __('portal.access_request.back') }}</x-secondary-button>
@@ -212,9 +220,9 @@
         <div class="space-y-4">
             <div>
                 <x-input-label for="funciones" :value="__('portal.access_request.functions')" />
-                <textarea id="funciones" name="funciones" rows="4" maxlength="1500" x-model="form.funciones" placeholder="{{ __('portal.access_request.functions_ph') }}" class="{{ $input }}"></textarea>
-                <p class="mt-1 text-xs text-gray-500" x-text="`${form.funciones.length} / 1500`"></p>
-                <p class="mt-1 text-sm text-red-600" x-show="errors.funciones" x-text="errors.funciones"></p>
+                <textarea id="funciones" name="funciones" rows="4" maxlength="1500" x-model="form.funciones" aria-required="true" aria-describedby="funciones-contador" placeholder="{{ __('portal.access_request.functions_ph') }}" class="{{ $input }}"></textarea>
+                <p id="funciones-contador" class="mt-1 text-xs text-gray-500" x-text="`${form.funciones.length} / 1500`"></p>
+                <p id="error-funciones" class="mt-1 text-sm text-red-600" x-show="errors.funciones" x-text="errors.funciones"></p>
                 <x-input-error :messages="$errors->get('funciones')" class="mt-1" />
             </div>
             <div>
@@ -231,7 +239,7 @@
 
     {{-- 4. Revisa y envía --}}
     <x-wizard.step :index="3" :title="__('portal.access_request.review_title')" :help="__('portal.access_request.review_help')">
-        <div class="space-y-3 text-sm">
+        <div class="space-y-3 text-sm [overflow-wrap:anywhere]">
             <div class="rounded-xl bg-brand-mist p-4">
                 <p class="font-semibold text-brand-green" x-text="form.puesto"></p>
                 <p class="text-gray-600" x-text="form.ubicacion"></p>

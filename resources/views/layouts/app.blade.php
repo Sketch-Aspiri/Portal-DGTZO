@@ -23,6 +23,7 @@
 
             <footer class="bg-brand-green py-6 text-center text-xs text-white/90">
                 {{ __('portal.system_name') }}
+                <div class="mt-2"><x-enlace-accesibilidad /></div>
             </footer>
         </div>
 

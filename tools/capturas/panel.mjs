@@ -78,7 +78,7 @@ async function comprobar(sistema, base, alias, { ancho, alto, oscuro }) {
     assert.ok(await dialogo.locator('input[value="150"]').isChecked(), 'el panel muestra lo guardado');
     await dialogo.getByRole('button', { name: 'Restablecer' }).click();
     assert.ok(!(await clases(p)).includes('a11y-'), 'restablecer quita todo');
-    assert.ok(!(await p.context().cookies()).some((c) => c.name === 'a11y' && c.value), 'restablecer borra la cookie');
+    assert.equal((await p.context().cookies()).find((c) => c.name === 'a11y')?.value, 'auto', 'restablecer deja la cookie neutra');
 
     if (errores.length) fallas.push(`${nombre}: ${errores.join(' | ')}`);
     await p.context().close();

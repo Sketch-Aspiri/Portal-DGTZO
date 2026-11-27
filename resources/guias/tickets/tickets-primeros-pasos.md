@@ -44,6 +44,10 @@ En **Mi perfil** cambias foto, nombre y contraseña, y activas la verificación 
 
 ![Pantalla de mi perfil en Tickets](05-perfil.png)
 
+## Accesibilidad
+
+En la parte baja del menú, el botón **Accesibilidad** permite agrandar la letra, subir el contraste y más. Consulta la guía [Accesibilidad](/tutoriales/accesibilidad).
+
 ## En el celular
 
 Funciona igual; el menú se abre con **☰**.

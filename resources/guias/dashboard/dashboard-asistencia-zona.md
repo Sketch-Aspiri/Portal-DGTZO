@@ -1,6 +1,6 @@
 ## Quién ya capturó
 
-En **RR.HH. → Asistencia Zona Oriente** ves cada estación como **Capturado**, **Pendiente** o sin personal. Puedes consultar otra fecha. El oficio de la Zona se habilita cuando todas las estaciones capturaron.
+En **RR.HH. → Asistencia Zona Oriente** ves cada estación como **Capturado**, **Pendiente** o sin personal. Para consultar otra fecha, elígela en **Ver otra fecha** y toca **Ver esta fecha**. El oficio de la Zona se habilita cuando todas las estaciones capturaron.
 
 ![Tablero de captura por estación](01-zona.png)
 

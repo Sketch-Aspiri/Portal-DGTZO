@@ -90,8 +90,10 @@ function start(canvas) {
     const uTime = u('u_time');
 
     const sistema = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const quieto = () => sistema || document.documentElement.classList.contains('a11y-sin-movimiento');
-    const t0 = performance.now();
+    const quieto = () => sistema || ['a11y-sin-movimiento', 'fondo-pausado'].some((c) => document.documentElement.classList.contains(c));
+    // Tiempo de la animación: solo avanza mientras se mueve, para que al reanudar no salte.
+    let transcurrido = 0;
+    let anterior = null;
     let raf = 0;
     let visible = true;
 
@@ -114,7 +116,9 @@ function start(canvas) {
         raf = 0;
         resize();
         gl.uniform2f(uRes, canvas.width, canvas.height);
-        gl.uniform1f(uTime, ((now - t0) / 1000) * 0.309);
+        if (anterior !== null && !quieto()) transcurrido += Math.min(now - anterior, 100);
+        anterior = now;
+        gl.uniform1f(uTime, (transcurrido / 1000) * 0.309);
         gl.drawArrays(gl.TRIANGLES, 0, 3);
         if (!quieto() && visible) raf = requestAnimationFrame(draw);
     };
@@ -125,6 +129,7 @@ function start(canvas) {
     }).observe(canvas);
     window.addEventListener('resize', () => { if (quieto()) requestAnimationFrame(draw); });
     window.addEventListener('a11y-cambiado', () => { if (!raf) raf = requestAnimationFrame(draw); });
+    window.addEventListener('fondo-cambiado', () => { if (!raf) raf = requestAnimationFrame(draw); });
     raf = requestAnimationFrame(draw);
 }
 

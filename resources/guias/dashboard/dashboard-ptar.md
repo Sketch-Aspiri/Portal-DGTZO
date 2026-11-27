@@ -6,7 +6,7 @@ En **Otros → Reporte de Estatus PTAR** indica el modo de operación, el estado
 
 ## Tablero (Zona)
 
-Situación de cada planta, reportes por revisar y hallazgos abiertos.
+Situación de cada planta, reportes por revisar y hallazgos abiertos. Para ver otro mes, elige mes y año y toca **Ver**.
 
 ![Tablero PTAR](02-tablero.png)
 
@@ -18,6 +18,6 @@ Toca **Aprobar** o **Devolver a la estación**.
 
 ## Hallazgos y propuestas
 
-Registra problemas y propuestas, actualiza su estado y genera el oficio mensual en Word.
+Registra problemas y propuestas, actualiza su estado y genera el oficio mensual en Word. Para filtrar la lista, elige estado, planta o tipo y toca **Aplicar filtros**.
 
 ![Lista de hallazgos](04-hallazgos.png)

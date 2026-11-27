@@ -8,13 +8,15 @@ En **Mis sistemas** toca la tarjeta **Calendario oficial**.
 
 ## Consulta el mes
 
-Usa las flechas para cambiar de mes y **Hoy** para volver. Debajo, **Próximas** lista lo que viene con fecha, hora y lugar. Las horas están en horario de Cancún.
+Usa las flechas para cambiar de mes y **Hoy** para volver. En la computadora el mes es una tabla de lunes a domingo; en el celular aparece como lista con los días que tienen entradas. Cada tipo de entrada tiene una figura y un nombre, además de su color. Si un día tiene más de tres, toca **+ más** (con el número de las que faltan) para ver el resto.
+
+Debajo, **Próximas** lista lo que viene con fecha, hora y lugar. Las horas están en horario de Cancún.
 
 ![Vista mensual del calendario con la lista de próximas entradas](02-mes.png)
 
 ## Filtra lo que ves
 
-Elige **Evento**, **Día inhábil** o **Fecha límite**; con **Todo** vuelves a ver todo. Si aparecen las **Capas del Dashboard**, actívalas para ver además los cumpleaños u otras fechas disponibles para tu cuenta.
+Elige **Evento**, **Día inhábil** o **Fecha límite**; con **Todo** vuelves a ver todo. La opción elegida lleva una marca **✓**. Si aparecen las **Capas del Dashboard**, actívalas para ver además los cumpleaños u otras fechas disponibles para tu cuenta.
 
 ![Filtros del calendario con Fecha límite marcado](03-filtros.png)
 

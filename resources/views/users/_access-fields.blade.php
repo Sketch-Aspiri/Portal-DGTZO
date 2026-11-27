@@ -2,20 +2,23 @@
     Campos de acceso por subsistema (rol y ubicación), compartidos por la aprobación y por "dar acceso".
     Variables: $catalogo (config), $catalogos (catálogo vivo de cada subsistema o null), $esAdministrador,
     $omitir (claves de subsistemas que no se ofrecen), $prefill (clave => rol y contexto actuales, al editar),
-    $fijo (true: el sistema ya esta elegido y no se puede desmarcar, al editar).
+    $fijo (true: el sistema ya esta elegido y no se puede desmarcar, al editar),
+    $prefijo (para que no se repitan los id cuando el parcial aparece varias veces en la pantalla).
 --}}
 @foreach ($catalogo as $clave => $sistema)
     @continue(in_array($clave, $omitir ?? [], true))
     @php($cat = $catalogos[$clave] ?? null)
     @php($privilegiados = $sistema['roles_privilegiados'] ?? [])
     @php($pref = isset($prefill[$clave]) ? (array) $prefill[$clave] : (isset($solicitud) && $solicitud ? (array) ($solicitud->accesos[$clave] ?? []) : []))
-    <fieldset class="rounded-lg border p-4 space-y-3" @disabled($cat === null)>
+    @php($pid = $prefijo ?? '')
+    <fieldset class="min-w-0 rounded-lg border p-4 space-y-3" @disabled($cat === null)>
+        <legend class="sr-only">{{ $sistema['nombre'] }}</legend>
         @if (! empty($fijo))
             <input type="hidden" name="accesos[{{ $clave }}][activo]" value="1">
             <p class="font-medium">{{ $sistema['nombre'] }}</p>
         @else
-            <label class="flex items-center gap-2 font-medium">
-                <input type="checkbox" name="accesos[{{ $clave }}][activo]" value="1" @checked(old("accesos.$clave.activo", ! empty($pref))) @disabled($cat === null)>
+            <label class="flex min-h-[32px] items-center gap-2 font-medium">
+                <input type="checkbox" name="accesos[{{ $clave }}][activo]" value="1" class="rounded border-gray-300 text-brand-teal focus:ring-brand-teal" @checked(old("accesos.$clave.activo", ! empty($pref))) @disabled($cat === null)>
                 {{ $sistema['nombre'] }}
             </label>
         @endif
@@ -24,8 +27,8 @@
             <p class="text-sm text-red-700">{{ __('portal.catalog_unavailable') }}</p>
         @else
             <div>
-                <x-input-label :for="'rol-'.$clave" :value="__('portal.approvals.role')" />
-                <select id="rol-{{ $clave }}" name="accesos[{{ $clave }}][rol]" class="mt-1 block w-full rounded-md border-gray-300 text-sm">
+                <x-input-label :for="$pid.'rol-'.$clave" :value="__('portal.approvals.role')" />
+                <select id="{{ $pid }}rol-{{ $clave }}" name="accesos[{{ $clave }}][rol]" class="mt-1 block w-full rounded-md border-gray-300 text-sm">
                     @foreach ($sistema['roles'] as $rolClave => $rolNombre)
                         @if ($esAdministrador || ! in_array($rolClave, $privilegiados, true))
                             <option value="{{ $rolClave }}" @selected(old("accesos.$clave.rol", $pref['rol'] ?? null) === $rolClave)>{{ $rolNombre }}</option>
@@ -39,37 +42,37 @@
             </div>
 
             @if ($clave === 'tickets')
-                <div>
-                    <p class="text-sm font-medium">{{ __('portal.approvals.teams') }}</p>
-                    <p class="text-xs text-gray-500">{{ __('portal.approvals.teams_help') }}</p>
+                <fieldset class="min-w-0" aria-describedby="{{ $pid }}equipos-ayuda">
+                    <legend class="text-sm font-medium">{{ __('portal.approvals.teams') }}</legend>
+                    <p id="{{ $pid }}equipos-ayuda" class="text-xs text-gray-500">{{ __('portal.approvals.teams_help') }}</p>
                     @foreach (collect($cat['equipos'] ?? [])->groupBy(fn ($e) => ($e['estacion'] ?? '—').' › '.($e['coordinacion'] ?? '—')) as $grupo => $equipos)
-                        <div class="mt-2">
-                            <p class="text-xs font-semibold text-gray-600">{{ $grupo }}</p>
+                        <fieldset class="min-w-0 mt-2">
+                            <legend class="text-xs font-semibold text-gray-600">{{ $grupo }}</legend>
                             @foreach ($equipos as $equipo)
-                                <label class="flex items-center gap-2 text-sm">
-                                    <input type="checkbox" name="accesos[tickets][team_ids][]" value="{{ $equipo['id'] }}" @checked(in_array($equipo['id'], (array) old('accesos.tickets.team_ids', $pref['team_ids'] ?? [])))>
+                                <label class="flex min-h-[32px] items-center gap-2 text-sm">
+                                    <input type="checkbox" class="rounded border-gray-300 text-brand-teal focus:ring-brand-teal" name="accesos[tickets][team_ids][]" value="{{ $equipo['id'] }}" @checked(in_array($equipo['id'], (array) old('accesos.tickets.team_ids', $pref['team_ids'] ?? [])))>
                                     {{ $equipo['nombre'] }}
                                 </label>
                             @endforeach
-                        </div>
+                        </fieldset>
                     @endforeach
                     <x-input-error :messages="$errors->get('accesos.tickets.team_ids')" class="mt-1" />
-                </div>
-                <div>
-                    <p class="text-sm font-medium">{{ __('portal.approvals.coordinations') }}</p>
-                    <p class="text-xs text-gray-500">{{ __('portal.approvals.coordinations_help') }}</p>
+                </fieldset>
+                <fieldset class="min-w-0" aria-describedby="{{ $pid }}coordinaciones-ayuda">
+                    <legend class="text-sm font-medium">{{ __('portal.approvals.coordinations') }}</legend>
+                    <p id="{{ $pid }}coordinaciones-ayuda" class="text-xs text-gray-500">{{ __('portal.approvals.coordinations_help') }}</p>
                     @foreach ($cat['coordinaciones'] ?? [] as $coordinacion)
-                        <label class="flex items-center gap-2 text-sm">
-                            <input type="checkbox" name="accesos[tickets][coordination_ids][]" value="{{ $coordinacion['id'] }}" @checked(in_array($coordinacion['id'], (array) old('accesos.tickets.coordination_ids', $pref['coordination_ids'] ?? [])))>
+                        <label class="flex min-h-[32px] items-center gap-2 text-sm">
+                            <input type="checkbox" class="rounded border-gray-300 text-brand-teal focus:ring-brand-teal" name="accesos[tickets][coordination_ids][]" value="{{ $coordinacion['id'] }}" @checked(in_array($coordinacion['id'], (array) old('accesos.tickets.coordination_ids', $pref['coordination_ids'] ?? [])))>
                             {{ $coordinacion['estacion'] ?? '—' }} › {{ $coordinacion['nombre'] }}
                         </label>
                     @endforeach
                     <x-input-error :messages="$errors->get('accesos.tickets.coordination_ids')" class="mt-1" />
-                </div>
+                </fieldset>
             @elseif ($clave === 'dashboard')
                 <div>
-                    <x-input-label for="estacion-dashboard" :value="__('portal.approvals.station')" />
-                    <select id="estacion-dashboard" name="accesos[dashboard][estacion_id]" class="mt-1 block w-full rounded-md border-gray-300 text-sm">
+                    <x-input-label :for="$pid.'estacion-dashboard'" :value="__('portal.approvals.station')" />
+                    <select id="{{ $pid }}estacion-dashboard" name="accesos[dashboard][estacion_id]" class="mt-1 block w-full rounded-md border-gray-300 text-sm">
                         <option value="">—</option>
                         @foreach ($cat['estaciones'] ?? [] as $estacion)
                             <option value="{{ $estacion['id'] }}" @selected((int) old('accesos.dashboard.estacion_id', $pref['estacion_id'] ?? 0) === $estacion['id'])>{{ $estacion['nombre'] }}</option>
@@ -80,8 +83,8 @@
                 </div>
                 @if (! empty($cat['areas']))
                     <div>
-                        <x-input-label for="area-dashboard" :value="__('portal.approvals.area')" />
-                        <select id="area-dashboard" name="accesos[dashboard][area]" class="mt-1 block w-full rounded-md border-gray-300 text-sm">
+                        <x-input-label :for="$pid.'area-dashboard'" :value="__('portal.approvals.area')" />
+                        <select id="{{ $pid }}area-dashboard" name="accesos[dashboard][area]" class="mt-1 block w-full rounded-md border-gray-300 text-sm">
                             <option value="">—</option>
                             @foreach ($cat['areas'] as $area)
                                 <option value="{{ $area['clave'] }}" @selected(old('accesos.dashboard.area', $pref['area'] ?? null) === $area['clave'])>{{ $area['nombre'] }}</option>

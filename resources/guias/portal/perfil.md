@@ -29,6 +29,6 @@ Escribe la actual y dos veces la nueva (al menos 12 caracteres, con mayúsculas,
 
 ## Elige modo claro u oscuro
 
-El botón junto a la campana cambia la apariencia: según tu dispositivo, clara u oscura.
+El botón junto a la campana cambia la apariencia: según tu dispositivo, clara u oscura. El botón de al lado, **Accesibilidad**, permite agrandar la letra, subir el contraste y más: consulta la guía [Accesibilidad](/tutoriales/accesibilidad).
 
 ![Botón de apariencia marcado en la barra superior](05-tema.png)

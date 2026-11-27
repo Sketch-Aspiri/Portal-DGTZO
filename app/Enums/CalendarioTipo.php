@@ -26,6 +26,16 @@ enum CalendarioTipo: string
         };
     }
 
+    /** Figura que distingue el tipo en la cuadrícula sin depender del color (la leyenda la explica). */
+    public function simbolo(): string
+    {
+        return match ($this) {
+            self::Evento => '●',
+            self::Inhabil => '■',
+            self::FechaLimite => '▲',
+        };
+    }
+
     /** Los días inhábiles son de día completo por naturaleza. */
     public function esDiaCompleto(): bool
     {

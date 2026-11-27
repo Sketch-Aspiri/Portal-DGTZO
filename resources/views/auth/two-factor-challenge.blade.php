@@ -9,8 +9,10 @@
         <x-input-error :messages="$errors->get('code')" class="mt-2" />
 
         <details class="mt-4 text-sm">
-            <summary class="cursor-pointer text-gray-600">{{ __('portal.two_factor.use_recovery') }}</summary>
-            <x-text-input id="recovery_code" name="recovery_code" type="text" autocomplete="off" class="mt-2 block w-full" />
+            <summary class="min-h-6 cursor-pointer text-gray-600">{{ __('portal.two_factor.use_recovery') }}</summary>
+            <x-input-label for="recovery_code" :value="__('portal.two_factor.recovery_code')" class="mt-2" />
+            <x-text-input id="recovery_code" name="recovery_code" type="text" autocomplete="off" class="mt-1 block w-full" />
+            <x-input-error :messages="$errors->get('recovery_code')" class="mt-2" />
         </details>
 
         <div class="mt-4"><x-primary-button>{{ __('portal.two_factor.verify') }}</x-primary-button></div>

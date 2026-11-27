@@ -13,7 +13,7 @@ En **Recursos materiales → Solicitud de insumos**:
 
 ## Tablero del mes (Zona)
 
-Muestra el fondo del mes, qué estaciones enviaron y cuáles faltan. Abajo se descarga el consolidado en Excel.
+Muestra el fondo del mes, qué estaciones enviaron y cuáles faltan. Para ver otro mes usa las flechas, o elige mes y año y toca **Ver**. Abajo se descarga el consolidado en Excel.
 
 ![Tablero mensual de solicitudes](02-zona.png)
 

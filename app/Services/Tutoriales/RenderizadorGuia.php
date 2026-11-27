@@ -19,6 +19,9 @@ final class RenderizadorGuia
             'allow_unsafe_links' => false,
         ]);
 
+        // Los encabezados de las tablas dicen que encabezan columnas.
+        $html = (string) preg_replace('#<th(?=[\s>])#', '<th scope="col"', $html);
+
         $indice = [];
         $usados = [];
 

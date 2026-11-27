@@ -1,7 +1,8 @@
 <nav x-data="{ open: false }" @keydown.escape="if (open) { open = false; $refs.hamburguesa.focus() }" aria-label="{{ __('Navegación principal') }}" class="bg-white border-b border-brand-green/10">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div class="flex justify-between h-16">
+        {{-- Con letra grande en pantallas medianas, la barra pasa a dos renglones en vez de salirse. --}}
+        <div class="flex min-h-[4rem] flex-wrap justify-between">
             <div class="flex">
                 <!-- Logo -->
                 <div class="shrink-0 flex items-center">
@@ -24,7 +25,7 @@
             </div>
 
             <!-- Settings Dropdown -->
-            <div class="hidden sm:flex sm:items-center sm:ms-6 sm:gap-2">
+            <div class="hidden sm:ms-auto sm:flex sm:flex-wrap sm:items-center sm:justify-end sm:gap-2 sm:py-1 sm:ps-6">
                 <x-campana-notificaciones />
                 <x-selector-tema />
                 <x-panel-accesibilidad><x-selector-tema variante="segmentos" /></x-panel-accesibilidad>

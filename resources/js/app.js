@@ -5,6 +5,8 @@ import '@fontsource/poppins/600.css';
 import '@fontsource/poppins/700.css';
 
 import './shader-background';
+import { iniciarPausaFondo } from './pausa-fondo';
+import { iniciarConfirmaciones } from './confirmaciones';
 import accessWizard from './access-wizard';
 import { registerPush, registerServiceWorker } from './push';
 import { selectorTema } from './tema';
@@ -27,6 +29,8 @@ registrarPantalla(document, window);
 
 Alpine.start();
 iniciarAccesibilidad(document, window);
+iniciarPausaFondo(document, window);
+iniciarConfirmaciones(document);
 
 // Aparición suave al desplazarse (elementos con .reveal).
 const revealables = document.querySelectorAll('.reveal');

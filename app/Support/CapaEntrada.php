@@ -30,6 +30,11 @@ final readonly class CapaEntrada
         return $this->capa === 'cumpleanos' ? 'bg-pink-100 text-pink-800' : 'bg-sky-100 text-sky-800';
     }
 
+    public function simbolo(): string
+    {
+        return $this->capa === 'cumpleanos' ? '★' : '◆';
+    }
+
     public function editable(): bool
     {
         return false;

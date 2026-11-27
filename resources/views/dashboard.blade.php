@@ -19,6 +19,7 @@
         <div class="absolute inset-0 -z-[15] bg-gradient-to-r from-brand-green-dark/95 via-brand-green/85 to-brand-teal/60"></div>
         <canvas data-shader-bg data-colors="#043D39,#06534D,#1F7460,#70C2AD" aria-hidden="true"
                 class="absolute inset-0 -z-10 h-full w-full opacity-30"></canvas>
+        <x-pausa-fondo class="absolute right-2 top-1" />
         <div class="mx-auto max-w-7xl px-4 pb-20 pt-10 sm:px-6 sm:pt-12 lg:px-8">
             <p class="rise text-sm font-semibold uppercase tracking-[0.15em] text-brand-mint">{{ __('portal.launcher.title') }}</p>
             <h1 class="rise mt-2 font-heading text-3xl font-bold sm:text-4xl" style="animation-delay:.06s">{{ __('portal.launcher.'.$saludo) }}, {{ $nombre }}</h1>
@@ -43,7 +44,7 @@
             </div>
         @endif
 
-            <div class="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            <div class="grid grid-cols-1 gap-5 [overflow-wrap:anywhere] sm:grid-cols-2 lg:grid-cols-3">
                 @foreach ($subsistemas as $clave => $sistema)
                     <a href="{{ $sistema['url'] }}"
                        class="rise group relative flex flex-col overflow-hidden rounded-2xl border border-brand-green/10 bg-white p-6 shadow-lg shadow-brand-green/10 transition duration-300 hover:-translate-y-1 hover:border-brand-mint hover:shadow-xl focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal"
@@ -145,7 +146,7 @@
                 <h2 id="notificaciones-recientes" class="font-heading text-sm font-semibold uppercase tracking-wider text-brand-teal">
                     {{ __('push.center.title') }}
                     @if ($sinLeer > 0)
-                        <span class="ms-2 rounded-full bg-red-600 px-2 py-0.5 text-xs font-bold normal-case tracking-normal text-white">{{ $sinLeer }}</span>
+                        <span class="ms-2 rounded-full bg-red-600 px-2 py-0.5 text-xs font-bold normal-case tracking-normal text-white">{{ $sinLeer }} <span class="sr-only">{{ __('push.center.unread') }}</span></span>
                     @endif
                 </h2>
                 <a href="{{ route('notifications.index') }}" class="inline-flex min-h-[44px] items-center text-sm font-semibold text-brand-teal hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal">{{ __('Ver todas') }}</a>
@@ -153,13 +154,13 @@
             <div class="mt-3 space-y-2">
                 @forelse ($recientes as $aviso)
                     <a href="{{ route('notifications.open', $aviso->id) }}"
-                       class="flex items-start gap-3 rounded-xl border border-brand-green/10 bg-white p-4 shadow-sm shadow-brand-green/5 transition hover:border-brand-mint focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal">
+                       class="flex flex-wrap items-start gap-3 rounded-xl border border-brand-green/10 bg-white p-4 shadow-sm shadow-brand-green/5 transition hover:border-brand-mint focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal">
                         <span class="mt-1.5 h-2.5 w-2.5 shrink-0 rounded-full {{ $aviso->read_at === null ? 'bg-brand-teal' : 'bg-gray-200' }}" aria-hidden="true"></span>
                         <span class="min-w-0 flex-1">
-                            <span class="block text-sm {{ $aviso->read_at === null ? 'font-semibold text-gray-900' : 'font-medium text-gray-700' }}">{{ $aviso->data['title'] ?? '' }}</span>
+                            <span class="block text-sm {{ $aviso->read_at === null ? 'font-semibold text-gray-900' : 'font-medium text-gray-700' }}">{{ $aviso->data['title'] ?? '' }}@if ($aviso->read_at === null) <span class="ms-1 inline-block rounded-full border border-brand-teal/40 px-2 text-xs font-bold text-brand-green">{{ __('push.center.unread') }}</span>@endif</span>
                             <span class="block truncate text-sm text-gray-600">{{ $aviso->data['body'] ?? '' }}</span>
                         </span>
-                        <span class="shrink-0 text-xs text-gray-500">{{ __('push.systems.'.($aviso->data['source'] ?? 'portal')) }} · {{ $aviso->created_at->diffForHumans() }}</span>
+                        <span class="text-xs text-gray-500">{{ __('push.systems.'.($aviso->data['source'] ?? 'portal')) }} · {{ $aviso->created_at->diffForHumans() }}</span>
                     </a>
                 @empty
                     <p class="rounded-xl border border-dashed border-brand-green/25 bg-white p-5 text-sm text-gray-600">{{ __('push.center.empty') }}</p>

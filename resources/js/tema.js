@@ -78,6 +78,25 @@ export function selectorTema() {
             aplicar(tema);
         },
 
+        /** Grupo de opciones (radiogroup): las flechas, Inicio y Fin eligen y mueven el foco; Tab sale del grupo. */
+        teclas(evento) {
+            const paso = { ArrowRight: 1, ArrowDown: 1, ArrowLeft: -1, ArrowUp: -1 }[evento.key];
+            let destino;
+
+            if (paso) {
+                destino = OPCIONES[(OPCIONES.indexOf(this.tema) + paso + OPCIONES.length) % OPCIONES.length];
+            } else if (evento.key === 'Home' || evento.key === 'End') {
+                destino = OPCIONES.at(evento.key === 'Home' ? 0 : -1);
+            } else {
+                return;
+            }
+
+            evento.preventDefault();
+            const opcion = evento.currentTarget.querySelector(`[data-tema="${destino}"]`);
+            this.elegir(destino);
+            opcion.focus();
+        },
+
         siguiente() {
             this.elegir(OPCIONES[(OPCIONES.indexOf(this.tema) + 1) % OPCIONES.length]);
         },

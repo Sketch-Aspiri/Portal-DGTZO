@@ -86,9 +86,9 @@
             </form>
 
             @if ($editando)
-                <details class="rounded-xl border border-red-200 bg-white p-4">
+                <details data-confirmacion class="rounded-xl border border-red-200 bg-white p-4">
                     <summary class="cursor-pointer text-sm font-semibold text-red-700">{{ __('portal.calendar.delete') }}</summary>
-                    <form method="POST" action="{{ route('calendar.events.destroy', $evento) }}" class="mt-3 flex items-center gap-3">
+                    <form method="POST" action="{{ route('calendar.events.destroy', $evento) }}" class="mt-3 flex flex-wrap items-center gap-3">
                         @csrf
                         @method('DELETE')
                         <p class="text-sm text-gray-700">{{ __('portal.calendar.confirm_delete') }}</p>

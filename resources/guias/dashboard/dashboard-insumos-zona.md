@@ -1,6 +1,6 @@
 ## Catálogo
 
-Edita descripción, unidad, precio, partida y proveedor en la tabla y guarda cada renglón. **Cargar ANEXO** actualiza desde Excel.
+Edita descripción, unidad, precio, partida y proveedor en la tabla y guarda cada renglón. Para buscar o marcar **Mostrar inactivos**, toca después **Buscar**. **Cargar ANEXO** actualiza desde Excel.
 
 ![Catálogo de insumos](01-catalogo.png)
 
@@ -12,7 +12,7 @@ Cada proveedor factura con su IVA. Un proveedor sin IVA definido se calcula al 8
 
 ## Inventario
 
-Muestra por estación la herramienta, el equipo de protección y los consumibles entregados.
+Muestra por estación la herramienta, el equipo de protección y los consumibles entregados. Para cambiar de estación, elígela y toca **Ver estación**.
 
 ![Inventario de una estación](03-inventario.png)
 
@@ -24,6 +24,6 @@ Sube el PDF o captura los datos y renglones, relacionando cada uno con la partid
 
 ## Facturas
 
-Carga los **XML (CFDI)** con su PDF del mismo nombre. El sistema los compara con la cotización y las partidas. Al final del mes prepara el PDF de comprobación.
+Carga los **XML (CFDI)** con su PDF del mismo nombre. El sistema los compara con la cotización y las partidas. Si dentro de una factura cambias la partida de un concepto, toca su botón **Guardar**. Para ver otro mes, elige mes y año y toca **Ver**. Al final del mes prepara el PDF de comprobación.
 
 ![Facturas del mes](05-facturas.png)

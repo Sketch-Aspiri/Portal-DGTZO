@@ -42,7 +42,8 @@
                     <x-panel-accesibilidad><x-selector-tema variante="segmentos" /></x-panel-accesibilidad>
                 </div>
 
-                <main id="contenido" tabindex="-1" class="flex flex-1 items-center justify-center px-4 py-8 sm:px-8">
+                {{-- En columna: el resumen de errores (accesibilidad-base.js) se inserta aquí y va arriba de la tarjeta. --}}
+                <main id="contenido" tabindex="-1" class="flex flex-1 flex-col items-center justify-center px-4 py-8 sm:px-8">
                     <div class="w-full {{ $attributes->has('wide') ? 'max-w-2xl' : 'max-w-md' }}">
                         <div class="rounded-2xl border border-brand-green/10 bg-white p-6 shadow-lg shadow-brand-green/5 sm:p-8">
                             @isset($title)
@@ -58,6 +59,7 @@
                         <p class="mt-6 text-center text-xs text-gray-500">{{ __('portal.system_name') }}</p>
                     </div>
                 </main>
+                <footer class="pb-4 text-center text-xs"><x-enlace-accesibilidad class="text-brand-teal" /></footer>
             </div>
         </div>
 

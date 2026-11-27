@@ -44,7 +44,7 @@
                 </div>
 
                 <div class="bg-white border border-brand-green/10 shadow-sm shadow-brand-green/5 rounded-xl p-6 space-y-4">
-                    <h3 class="font-semibold">{{ __('portal.approvals.grant') }}</h3>
+                    <h2 class="font-semibold">{{ __('portal.approvals.grant') }}</h2>
                     <p class="text-sm text-gray-600">{{ __('portal.approvals.grant_help') }}</p>
                     <x-input-error :messages="$errors->get('accesos')" />
 

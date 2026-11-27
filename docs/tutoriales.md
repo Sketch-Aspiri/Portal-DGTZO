@@ -24,6 +24,10 @@ portal las ve todas. Las capturas se sirven con el mismo permiso que su guía (n
 4. `php vendor/bin/phpunit tests/Feature` (la prueba de coherencia detecta imágenes faltantes o sobrantes).
 5. Publicar requiere desplegar el portal.
 
+La guía `accesibilidad` es del portal, pero dos de sus capturas son del Dashboard: `node portal.mjs` levanta además la
+copia del Dashboard (`DASHBOARD_DIR`, por omisión `../dash_a11y`) y necesita el MySQL de abajo. No la ejecutes al mismo
+tiempo que `dashboard.mjs` o `a11y.mjs`: comparten esa base.
+
 Guía nueva: agrega su entrada al catálogo, el `.md` y un bloque con el mismo slug en el guion de su sistema. Los slugs
 son únicos entre sistemas (por eso llevan el prefijo `tickets-` o `dashboard-`).
 

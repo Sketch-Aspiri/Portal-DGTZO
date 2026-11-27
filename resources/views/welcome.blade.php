@@ -11,34 +11,38 @@
 
         <x-saltar-contenido />
 
-        {{-- Hero --}}
-        <section class="relative isolate overflow-hidden text-white">
-            <img src="{{ asset('images/tren-maya.jpeg') }}" alt="" aria-hidden="true"
-                 class="absolute inset-0 -z-20 h-full w-full scale-[1.3] origin-[10%_70%] object-cover blur-[2px]">
-            <div class="absolute inset-0 -z-[15] bg-gradient-to-br from-brand-green-dark/95 via-brand-green/75 to-brand-teal/30"></div>
-            <canvas data-shader-bg data-colors="#043D39,#06534D,#1F7460,#70C2AD" aria-hidden="true"
-                    class="absolute inset-0 -z-10 h-full w-full opacity-40 [mask-image:linear-gradient(to_right,black_0%,black_40%,transparent_95%)]"></canvas>
-            <div class="absolute -right-24 top-1/3 -z-10 h-96 w-96 rounded-full bg-brand-mint/20 blur-3xl" aria-hidden="true"></div>
-            <div class="absolute inset-x-0 bottom-0 -z-10 h-40 bg-gradient-to-t from-brand-green-dark/50 to-transparent" aria-hidden="true"></div>
+        {{-- Cabecera y portada. El fondo es de la portada y sube por detrás de la cabecera: así el título queda dentro
+             de <main> y la cabecera sigue siendo una zona aparte. --}}
+        <header class="relative z-10 mx-auto flex w-full max-w-6xl text-white items-center justify-between px-4 py-5 sm:px-6 lg:px-8">
+            <a href="/" aria-label="Tren Maya">
+                <x-application-logo class="h-12 sm:h-14 [&_img]:brightness-0 [&_img]:invert" />
+            </a>
+            <nav class="flex flex-wrap items-center justify-end gap-2 sm:gap-3" aria-label="{{ __('Navegación principal') }}">
+                <x-panel-accesibilidad class="rounded-md bg-white" />
+                <a href="{{ route('tutorials.index') }}" class="inline-flex min-h-[44px] items-center rounded-lg px-3 text-sm font-semibold text-white hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white">{{ __('portal.tutorials.help') }}</a>
+                @auth
+                    <a href="{{ route('dashboard') }}" class="{{ $btnPrimary }} !min-h-[44px] !rounded-lg !px-4">{{ __('portal.welcome.open') }}</a>
+                @else
+                    <a href="{{ route('login') }}" class="inline-flex min-h-[44px] items-center rounded-lg px-3 text-sm font-semibold text-white hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white">{{ __('portal.welcome.login') }}</a>
+                    <a href="{{ route('register') }}" class="{{ $btnPrimary }} !min-h-[44px] !rounded-lg !px-4">{{ __('portal.welcome.register') }}</a>
+                @endauth
+            </nav>
+        </header>
 
-            <header class="mx-auto flex max-w-6xl items-center justify-between px-4 py-5 sm:px-6 lg:px-8">
-                <a href="/" aria-label="Tren Maya">
-                    <x-application-logo class="h-12 sm:h-14 [&_img]:brightness-0 [&_img]:invert" />
-                </a>
-                <nav class="flex items-center gap-2 sm:gap-3">
-                    <x-panel-accesibilidad class="rounded-md bg-white" />
-                    <a href="{{ route('tutorials.index') }}" class="inline-flex min-h-[44px] items-center rounded-lg px-3 text-sm font-semibold text-white hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white">{{ __('portal.tutorials.help') }}</a>
-                    @auth
-                        <a href="{{ route('dashboard') }}" class="{{ $btnPrimary }} !min-h-[44px] !rounded-lg !px-4">{{ __('portal.welcome.open') }}</a>
-                    @else
-                        <a href="{{ route('login') }}" class="inline-flex min-h-[44px] items-center rounded-lg px-3 text-sm font-semibold text-white hover:bg-white/10 focus:outline-none focus-visible:ring-2 focus-visible:ring-white">{{ __('portal.welcome.login') }}</a>
-                        <a href="{{ route('register') }}" class="{{ $btnPrimary }} !min-h-[44px] !rounded-lg !px-4">{{ __('portal.welcome.register') }}</a>
-                    @endauth
-                </nav>
-            </header>
+        <main id="contenido" tabindex="-1" class="flex-1">
+        <section class="relative isolate text-white">
+            <div class="absolute inset-x-0 -top-64 bottom-0 -z-10 overflow-hidden">
+                <img src="{{ asset('images/tren-maya.jpeg') }}" alt="" aria-hidden="true"
+                     class="absolute inset-0 -z-20 h-full w-full scale-[1.3] origin-[10%_70%] object-cover blur-[2px]">
+                <div class="absolute inset-0 -z-[15] bg-gradient-to-br from-brand-green-dark/95 via-brand-green/75 to-brand-teal/30"></div>
+                <canvas data-shader-bg data-colors="#043D39,#06534D,#1F7460,#70C2AD" aria-hidden="true"
+                        class="absolute inset-0 -z-10 h-full w-full opacity-40 [mask-image:linear-gradient(to_right,black_0%,black_40%,transparent_95%)]"></canvas>
+                <div class="absolute -right-24 top-1/3 -z-10 h-96 w-96 rounded-full bg-brand-mint/20 blur-3xl" aria-hidden="true"></div>
+                <div class="absolute inset-x-0 bottom-0 -z-10 h-40 bg-gradient-to-t from-brand-green-dark/50 to-transparent" aria-hidden="true"></div>
+            </div>
 
-            <div class="mx-auto grid max-w-6xl items-center gap-12 px-4 pb-48 pt-12 sm:px-6 sm:pt-20 lg:grid-cols-[1.15fr_0.85fr] lg:px-8">
-                <div>
+            <div class="mx-auto grid max-w-6xl grid-cols-1 items-center gap-12 px-4 pb-48 pt-12 sm:px-6 sm:pt-20 lg:grid-cols-[1.15fr_0.85fr] lg:px-8">
+                <div class="min-w-0 [overflow-wrap:anywhere]">
                     <p class="rise inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.15em] text-brand-mint backdrop-blur sm:text-[0.8rem]">
                         <span class="h-1.5 w-1.5 rounded-full bg-brand-mint"></span>{{ __('portal.welcome.eyebrow') }}
                     </p>
@@ -62,6 +66,7 @@
                             </li>
                         @endforeach
                     </ul>
+                    <x-pausa-fondo class="mt-6" />
                 </div>
 
                 {{-- Vista previa del lanzador de sistemas --}}
@@ -117,7 +122,7 @@
             </div>
         </section>
 
-        <main id="contenido" tabindex="-1" class="relative z-10 mx-auto -mt-24 w-full max-w-6xl flex-1 px-4 pb-8 sm:px-6 lg:px-8">
+        <div class="relative z-10 mx-auto -mt-24 w-full max-w-6xl px-4 pb-8 sm:px-6 lg:px-8">
             {{-- Cifras --}}
             <div class="reveal grid grid-cols-1 divide-y divide-brand-green/10 rounded-2xl border border-brand-green/10 bg-white shadow-xl shadow-brand-green/10 sm:grid-cols-3 sm:divide-x sm:divide-y-0">
                 @foreach ([1, 2, 3] as $n)
@@ -131,8 +136,9 @@
             {{-- Pasos --}}
             <section class="mt-20" aria-labelledby="como-funciona">
                 <h2 id="como-funciona" class="reveal text-center font-heading text-2xl font-bold text-brand-green sm:text-3xl">{{ __('portal.welcome.steps_title') }}</h2>
-                <ol class="relative mt-10 grid gap-5 md:grid-cols-3">
-                    <div class="absolute left-[16%] right-[16%] top-[2.1rem] hidden border-t-2 border-dashed border-brand-mint md:block" aria-hidden="true"></div>
+                <div class="relative mt-10">
+                <div class="absolute left-[16%] right-[16%] top-[2.1rem] hidden border-t-2 border-dashed border-brand-mint md:block" aria-hidden="true"></div>
+                <ol class="relative grid gap-5 md:grid-cols-3">
                     @foreach ([1, 2, 3] as $n)
                         <li class="reveal relative rounded-2xl border border-brand-green/10 bg-white p-6 shadow-md shadow-brand-green/5 transition hover:-translate-y-1 hover:shadow-xl" style="transition-delay: {{ ($n - 1) * 90 }}ms">
                             <span class="relative flex h-12 w-12 items-center justify-center rounded-xl bg-gradient-to-br from-brand-teal to-brand-green font-heading text-lg font-bold text-white shadow-lg shadow-brand-green/30" aria-hidden="true">{{ $n }}</span>
@@ -141,6 +147,7 @@
                         </li>
                     @endforeach
                 </ol>
+                </div>
             </section>
 
             {{-- Características --}}
@@ -184,11 +191,13 @@
                     @endauth
                 </div>
             </section>
+        </div>
         </main>
 
         <footer class="mt-12 bg-brand-green-dark py-8 text-center text-xs text-white/85">
             <div class="mb-3 flex justify-center"><x-application-logo class="h-10 opacity-90 [&_img]:brightness-0 [&_img]:invert" /></div>
             {{ __('portal.welcome.footer') }}
+            <div class="mt-2"><x-enlace-accesibilidad /></div>
         </footer>
 
         <x-pantalla-carga />

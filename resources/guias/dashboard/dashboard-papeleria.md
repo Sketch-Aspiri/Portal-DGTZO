@@ -12,6 +12,8 @@ Toca **Guardar borrador** y, cuando esté completa, **Enviar a la Zona**.
 
 ## Revisión (Zona)
 
+Para ver las solicitudes de otro mes, elige mes y año y toca **Ver**.
+
 Toca **Aprobar** para incluirla en el Excel del mes, o **Devolver a la estación** explicando qué corregir.
 
 ![Revisión de una solicitud de papelería](03-revisar.png)

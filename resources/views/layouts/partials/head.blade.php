@@ -4,7 +4,7 @@
 <meta name="theme-color" content="#06534D">
 @php
     // Título propio de cada pantalla: la ranura "title" o el primer <h1> de la cabecera o del contenido.
-    $tituloPagina = trim((string) ($title ?? ''));
+    $tituloPagina = trim(html_entity_decode((string) ($title ?? ''), ENT_QUOTES | ENT_HTML5));
     if ($tituloPagina === '' && preg_match('~<h1\b[^>]*>(.*?)</h1>~s', (string) ($header ?? '').(string) ($slot ?? ''), $coincidencia)) {
         $tituloPagina = trim(preg_replace('/\s+/', ' ', html_entity_decode(strip_tags($coincidencia[1]), ENT_QUOTES | ENT_HTML5)));
     }
@@ -21,5 +21,5 @@
     <meta name="vapid-public-key" content="{{ config('webpush.vapid.public_key') }}">
 @endif
 @include('layouts.partials.tema')
-<script src="{{ asset('js/accesibilidad-inicial.js') }}?v=1"></script>
+<script src="{{ asset('js/accesibilidad-inicial.js') }}?v=2"></script>
 @vite(['resources/css/app.css', 'resources/js/app.js'])

@@ -15,6 +15,7 @@
         <div class="absolute inset-0 -z-[15] bg-gradient-to-r from-brand-green-dark/95 via-brand-green/85 to-brand-teal/60"></div>
         <canvas data-shader-bg data-colors="#043D39,#06534D,#1F7460,#70C2AD" aria-hidden="true"
                 class="absolute inset-0 -z-10 h-full w-full opacity-30"></canvas>
+        <x-pausa-fondo class="absolute right-2 top-1" />
         <div class="mx-auto max-w-5xl px-4 pb-20 pt-9 sm:px-6 lg:px-8">
             <h1 class="rise font-heading text-3xl font-bold sm:text-4xl">{{ __('portal.approvals.title') }}</h1>
             <p class="rise mt-2 max-w-2xl text-white/90" style="animation-delay:.08s">{{ __('portal.approvals.subtitle') }}</p>
@@ -28,7 +29,7 @@
         @endif
 
         {{-- Estados --}}
-        <nav class="grid grid-cols-3 gap-3" aria-label="{{ __('portal.approvals.title') }}">
+        <nav class="grid grid-cols-[repeat(auto-fit,minmax(5.5rem,1fr))] gap-3 [overflow-wrap:anywhere]" aria-label="{{ __('portal.approvals.title') }}">
             @foreach (\App\Enums\UserStatus::cases() as $case)
                 @php $active = $case === $status; @endphp
                 <a href="{{ route('users.index', array_filter(['estado' => $case->value, 'q' => $term])) }}"

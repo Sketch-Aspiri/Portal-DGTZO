@@ -13,6 +13,7 @@
         <div class="absolute inset-0 -z-[15] bg-gradient-to-r from-brand-green-dark/95 via-brand-green/85 to-brand-teal/60"></div>
         <canvas data-shader-bg data-colors="#043D39,#06534D,#1F7460,#70C2AD" aria-hidden="true"
                 class="absolute inset-0 -z-10 h-full w-full opacity-30"></canvas>
+        <x-pausa-fondo class="absolute right-2 top-1" />
 
         <div class="mx-auto flex max-w-5xl flex-col items-center gap-6 px-4 pb-24 pt-10 text-center sm:flex-row sm:px-6 sm:text-left lg:px-8">
             <div class="rise relative">
@@ -94,7 +95,7 @@
                                     <span class="block font-heading text-sm font-semibold text-brand-green">{{ $sistema['nombre'] }}</span>
                                     <span class="block text-xs text-gray-500">{{ __('portal.launcher.role', ['role' => $sistema['roles'][$sistema['rol_asignado']] ?? $sistema['rol_asignado']]) }}</span>
                                 </span>
-                                <a href="{{ $sistema['url'] }}" class="shrink-0 text-sm font-semibold text-brand-teal hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal">{{ __('portal.launcher.open') }} →</a>
+                                <a href="{{ $sistema['url'] }}" class="inline-flex min-h-6 shrink-0 items-center gap-1 text-sm font-semibold text-brand-teal hover:underline focus:outline-none focus-visible:ring-2 focus-visible:ring-brand-teal">{{ __('portal.launcher.open') }} <span class="sr-only">{{ $sistema['nombre'] }}</span> <span aria-hidden="true">→</span></a>
                             </li>
                         @empty
                             <li class="py-3 text-sm text-gray-500">{{ __('portal.launcher.empty') }}</li>
@@ -114,7 +115,7 @@
                     {{ $user->hasTwoFactorEnabled() ? __('portal.profile_page.two_factor_on') : __('portal.profile_page.two_factor_off') }}
                 </p>
                 @unless ($user->hasTwoFactorEnabled())
-                    <a href="{{ route('two-factor.setup') }}" class="mt-4 block text-sm font-semibold text-brand-teal hover:underline">{{ __('portal.profile_page.two_factor_setup') }} →</a>
+                    <a href="{{ route('two-factor.setup') }}" class="mt-4 block text-sm font-semibold text-brand-teal hover:underline">{{ __('portal.profile_page.two_factor_setup') }} <span aria-hidden="true">→</span></a>
                 @endunless
             </section>
 

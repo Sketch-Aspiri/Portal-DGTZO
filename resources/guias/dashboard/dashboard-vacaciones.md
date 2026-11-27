@@ -24,6 +24,6 @@ En **Selección** (estaciones y Zona) revisa lo que está por autorizar de tu al
 
 ## Calendario
 
-Muestra quién estará de vacaciones en cada mes; filtra por estación o estado.
+Muestra quién estará de vacaciones en cada mes. Para filtrar por estación o estado, elige y toca **Filtrar**.
 
 ![Calendario de vacaciones](04-calendario.png)
